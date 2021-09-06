@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "s-fence": "/components/fence/index"
+  }
+}

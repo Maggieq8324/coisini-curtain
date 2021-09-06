@@ -1,0 +1,38 @@
+/*
+ * 主价格
+ */
+function mainPrice(price, discountPrice) {
+    if(!discountPrice){
+        return {
+            price:price,
+            display:true
+        }
+    }else{
+        return {
+            display:true,
+            price:discountPrice,
+        }
+    }
+}
+
+/**
+ * 折扣价
+ */
+function slashedPrice(price, discountPrice) {
+    if(discountPrice){
+        return {
+            display:true,
+            price:price
+        }
+    }else{
+        return {
+            display:false,
+            price:null
+        }
+    }
+}
+
+module.exports = {
+    mainPrice:mainPrice,
+    slashedPrice:slashedPrice
+}

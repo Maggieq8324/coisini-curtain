@@ -1,0 +1,8 @@
+/* pages/coupon/coupon.wxss */
+
+.container {
+    padding-top: 26rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

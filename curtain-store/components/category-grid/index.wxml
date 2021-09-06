@@ -1,0 +1,17 @@
+<!-- 首页宫格组件 -->
+<view class="container">
+    <l-grid l-class="inner-container" row-num="3">
+        <block wx:for="{{ grid }}" wx:key="id">
+<!--            <l-grid-item key="{{ index }}" slot="{{ index }}">-->
+            <l-grid-item data-cid="{{item.category_id}}"
+                         data-rid="{{item.root_category_id}}"
+                         bind:linitemtap="onGoToCategory"
+                         key="{{index}}" slot="{{index}}">
+                <view class="grid-item">
+                    <image class="img" src="{{ item.img }}"></image>
+                    <text class="text">{{ item.title }}</text>
+                </view>
+            </l-grid-item>
+        </block>
+    </l-grid>
+</view>

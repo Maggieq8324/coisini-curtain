@@ -1,0 +1,18 @@
+<!-- 订单结算页Sku -->
+<view class="container l-class">
+    <image mode="aspectFit" src="{{orderItem.img}}" class="left"></image>
+    <view class="middle">
+        <text class="title hidden-text ">{{orderItem.title}}</text>
+        <view class="specs-container">
+            <view wx:if="{{specValuesText}}" class="specs">
+                <text>{{specValuesText}}</text>
+            </view>
+        </view>
+    </view>
+    <view class="right">
+        <l-price value="{{orderItem.finalPrice || orderItem.final_price}}"
+                 color="#333333">
+        </l-price>
+        <text>x {{orderItem.count}}</text>
+    </view>
+</view>

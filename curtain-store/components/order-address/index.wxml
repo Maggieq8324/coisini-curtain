@@ -1,0 +1,22 @@
+<view class="container">
+    <view class="address-inner">
+        <view class="left">
+            <view class="base-info">
+                <l-icon name="address1" l-class="curtain"></l-icon>
+                <text class="name">{{address.user_name}}</text>
+                <text>{{address.mobile}}</text>
+            </view>
+            <view class="address-info">
+                <text>{{address.province}}</text>
+                <text> {{address.city}}</text>
+                <text> {{address.county}}</text>
+                <text> {{address.detail}}</text>
+            </view>
+        </view>
+        <view class="icon-container">
+            <image style="width:116rpx;height:88rpx;" src="../imgs/icon/{{status}}@status.png"></image>
+        </view>
+    </view>
+    <image class="bottom-img" src="../imgs/bottom@address.png"></image>
+</view>
+

@@ -1,0 +1,15 @@
+/*
+ * 库存短缺计算
+ */
+function shortage(stock) {
+    if(stock < 10 && stock > 0){
+        return true
+    }
+    else{
+        false
+    }
+}
+
+module.exports= {
+    shortage: shortage
+}

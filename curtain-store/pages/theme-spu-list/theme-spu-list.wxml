@@ -1,0 +1,20 @@
+<!-- 主题SPU -->
+<view>
+    <image style="height:{{h}}rpx;width:{{w}}rpx;"
+           bind:load="onLoadImg"
+           class="top-img"
+           src="{{topImg}}">
+    </image>
+    <view wx:if="{{descriptions.length !==0 }}" class="description-container">
+        <block wx:for="{{descriptions}}" wx:key="index">
+            <text class="description">{{item}}</text>
+        </block>
+    </view>
+    <view slot="content" class="spu-bottom">
+        <l-water-flow generic:l-water-flow-item="s-spu-preview"></l-water-flow>
+    </view>
+
+
+    <s-empty-screen></s-empty-screen>
+
+</view>

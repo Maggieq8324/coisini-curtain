@@ -1,0 +1,9 @@
+/* pages/spu-list/spu-list.wxss */
+.spu-bottom{
+    background-color: #ffffff;
+    /*margin-top: 20rpx;*/
+    padding-top: 30rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

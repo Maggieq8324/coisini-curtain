@@ -1,0 +1,5 @@
+<!-- 详情页优惠劵 -->
+<view class="container">
+    <text class="text">{{text}}</text>
+    <image class="bg" src="../imgs/coupon@mini.png"></image>
+</view>

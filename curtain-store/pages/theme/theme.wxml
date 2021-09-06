@@ -1,0 +1,16 @@
+<!-- 主题 -->
+<s-theme-irelia wx:if="{{_tplName=='irelia'}}" theme="{{_theme}}"></s-theme-irelia>
+<s-theme-camille wx:if="{{_tplName=='camille'}}" theme="{{_theme}}"></s-theme-camille>
+<s-theme-diana wx:if="{{_tplName=='diana'}}" theme="{{_theme}}"></s-theme-diana>
+<s-theme-janna wx:if="{{_tplName=='janna'}}" theme="{{_theme}}"></s-theme-janna>
+
+<!-- <view class="for-you-container">
+    <view class="title">
+        <text>- 更多推荐 -</text>
+    </view>
+    <view class="for-you-spu">
+        <l-water-flow bind:item="onItemTap" generic:l-water-flow-item="s-spu-preview"></l-water-flow>
+    </view>
+</view> -->
+
+<l-loading></l-loading>

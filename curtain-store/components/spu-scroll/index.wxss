@@ -1,0 +1,56 @@
+/* components/spu-scroll/index.wxss */
+
+.container{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 42rpx 0 34rpx 28rpx;
+    background-color: #ffffff;
+}
+
+.title {
+    width: 692rpx;
+    height: 90rpx;
+}
+
+.price-unit{
+    font-size:24rpx !important;
+    color: #157658 !important;
+}
+
+.price-value{
+    font-size:26rpx !important;
+    color: #157658 !important;
+}
+
+.spu-container{
+    margin-right:60rpx;
+    display:flex;
+    flex-direction:column;
+    align-items: center;
+}
+
+.scroll-view{
+    margin-top:28rpx;
+    display:flex;
+    flex-direction:row;
+}
+
+.inner{
+    display:flex;
+    flex-direction:row;
+}
+
+.spu-text{
+    font-size: 20rpx;
+    color: #666666;
+    margin-top:20rpx;
+    /*width: 150rpx;*/
+    /*overflow: hidden;*/
+    /*text-overflow:ellipsis;*/
+    /*white-space: nowrap;*/
+}
+
+.spu-img{
+    width: 160rpx;
+    height: 160rpx;
+}

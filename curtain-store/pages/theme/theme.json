@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "s-theme-irelia": "/components/theme-irelia/index",
+    "s-theme-camille": "/components/theme-camille/index",
+    "s-theme-diana": "/components/theme-diana/index",
+    "s-theme-janna": "/components/theme-janna/index"
+  }
+}

@@ -1,0 +1,34 @@
+/* components/category-grid/index.wxss */
+.container {
+    height: 320rpx;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+}
+
+.inner-container {
+    width: 730rpx;
+    height: 310rpx;
+    border: 1px dashed #DCEBE6;
+}
+
+.grid-item {
+    width: 200rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.img {
+    width: 100rpx;
+    height: 70rpx;
+}
+
+.text {
+    margin-top: 6rpx;
+    font-size: 24rpx;
+    color: #333333;
+}

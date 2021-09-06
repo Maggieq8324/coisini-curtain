@@ -1,0 +1,67 @@
+page {
+  background-color: #f5f5f5;
+}
+
+@font-face {
+  font-family: 'curtain';  /* Project id 2792156 */
+  src: url('//at.alicdn.com/t/font_2792156_3kuzctu6hgv.woff2?t=1630908400300') format('woff2'),
+  url('//at.alicdn.com/t/font_2792156_3kuzctu6hgv.woff?t=1630908400300') format('woff'),
+  url('//at.alicdn.com/t/font_2792156_3kuzctu6hgv.ttf?t=1630908400300') format('truetype'),
+  url('//at.alicdn.com/t/font_2792156_3kuzctu6hgv.svg?t=1630908400300#curtain') format('svg');
+}
+
+.curtain{
+  font-family: curtain !important;
+  color:#157658 !important;
+}
+
+.l-icon-home:before {
+  content: "\e62e"
+}
+
+.l-icon-check:before {
+  content: "\e645"
+}
+
+.l-icon-address1:before {
+  content: "\e8f0"
+}
+
+.l-icon-about:before {
+  content: "\e640"
+}
+
+
+.l-icon-unpaid:before {
+  content: "\e612";
+}
+
+.l-icon-paid:before {
+  content: "\e6b5";
+}
+
+.l-icon-delivered:before {
+  content: "\e64f";
+}
+
+.l-icon-over:before {
+  content: "\e60c"
+}
+
+.l-icon-coupon:before{
+  content: "\e61d"
+}
+
+.l-icon-order1:before{
+  content: '\e897';
+}
+
+.l-icon-address2:before{
+  content:'\e63b';
+}
+
+.l-icon-flower:before{
+  content:"\e624"
+}
+
+

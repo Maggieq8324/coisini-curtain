@@ -1,0 +1,14 @@
+{
+  "name": "curtain-store",
+  "version": "1.0.0",
+  "description": "美佳窗帘布艺",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "coisini",
+  "license": "ISC",
+  "dependencies": {
+    "lin-ui": "^0.9.4"
+  }
+}

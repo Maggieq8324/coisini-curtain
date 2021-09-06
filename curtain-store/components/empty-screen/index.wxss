@@ -1,0 +1,10 @@
+/* components/empty-scrren/index.wxss */
+
+.img{
+    width:120rpx !important;
+    height:120rpx !important;
+}
+
+.describe{
+    color: #333333 !important;
+}

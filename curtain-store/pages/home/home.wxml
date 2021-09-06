@@ -1,0 +1,69 @@
+<!-- 首页 -->
+<l-loadmore show
+            end-text="- 我是有底线的 -"
+            type="{{loadingType}}">
+    <view slot="content" class="container">
+
+        <!-- 主题1 -->
+        <image wx:if="{{themeA.online}}"
+               class="top-theme" src="{{themeA.entrance_img}}"
+               data-tname="t-1" bind:tap="onGoToTheme" >
+        </image>
+
+        <!--轮播图-->
+        <swiper class="swiper"
+                indicator-dots
+                indicator-active-color="#157658"
+                autoplay
+                circular>
+            <block wx:for="{{ bannerB.items }}" wx:key="id">
+                <swiper-item>
+                    <image data-type="{{item.type}}"
+                           data-keyword="{{item.keyword}}"
+                           bind:tap="onGoToBanner"
+                           class="swiper"
+                           src="{{item.img}}"></image>
+                </swiper-item>
+            </block>
+        </swiper>
+
+        <!--宫格组件-->
+        <s-category-grid grid="{{ grid }}"></s-category-grid>
+
+        <!--优惠劵-->
+        <image data-aname="a-2"
+               bind:tap="onGoToCoupons"
+               class="activity"
+               src="{{activityD.entrance_img}}"></image>
+
+        <!-- 横向滚动 -->
+        <s-spu-scroll
+                wx:if="{{ themeE.online }}"
+                theme="{{ themeE }}"
+                spu-list="{{ themeESpu }}"
+        ></s-spu-scroll>
+
+        <!-- 主题二 -->
+        <image data-tname="t-3"
+               bind:tap="onGoToTheme"
+               src="{{themeF.entrance_img}}"
+               class="quality">
+        </image>
+
+        <!-- 热卖榜单 -->
+        <s-hot-list banner="{{ bannerG }}"></s-hot-list>
+
+        <image data-tname="t-4"
+               bind:tap="onGoToTheme"
+               src="{{themeH.entrance_img}}"
+               class="fashion">
+        </image>
+
+        <view class="spu-bottom">
+            <image class="title-spu-bottom" src="/imgs/home/title@interest.png"></image>
+            <l-water-flow generic:l-water-flow-item="s-spu-preview"></l-water-flow>
+        </view>
+    </view>
+</l-loadmore>
+
+
