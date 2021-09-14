@@ -27,5 +27,5 @@ SpringBoot + Mysql + RocketMQ + Vue + 小程序
 #### 使用说明
 
 1.  cms-pictures请使用tomcat/nginx加载，地址与数据库相对应
-2.  小程序需安装linui，参照cms-store/README.md
+2.  小程序需安装linui，参照cms-store/README.md 
 
