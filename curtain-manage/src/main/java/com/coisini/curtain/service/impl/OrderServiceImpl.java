@@ -13,6 +13,7 @@ import io.github.talelin.autoconfigure.exception.ForbiddenException;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,9 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     @Override
     public void changeOrderStatus(Integer id, Integer status) {
@@ -57,7 +61,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public IPage<Order> search(Integer page, Integer count, String keyword, Date start, Date end) {
         Page<Order> pager = new Page<>(page, count);
-        IPage<Order> paging = this.baseMapper.searchOrders(pager, "%" + keyword + "%", start, end);
+        IPage<Order> paging = orderMapper.searchOrders(pager, keyword, start, end);
         return paging;
     }
 

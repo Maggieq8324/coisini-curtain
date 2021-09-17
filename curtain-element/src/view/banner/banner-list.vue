@@ -61,11 +61,12 @@ export default {
       pageCount: 10,
       refreshPagination: true,
       detailBannerId: 0,
+      loading: false
     }
   },
   async created() {
     this.loading = true
-    this.getBanners()
+    await this.getBanners()
     this.loading = false
   },
   methods: {
@@ -82,7 +83,7 @@ export default {
       this.imgSrcList = []
       this.currentPage = val
       this.loading = true
-      this.getBanners()
+      await this.getBanners()
       this.loading = false
     },
     initImgSrcList() {
@@ -117,7 +118,7 @@ export default {
           if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
             this.currentPage--
           }
-          this.getBanners()
+          await this.getBanners()
           this.$message({
             type: 'success',
             message: `${res.message}`,

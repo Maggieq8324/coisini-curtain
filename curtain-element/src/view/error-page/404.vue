@@ -21,7 +21,6 @@ export default {
   justify-content: center;
   align-items: center;
   position: relative;
-  max-height: 750px;
   .page-404 {
     width: 100%;
     height: auto;

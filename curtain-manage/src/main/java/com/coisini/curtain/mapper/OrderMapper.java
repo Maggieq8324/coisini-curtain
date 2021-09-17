@@ -5,6 +5,7 @@ import com.coisini.curtain.common.mybatis.Page;
 import com.coisini.curtain.model.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import java.util.Date;
  * @author generator@TaleLin
  * @since 2020-05-28
  */
+@Repository
 public interface OrderMapper extends BaseMapper<Order> {
 
     /**

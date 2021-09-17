@@ -23,16 +23,6 @@ let homeRouter = [
     order: 0,
     inNav: true,
   },
-  // {
-  //   title: '林间有风',
-  //   type: 'view',
-  //   name: Symbol('about'),
-  //   route: '/about',
-  //   filePath: 'view/about/about.vue',
-  //   inNav: false,
-  //   icon: 'iconfont icon-iconset0103',
-  //   order: 1,
-  // },
   {
     title: '日志管理',
     type: 'view',
@@ -41,7 +31,7 @@ let homeRouter = [
     filePath: 'view/log/log.vue',
     inNav: true,
     icon: 'iconfont icon-rizhiguanli',
-    order: 2,
+    order: 1,
     permission: ['查询所有日志'],
   },
   {

@@ -32,7 +32,7 @@ export default {
       throttleLogin: null, // 节流登录
       form: {
         username: 'guest',
-        password: '123456',
+        password: 'P@ssw0rd',
       },
     }
   },
@@ -44,7 +44,7 @@ export default {
         await User.getToken(username, password)
         await this.getInformation()
         this.loading = false
-        this.$router.push('/dashboard')
+        await this.$router.push('/dashboard')
         this.$message.success('登录成功')
       } catch (e) {
         this.loading = false

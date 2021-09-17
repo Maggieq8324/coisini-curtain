@@ -19,7 +19,7 @@
                 <el-input size="medium" v-model="form.keyword" placeholder="请填写关键字"></el-input>
               </el-form-item>
               <el-form-item label="类型" prop="type">
-                <el-input size="medium" v-model="form.type" placeholder="请填写类型"></el-input>
+                <el-input size="medium" v-model="form.type" placeholder="请填写类型(数字)"></el-input>
               </el-form-item>
               <el-form-item label="图片" prop="img">
                 <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" />
