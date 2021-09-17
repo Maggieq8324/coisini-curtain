@@ -9,10 +9,10 @@
 package com.coisini.curtain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.coisini.curtain.model.BannerItemDO;
+import com.coisini.curtain.model.BannerItem;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BannerItemMapper extends BaseMapper<BannerItemDO> {
+public interface BannerItemMapper extends BaseMapper<BannerItem> {
 
 }

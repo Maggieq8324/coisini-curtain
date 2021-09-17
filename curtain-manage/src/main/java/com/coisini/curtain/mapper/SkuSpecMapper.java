@@ -1,6 +1,6 @@
 package com.coisini.curtain.mapper;
 
-import com.coisini.curtain.model.SkuSpecDO;
+import com.coisini.curtain.model.SkuSpec;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +15,7 @@ import java.util.List;
  * @since 2020-06-03
  */
 @Repository
-public interface SkuSpecMapper extends BaseMapper<SkuSpecDO> {
+public interface SkuSpecMapper extends BaseMapper<SkuSpec> {
 
     /**
      * 根据规格名id获取sku的id列表

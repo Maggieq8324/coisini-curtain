@@ -3,7 +3,7 @@ package com.coisini.curtain.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.User;
 import org.springframework.stereotype.Repository;
 
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
  * @author Juzi@TaleLin
  */
 @Repository
-public interface UserMapper extends BaseMapper<UserDO> {
+public interface UserMapper extends BaseMapper<User> {
 
     /**
      * 查询用户名为$username的人数
@@ -39,5 +39,5 @@ public interface UserMapper extends BaseMapper<UserDO> {
      * @param rootGroupId 超级用户组id(不返回超级用户组的用户)
      * @return 分页数据
      */
-    IPage<UserDO> selectPageByGroupId(Page pager, Integer groupId, Integer rootGroupId);
+    IPage<User> selectPageByGroupId(Page pager, Integer groupId, Integer rootGroupId);
 }

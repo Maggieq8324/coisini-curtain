@@ -1,17 +1,17 @@
 package com.coisini.curtain.controller.v1;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.vo.UpdatedVo;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.core.annotation.GroupRequired;
 import io.github.talelin.core.annotation.LoginRequired;
 import io.github.talelin.core.annotation.PermissionMeta;
 import io.github.talelin.core.annotation.PermissionModule;
 import com.coisini.curtain.common.util.PageUtil;
-import com.coisini.curtain.model.OrderDO;
+import com.coisini.curtain.model.Order;
 import com.coisini.curtain.service.OrderService;
-import com.coisini.curtain.vo.OrderSimplifyVO;
-import com.coisini.curtain.vo.PageResponseVO;
+import com.coisini.curtain.vo.OrderSimplifyVo;
+import com.coisini.curtain.vo.PageResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
@@ -34,18 +34,18 @@ public class OrderController {
     @PutMapping("/status")
     @GroupRequired
     @PermissionMeta(value = "修改订单状态")
-    public UpdatedVO update(
+    public UpdatedVo update(
             @RequestParam(name = "id") @Positive Integer id,
             @RequestParam(name = "status") @Min(value = 0) Integer status
     ) {
         orderService.changeOrderStatus(id, status);
-        return new UpdatedVO();
+        return new UpdatedVo();
     }
 
     @GetMapping("/{id}/detail")
     @LoginRequired
-    public OrderDO getDetail(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
-        OrderDO order = orderService.getById(id);
+    public Order getDetail(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+        Order order = orderService.getById(id);
         if (order == null) {
             throw new NotFoundException(110000);
         }
@@ -54,21 +54,21 @@ public class OrderController {
 
     @GetMapping("/page")
     @LoginRequired
-    public PageResponseVO<OrderSimplifyVO> page(
+    public PageResponseVo<OrderSimplifyVo> page(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
             @RequestParam(name = "page", required = false, defaultValue = "0")
             @Min(value = 0, message = "{page.number.min}") Integer page
     ) {
-        IPage<OrderDO> iPage = orderService.getOrderByPage(count, page);
-        List<OrderSimplifyVO> orderSimplifyVOList = orderService.convertFromDO(iPage.getRecords());
-        return PageUtil.build(iPage, orderSimplifyVOList);
+        IPage<Order> iPage = orderService.getOrderByPage(count, page);
+        List<OrderSimplifyVo> orderSimplifyVoList = orderService.convertFromDO(iPage.getRecords());
+        return PageUtil.build(iPage, orderSimplifyVoList);
     }
 
     @GetMapping("/search")
     @LoginRequired
-    public PageResponseVO<OrderSimplifyVO> search(
+    public PageResponseVo<OrderSimplifyVo> search(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
@@ -78,9 +78,9 @@ public class OrderController {
             @RequestParam(name = "start", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date start,
             @RequestParam(name = "end", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date end
     ) {
-        IPage<OrderDO> iPage = orderService.search(page, count, keyword, start, end);
-        List<OrderSimplifyVO> orderSimplifyVOList = orderService.convertFromDO(iPage.getRecords());
-        return PageUtil.build(iPage, orderSimplifyVOList);
+        IPage<Order> iPage = orderService.search(page, count, keyword, start, end);
+        List<OrderSimplifyVo> orderSimplifyVoList = orderService.convertFromDO(iPage.getRecords());
+        return PageUtil.build(iPage, orderSimplifyVoList);
     }
 
 }

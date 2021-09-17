@@ -1,6 +1,6 @@
 package com.coisini.curtain.common;
 
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.User;
 
 /**
  * 线程安全的当前登录用户，如果用户为登录，则得到 null
@@ -9,14 +9,14 @@ import com.coisini.curtain.model.UserDO;
  */
 public class LocalUser {
 
-    private static ThreadLocal<UserDO> local = new ThreadLocal<>();
+    private static ThreadLocal<User> local = new ThreadLocal<>();
 
     /**
      * 得到当前登录用户
      *
      * @return user | null
      */
-    public static UserDO getLocalUser() {
+    public static User getLocalUser() {
         return LocalUser.local.get();
     }
 
@@ -25,7 +25,7 @@ public class LocalUser {
      *
      * @param user user
      */
-    public static void setLocalUser(UserDO user) {
+    public static void setLocalUser(User user) {
         LocalUser.local.set(user);
     }
 

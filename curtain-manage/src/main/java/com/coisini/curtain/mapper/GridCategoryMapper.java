@@ -1,6 +1,6 @@
 package com.coisini.curtain.mapper;
 
-import com.coisini.curtain.model.GridCategoryDO;
+import com.coisini.curtain.model.GridCategory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author generator@TaleLin
  * @since 2020-06-01
  */
-public interface GridCategoryMapper extends BaseMapper<GridCategoryDO> {
+public interface GridCategoryMapper extends BaseMapper<GridCategory> {
 
 }

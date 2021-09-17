@@ -6,7 +6,7 @@ import com.coisini.curtain.mapper.SpuMapper;
 import com.coisini.curtain.model.*;
 import com.coisini.curtain.service.*;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
-import com.coisini.curtain.dto.SpuDTO;
+import com.coisini.curtain.evt.SpuEvt;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Service
-public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements SpuService {
+public class SpuServiceImpl extends ServiceImpl<SpuMapper, Spu> implements SpuService {
 
     @Autowired
     private CategoryService categoryService;
@@ -42,7 +42,7 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements Spu
      * @return
      */
     @Override
-    public SpuDetailDO getDetail(Integer id) {
+    public SpuDetail getDetail(Integer id) {
         return this.getBaseMapper().getDetail(id);
     }
 
@@ -53,32 +53,32 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements Spu
 
     /**
      * 插入
-     * @param dto
+     * @param evt
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void create(SpuDTO dto) {
-        SpuDO spuDO = new SpuDO();
-        BeanUtils.copyProperties(dto, spuDO);
-        CategoryDO categoryDO = categoryService.getCategoryById(dto.getCategoryId());
-        spuDO.setRootCategoryId(categoryDO.getParentId());
-        this.save(spuDO);
+    public void create(SpuEvt evt) {
+        Spu spu = new Spu();
+        BeanUtils.copyProperties(evt, spu);
+        Category category = categoryService.getCategoryById(evt.getCategoryId());
+        spu.setRootCategoryId(category.getParentId());
+        this.save(spu);
 
         List<String> spuImgList = new ArrayList<>();
-        if (dto.getSpuImgList() == null) {
-            spuImgList.add(dto.getImg());
+        if (evt.getSpuImgList() == null) {
+            spuImgList.add(evt.getImg());
         } else {
-            spuImgList = dto.getSpuImgList();
+            spuImgList = evt.getSpuImgList();
         }
 
-        this.insertSpuImgList(spuImgList, spuDO.getId());
+        this.insertSpuImgList(spuImgList, spu.getId());
 
-        if (dto.getSpuDetailImgList() != null) {
-            this.insertSpuDetailImgList(dto.getSpuDetailImgList(), spuDO.getId());
+        if (evt.getSpuDetailImgList() != null) {
+            this.insertSpuDetailImgList(evt.getSpuDetailImgList(), spu.getId());
         }
 
-        if (dto.getSpecKeyIdList() != null) {
-            this.insertSpuKeyList(dto.getSpecKeyIdList(), spuDO.getId());
+        if (evt.getSpecKeyIdList() != null) {
+            this.insertSpuKeyList(evt.getSpecKeyIdList(), spu.getId());
         }
     }
 
@@ -88,11 +88,11 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements Spu
      * @param spuId
      */
     private void insertSpuImgList(List<String> spuImgList, Integer spuId) {
-        List<SpuImgDO> spuImgDOList = spuImgList.stream().map(s -> {
-            SpuImgDO spuImgDO = new SpuImgDO();
-            spuImgDO.setImg(s);
-            spuImgDO.setSpuId(spuId);
-            return spuImgDO;
+        List<SpuImg> spuImgDOList = spuImgList.stream().map(s -> {
+            SpuImg spuImg = new SpuImg();
+            spuImg.setImg(s);
+            spuImg.setSpuId(spuId);
+            return spuImg;
         }).collect(Collectors.toList());
         this.spuImgService.saveBatch(spuImgDOList);
     }
@@ -103,60 +103,60 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements Spu
      * @param spuId Spu ID
      */
     private void insertSpuDetailImgList(List<String> spuDetailImgList, Integer spuId) {
-        List<SpuDetailImgDO> spuDetailImgDOList = new ArrayList<>();
+        List<SpuDetailImg> spuDetailImgDOList = new ArrayList<>();
         for (int i = 0; i < spuDetailImgList.size(); i++) {
-            SpuDetailImgDO spuDetailImgDO = new SpuDetailImgDO();
-            spuDetailImgDO.setImg(spuDetailImgList.get(i))
+            SpuDetailImg spuDetailImg = new SpuDetailImg();
+            spuDetailImg.setImg(spuDetailImgList.get(i))
                     .setSpuId(spuId)
                     .setSort(i);
-            spuDetailImgDOList.add(spuDetailImgDO);
+            spuDetailImgDOList.add(spuDetailImg);
         }
         this.spuDetailImgService.saveBatch(spuDetailImgDOList);
     }
 
     private void insertSpuKeyList(List<Integer> spuKeyIdList, Integer spuId) {
-        List<SpuKeyDO> spuKeyDOList = spuKeyIdList.stream()
+        List<SpuKey> spuKeyList = spuKeyIdList.stream()
                 .map(sk -> {
-                    SpuKeyDO spuKeyDO = new SpuKeyDO();
-                    spuKeyDO.setSpuId(spuId)
+                    SpuKey spuKey = new SpuKey();
+                    spuKey.setSpuId(spuId)
                             .setSpecKeyId(sk);
-                    return spuKeyDO;
+                    return spuKey;
                 }).collect(Collectors.toList());
-        this.spuKeyService.saveBatch(spuKeyDOList);
+        this.spuKeyService.saveBatch(spuKeyList);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void update(SpuDTO dto, Integer id) {
-        SpuDO spuDO = this.getById(id);
-        if (spuDO == null) {
+    public void update(SpuEvt evt, Integer id) {
+        Spu spu = this.getById(id);
+        if (spu == null) {
             throw new NotFoundException(70000);
         }
-        BeanUtils.copyProperties(dto, spuDO);
-        CategoryDO category = categoryService.getCategoryById(dto.getCategoryId());
+        BeanUtils.copyProperties(evt, spu);
+        Category category = categoryService.getCategoryById(evt.getCategoryId());
         if (category.getParentId() != null) {
-            spuDO.setRootCategoryId(category.getParentId());
+            spu.setRootCategoryId(category.getParentId());
         }
-        this.updateById(spuDO);
+        this.updateById(spu);
 
         List<String> spuImgList = new ArrayList<>();
-        if (dto.getSpuImgList() == null) {
-            spuImgList.add(dto.getImg());
+        if (evt.getSpuImgList() == null) {
+            spuImgList.add(evt.getImg());
         } else {
-            spuImgList = dto.getSpuImgList();
+            spuImgList = evt.getSpuImgList();
         }
-        spuImgService.hardDeleteImgsBySpuId(spuDO.getId());
-        spuDetailImgService.hardDeleteImgsBySpuId(spuDO.getId());
-        this.insertSpuImgList(spuImgList, spuDO.getId());
-        if (dto.getSpuDetailImgList() != null) {
-            this.insertSpuDetailImgList(dto.getSpuDetailImgList(), spuDO.getId());
+        spuImgService.hardDeleteImgsBySpuId(spu.getId());
+        spuDetailImgService.hardDeleteImgsBySpuId(spu.getId());
+        this.insertSpuImgList(spuImgList, spu.getId());
+        if (evt.getSpuDetailImgList() != null) {
+            this.insertSpuDetailImgList(evt.getSpuDetailImgList(), spu.getId());
         }
-        this.updateSpuKey(spuDO.getId(), dto.getSpecKeyIdList());
+        this.updateSpuKey(spu.getId(), evt.getSpecKeyIdList());
     }
 
     @Override
     public void delete(Integer id) {
-        SpuDO exist = this.getById(id);
+        Spu exist = this.getById(id);
         if (exist == null) {
             throw new NotFoundException(70000);
         }
@@ -169,19 +169,19 @@ public class SpuServiceImpl extends ServiceImpl<SpuMapper, SpuDO> implements Spu
      * @param newSpecKeyIdList 前端传递过来的 spu_key id列表
      */
     private void updateSpuKey(Integer spuId, List<Integer> newSpecKeyIdList) {
-        QueryWrapper<SpuKeyDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(SpuKeyDO::getSpuId, spuId);
-        List<SpuKeyDO> exists = spuKeyService.getBaseMapper().selectList(wrapper);
+        QueryWrapper<SpuKey> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(SpuKey::getSpuId, spuId);
+        List<SpuKey> exists = spuKeyService.getBaseMapper().selectList(wrapper);
         List<Integer> existsIds = new ArrayList<>();
-        List<SpuKeyDO> newSpuKeyList = new ArrayList<>();
-        for (SpuKeyDO exist: exists) {
+        List<SpuKey> newSpuKeyList = new ArrayList<>();
+        for (SpuKey exist: exists) {
             existsIds.add(exist.getId());
         }
         for (Integer specKeyId: newSpecKeyIdList) {
-            SpuKeyDO spuKeyDO = new SpuKeyDO();
-            spuKeyDO.setSpecKeyId(specKeyId);
-            spuKeyDO.setSpuId(spuId);
-            newSpuKeyList.add(spuKeyDO);
+            SpuKey spuKey = new SpuKey();
+            spuKey.setSpecKeyId(specKeyId);
+            spuKey.setSpuId(spuId);
+            newSpuKeyList.add(spuKey);
         }
         spuKeyService.removeByIds(existsIds);
         spuKeyService.saveBatch(newSpuKeyList);

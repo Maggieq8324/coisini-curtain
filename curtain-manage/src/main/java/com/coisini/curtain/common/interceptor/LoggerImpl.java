@@ -6,7 +6,7 @@ import io.github.talelin.autoconfigure.interfaces.LoggerResolver;
 import io.github.talelin.core.annotation.Logger;
 import io.github.talelin.core.annotation.PermissionMeta;
 import io.github.talelin.core.util.BeanUtil;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class LoggerImpl implements LoggerResolver {
     @Override
     public void handle(PermissionMeta meta, Logger logger, HttpServletRequest request, HttpServletResponse response) {
         String template = logger.template();
-        UserDO user = LocalUser.getLocalUser();
+        User user = LocalUser.getLocalUser();
         template = this.parseTemplate(template, user, request, response);
         String permission = "";
         if (meta != null) {
@@ -50,7 +50,7 @@ public class LoggerImpl implements LoggerResolver {
         logService.createLog(template, permission, userId, username, method, path, status);
     }
 
-    private String parseTemplate(String template, UserDO user, HttpServletRequest request, HttpServletResponse response) {
+    private String parseTemplate(String template, User user, HttpServletRequest request, HttpServletResponse response) {
         // 调用 get 方法
         Matcher m = pattern.matcher(template);
         while (m.find()) {
@@ -61,7 +61,7 @@ public class LoggerImpl implements LoggerResolver {
         return template;
     }
 
-    private String extractProperty(String item, UserDO user, HttpServletRequest request, HttpServletResponse response) {
+    private String extractProperty(String item, User user, HttpServletRequest request, HttpServletResponse response) {
         int i = item.lastIndexOf('.');
         String obj = item.substring(0, i);
         String prop = item.substring(i + 1);

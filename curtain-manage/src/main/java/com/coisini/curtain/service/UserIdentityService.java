@@ -1,13 +1,13 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.model.UserIdentityDO;
+import com.coisini.curtain.model.UserIdentity;
 
 /**
  * @author pedro@TaleLin
  * @author Juzi@TaleLin
  */
-public interface UserIdentityService extends IService<UserIdentityDO> {
+public interface UserIdentityService extends IService<UserIdentity> {
 
     /**
      * 新建用户认证信息
@@ -18,10 +18,10 @@ public interface UserIdentityService extends IService<UserIdentityDO> {
      * @param credential   凭证
      * @return 用户认证
      */
-    UserIdentityDO createIdentity(Integer userId,
-                                  String identityType,
-                                  String identifier,
-                                  String credential);
+    UserIdentity createIdentity(Integer userId,
+                                String identityType,
+                                String identifier,
+                                String credential);
 
     /**
      * 新建用户认证信息
@@ -29,7 +29,7 @@ public interface UserIdentityService extends IService<UserIdentityDO> {
      * @param userIdentity 用户认证信息
      * @return 用户认证
      */
-    UserIdentityDO createIdentity(UserIdentityDO userIdentity);
+    UserIdentity createIdentity(UserIdentity userIdentity);
 
     /**
      * 新建用户认证信息 (USERNAME_PASSWORD)
@@ -39,9 +39,9 @@ public interface UserIdentityService extends IService<UserIdentityDO> {
      * @param password 密码
      * @return 用户认证
      */
-    UserIdentityDO createUsernamePasswordIdentity(Integer userId,
-                                                  String username,
-                                                  String password);
+    UserIdentity createUsernamePasswordIdentity(Integer userId,
+                                                String username,
+                                                String password);
 
 
     /**

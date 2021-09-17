@@ -1,9 +1,9 @@
 package com.coisini.curtain.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.coisini.curtain.bo.FileBO;
+import com.coisini.curtain.bo.FileBo;
 import com.coisini.curtain.mapper.FileMapper;
-import com.coisini.curtain.model.FileDO;
+import com.coisini.curtain.model.FileModel;
 import com.coisini.curtain.module.file.FileConstant;
 import com.coisini.curtain.module.file.FileProperties;
 import com.coisini.curtain.module.file.Uploader;
@@ -22,7 +22,7 @@ import java.util.List;
  * @author Juzi@TaleLin
  */
 @Service
-public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements FileService {
+public class FileServiceImpl extends ServiceImpl<FileMapper, FileModel> implements FileService {
 
     @Autowired
     private Uploader uploader;
@@ -40,16 +40,16 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements 
      * 3. 批量插入也仅仅只是一条sql语句的事情，如果真的需要，可以自行尝试一下
      */
     @Override
-    public List<FileBO> upload(MultiValueMap<String, MultipartFile> fileMap) {
-        List<FileBO> res = new ArrayList<>();
+    public List<FileBo> upload(MultiValueMap<String, MultipartFile> fileMap) {
+        List<FileBo> res = new ArrayList<>();
         uploader.upload(fileMap, file -> {
-            FileDO found = this.baseMapper.selectByMd5(file.getMd5());
+            FileModel found = this.baseMapper.selectByMd5(file.getMd5());
             // 数据库中不存在
             if (found == null) {
-                FileDO fileDO = new FileDO();
-                BeanUtil.copyProperties(file, fileDO);
-                this.getBaseMapper().insert(fileDO);
-                res.add(transformDoToBo(fileDO, file.getKey()));
+                FileModel fileModel = new FileModel();
+                BeanUtil.copyProperties(file, fileModel);
+                this.getBaseMapper().insert(fileModel);
+                res.add(transformDoToBo(fileModel, file.getKey()));
                 return true;
             }
             // 已存在，则直接转化返回
@@ -64,8 +64,8 @@ public class FileServiceImpl extends ServiceImpl<FileMapper, FileDO> implements 
         return this.getBaseMapper().selectCountByMd5(md5) > 0;
     }
 
-    private FileBO transformDoToBo(FileDO file, String key) {
-        FileBO bo = new FileBO();
+    private FileBo transformDoToBo(FileModel file, String key) {
+        FileBo bo = new FileBo();
         BeanUtil.copyProperties(file, bo);
         if (file.getType().equals(FileConstant.LOCAL)) {
             String s = fileProperties.getServePath().split("/")[0];

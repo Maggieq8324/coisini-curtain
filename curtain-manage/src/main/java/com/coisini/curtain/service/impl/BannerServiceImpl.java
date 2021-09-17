@@ -2,13 +2,13 @@ package com.coisini.curtain.service.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.coisini.curtain.bo.BannerWithItemsBO;
-import com.coisini.curtain.dto.BannerDTO;
+import com.coisini.curtain.bo.BannerWithItemsBo;
+import com.coisini.curtain.evt.BannerEvt;
 import com.coisini.curtain.mapper.BannerItemMapper;
 import com.coisini.curtain.mapper.BannerMapper;
+import com.coisini.curtain.model.Banner;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
-import com.coisini.curtain.model.BannerDO;
-import com.coisini.curtain.model.BannerItemDO;
+import com.coisini.curtain.model.BannerItem;
 import com.coisini.curtain.service.BannerService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class BannerServiceImpl extends ServiceImpl<BannerMapper, BannerDO> implements BannerService {
+public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> implements BannerService {
 
     @Autowired
     private BannerMapper bannerMapper;
@@ -25,8 +25,8 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, BannerDO> imple
     private BannerItemMapper bannerItemMapper;
 
     @Override
-    public BannerWithItemsBO getWithItems(Integer id) {
-        BannerDO banner = this.getById(id);
+    public BannerWithItemsBo getWithItems(Integer id) {
+        Banner banner = this.getById(id);
         if (banner == null) {
             throw new NotFoundException(20000);
         }
@@ -37,17 +37,17 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, BannerDO> imple
 //        wrapper.eq(BannerItemDO::getBannerId, id);
 //        List<BannerItemDO> bannerItems = bannerItemMapper.selectList(wrapper);
 
-        List<BannerItemDO> bannerItems =
+        List<BannerItem> bannerItems =
                 new LambdaQueryChainWrapper<>(bannerItemMapper)
-                        .eq(BannerItemDO::getBannerId, id)
+                        .eq(BannerItem::getBannerId, id)
                         .list();
 
-        return new BannerWithItemsBO(banner, bannerItems);
+        return new BannerWithItemsBo(banner, bannerItems);
     }
 
     @Override
     public void delete(Integer id) {
-        BannerDO banner = this.getById(id);
+        Banner banner = this.getById(id);
         if (banner == null) {
             throw new NotFoundException(20000);
         }
@@ -55,13 +55,13 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, BannerDO> imple
     }
 
     @Override
-    public void update(BannerDTO dto, Integer id) {
-        BannerDO bannerDO = this.getById(id);
-        if (bannerDO == null) {
+    public void update(BannerEvt evt, Integer id) {
+        Banner banner = this.getById(id);
+        if (banner == null) {
             throw new NotFoundException(20000);
         }
-        BeanUtils.copyProperties(dto, bannerDO);
-        this.updateById(bannerDO);
+        BeanUtils.copyProperties(evt, banner);
+        this.updateById(banner);
     }
 
 }

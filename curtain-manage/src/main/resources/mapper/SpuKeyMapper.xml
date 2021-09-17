@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.SpuKeyMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpuKeyDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpuKey">
         <id column="id" property="id" />
         <result column="spu_id" property="spuId" />
         <result column="spec_key_id" property="specKeyId" />

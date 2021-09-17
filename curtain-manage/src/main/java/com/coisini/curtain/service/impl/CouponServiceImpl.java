@@ -2,16 +2,16 @@ package com.coisini.curtain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.coisini.curtain.dto.CouponTemplateDTO;
+import com.coisini.curtain.evt.CouponTemplateEvt;
 import com.coisini.curtain.mapper.CouponMapper;
-import com.coisini.curtain.model.CouponDO;
+import com.coisini.curtain.model.Coupon;
 import com.coisini.curtain.service.CouponService;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.autoconfigure.exception.ParameterException;
 import com.coisini.curtain.common.enumeration.CouponTypeEnum;
-import com.coisini.curtain.dto.CouponDTO;
+import com.coisini.curtain.evt.CouponEvt;
 import com.coisini.curtain.mapper.CouponTemplateMapper;
-import com.coisini.curtain.model.CouponTemplateDO;
+import com.coisini.curtain.model.CouponTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,39 +22,39 @@ import java.util.List;
  * @author TaleLin
  */
 @Service
-public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> implements CouponService {
+public class CouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implements CouponService {
 
     @Autowired
     private CouponTemplateMapper couponTemplateMapper;
 
     @Override
-    public void create(CouponDTO dto) {
-        boolean ok = checkCouponType(dto);
+    public void create(CouponEvt evt) {
+        boolean ok = checkCouponType(evt);
         if (!ok) {
             throw new ParameterException(100001);
         }
-        CouponDO coupon = new CouponDO();
-        BeanUtils.copyProperties(dto, coupon);
+        Coupon coupon = new Coupon();
+        BeanUtils.copyProperties(evt, coupon);
         this.save(coupon);
     }
 
     @Override
-    public void update(CouponDTO dto, Integer id) {
-        CouponDO coupon = this.getById(id);
+    public void update(CouponEvt evt, Integer id) {
+        Coupon coupon = this.getById(id);
         if (coupon == null) {
             throw new NotFoundException(100000);
         }
-        boolean ok = checkCouponType(dto);
+        boolean ok = checkCouponType(evt);
         if (!ok) {
             throw new ParameterException(100001);
         }
-        BeanUtils.copyProperties(dto, coupon);
+        BeanUtils.copyProperties(evt, coupon);
         this.updateById(coupon);
     }
 
     @Override
     public void delete(Integer id) {
-        CouponDO coupon = this.getById(id);
+        Coupon coupon = this.getById(id);
         if (coupon == null) {
             throw new NotFoundException(100000);
         }
@@ -62,35 +62,35 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
     }
 
     @Override
-    public List<CouponTemplateDO> getTemplates() {
+    public List<CouponTemplate> getTemplates() {
         return couponTemplateMapper.selectList(null);
     }
 
     @Override
-    public void createTemplate(CouponTemplateDTO dto) {
-        boolean ok = checkCouponType(dto);
+    public void createTemplate(CouponTemplateEvt evt) {
+        boolean ok = checkCouponType(evt);
         if (!ok) {
             throw new ParameterException(100002);
         }
-        CouponTemplateDO couponTemplateDO = new CouponTemplateDO();
-        BeanUtils.copyProperties(dto, couponTemplateDO);
-        couponTemplateMapper.insert(couponTemplateDO);
+        CouponTemplate couponTemplate = new CouponTemplate();
+        BeanUtils.copyProperties(evt, couponTemplate);
+        couponTemplateMapper.insert(couponTemplate);
     }
 
     @Override
-    public void updateTemplate(CouponTemplateDTO dto, Integer id) {
-        CouponTemplateDO couponTemplateDO = getTemplate(id);
-        boolean ok = checkCouponType(dto);
+    public void updateTemplate(CouponTemplateEvt evt, Integer id) {
+        CouponTemplate couponTemplate = getTemplate(id);
+        boolean ok = checkCouponType(evt);
         if (!ok) {
             throw new ParameterException(100001);
         }
-        BeanUtils.copyProperties(dto, couponTemplateDO);
-        couponTemplateMapper.updateById(couponTemplateDO);
+        BeanUtils.copyProperties(evt, couponTemplate);
+        couponTemplateMapper.updateById(couponTemplate);
     }
 
     @Override
-    public CouponTemplateDO getTemplate(Integer id) {
-        CouponTemplateDO couponTemplate = couponTemplateMapper.selectById(id);
+    public CouponTemplate getTemplate(Integer id) {
+        CouponTemplate couponTemplate = couponTemplateMapper.selectById(id);
         if (couponTemplate == null) {
             throw new NotFoundException(100000);
         }
@@ -104,24 +104,24 @@ public class CouponServiceImpl extends ServiceImpl<CouponMapper, CouponDO> imple
     }
 
     @Override
-    public List<CouponDO> getListByActivityId(Integer id) {
-        QueryWrapper<CouponDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(CouponDO::getActivityId, id);
+    public List<Coupon> getListByActivityId(Integer id) {
+        QueryWrapper<Coupon> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Coupon::getActivityId, id);
         return this.getBaseMapper().selectList(wrapper);
     }
 
     /**
      * 校验优惠卷数据是否满足优惠卷类型
      */
-    private boolean checkCouponType(CouponTemplateDTO dto) {
-        if (dto.getType() == CouponTypeEnum.FULL_MONEY_CUT.getValue()) {
-            return (dto.getFullMoney() != null && dto.getMinus() != null);
-        } else if (dto.getType() == CouponTypeEnum.DISCOUNT.getValue()) {
-            return dto.getDiscount() != null;
-        } else if (dto.getType() == CouponTypeEnum.ALL.getValue()) {
+    private boolean checkCouponType(CouponTemplateEvt evt) {
+        if (evt.getType() == CouponTypeEnum.FULL_MONEY_CUT.getValue()) {
+            return (evt.getFullMoney() != null && evt.getMinus() != null);
+        } else if (evt.getType() == CouponTypeEnum.DISCOUNT.getValue()) {
+            return evt.getDiscount() != null;
+        } else if (evt.getType() == CouponTypeEnum.ALL.getValue()) {
             return true;
-        } else if (dto.getType() == CouponTypeEnum.FULL_MONEY_DISCOUNT.getValue()) {
-            return (dto.getFullMoney() != null && dto.getDiscount() != null);
+        } else if (evt.getType() == CouponTypeEnum.FULL_MONEY_DISCOUNT.getValue()) {
+            return (evt.getFullMoney() != null && evt.getDiscount() != null);
         } else {
             return false;
         }

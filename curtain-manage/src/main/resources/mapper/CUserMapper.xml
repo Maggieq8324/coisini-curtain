@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coisini.curtain.mapper.CUserMapper">
 
-    <select id="searchCUserByKeyword" resultType="com.coisini.curtain.model.CUserDO">
+    <select id="searchCUserByKeyword" resultType="com.coisini.curtain.model.ClientUser">
         SELECT u.* FROM `user` u
         WHERE u.delete_time IS NULL
         <if test="keyword != null">

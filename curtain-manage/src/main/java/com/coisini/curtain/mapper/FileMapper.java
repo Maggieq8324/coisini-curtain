@@ -1,6 +1,6 @@
 package com.coisini.curtain.mapper;
 
-import com.coisini.curtain.model.FileDO;
+import com.coisini.curtain.model.FileModel;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
  * @author pedro@TaleLin
  */
 @Repository
-public interface FileMapper extends BaseMapper<FileDO> {
+public interface FileMapper extends BaseMapper<FileModel> {
 
-    FileDO selectByMd5(@Param("md5") String md5);
+    FileModel selectByMd5(@Param("md5") String md5);
 
     int selectCountByMd5(@Param("md5") String md5);
 }

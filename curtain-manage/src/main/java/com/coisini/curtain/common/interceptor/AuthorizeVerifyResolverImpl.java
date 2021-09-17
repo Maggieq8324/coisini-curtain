@@ -7,8 +7,8 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.coisini.curtain.common.LocalUser;
-import com.coisini.curtain.model.PermissionDO;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.Permission;
+import com.coisini.curtain.model.User;
 import com.coisini.curtain.service.UserService;
 import io.github.talelin.autoconfigure.bean.MetaInfo;
 import io.github.talelin.autoconfigure.exception.AuthenticationException;
@@ -49,10 +49,10 @@ public class AuthorizeVerifyResolverImpl implements AuthorizeVerifyResolver {
     @Autowired
     private GroupService groupService;
 
-    @Value("${lin.file.domain}")
+    @Value("${coisini.file.domain}")
     private String domain;
 
-    @Value("${lin.file.serve-path:assets/**}")
+    @Value("${coisini.file.serve-path:assets/**}")
     private String servePath;
 
 
@@ -73,14 +73,14 @@ public class AuthorizeVerifyResolverImpl implements AuthorizeVerifyResolver {
     @Override
     public boolean handleGroup(HttpServletRequest request, HttpServletResponse response, MetaInfo meta) {
         handleLogin(request, response, meta);
-        UserDO user = LocalUser.getLocalUser();
+        User user = LocalUser.getLocalUser();
         if (verifyAdmin(user)) {
             return true;
         }
         Integer userId = user.getId();
         String permission = meta.getPermission();
         String module = meta.getModule();
-        List<PermissionDO> permissions = userService.getUserPermissions(userId);
+        List<Permission> permissions = userService.getUserPermissions(userId);
         boolean matched = permissions.stream().anyMatch(it -> it.getModule().equals(module) && it.getName().equals(permission));
         if (!matched) {
             throw new AuthenticationException("you don't have the permission to access", 10001);
@@ -91,7 +91,7 @@ public class AuthorizeVerifyResolverImpl implements AuthorizeVerifyResolver {
     @Override
     public boolean handleAdmin(HttpServletRequest request, HttpServletResponse response, MetaInfo meta) {
         handleLogin(request, response, meta);
-        UserDO user = LocalUser.getLocalUser();
+        User user = LocalUser.getLocalUser();
         if (!verifyAdmin(user)) {
             throw new AuthenticationException("you don't have the permission to access", 10001);
         }
@@ -129,7 +129,7 @@ public class AuthorizeVerifyResolverImpl implements AuthorizeVerifyResolver {
             throw new TokenInvalidException("token is invalid, can't be decode", 10041);
         }
         int identity = claims.get("identity").asInt();
-        UserDO user = userService.getById(identity);
+        User user = userService.getById(identity);
         if (user == null) {
             throw new NotFoundException("user is not found", 10021);
         }
@@ -151,7 +151,7 @@ public class AuthorizeVerifyResolverImpl implements AuthorizeVerifyResolver {
      *
      * @param user 用户
      */
-    private boolean verifyAdmin(UserDO user) {
+    private boolean verifyAdmin(User user) {
         return groupService.checkIsRootByUserId(user.getId());
     }
 

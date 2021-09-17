@@ -2,9 +2,9 @@ package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.bo.GroupPermissionBO;
+import com.coisini.curtain.bo.GroupPermissionBo;
 import com.coisini.curtain.common.enumeration.GroupLevelEnum;
-import com.coisini.curtain.model.GroupDO;
+import com.coisini.curtain.model.Group;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @author pedro@TaleLin
  * @author Juzi@TaleLin
  */
-public interface GroupService extends IService<GroupDO> {
+public interface GroupService extends IService<Group> {
 
     /**
      * 获得用户的所有分组
@@ -20,7 +20,7 @@ public interface GroupService extends IService<GroupDO> {
      * @param userId 用户id
      * @return 所有分组
      */
-    List<GroupDO> getUserGroupsByUserId(Integer userId);
+    List<Group> getUserGroupsByUserId(Integer userId);
 
     /**
      * 获得用户的所有分组id
@@ -37,7 +37,7 @@ public interface GroupService extends IService<GroupDO> {
      * @param page  那一页
      * @return 分组页
      */
-    IPage<GroupDO> getGroupPage(int page, int count);
+    IPage<Group> getGroupPage(int page, int count);
 
     /**
      * 通过id检查分组是否存在
@@ -53,7 +53,7 @@ public interface GroupService extends IService<GroupDO> {
      * @param id 分组id
      * @return 分组及权限
      */
-    GroupPermissionBO getGroupAndPermissions(Integer id);
+    GroupPermissionBo getGroupAndPermissions(Integer id);
 
     /**
      * 通过名称检查分组是否存在
@@ -101,7 +101,7 @@ public interface GroupService extends IService<GroupDO> {
      * @param level GroupLevelEnum 枚举类
      * @return 用户组
      */
-    GroupDO getParticularGroupByLevel(GroupLevelEnum level);
+    Group getParticularGroupByLevel(GroupLevelEnum level);
 
     /**
      * 通过分组级别获取超级管理员分组或游客分组的id

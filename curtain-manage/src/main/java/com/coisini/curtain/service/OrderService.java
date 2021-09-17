@@ -2,20 +2,20 @@ package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.model.OrderDO;
-import com.coisini.curtain.vo.OrderSimplifyVO;
+import com.coisini.curtain.model.Order;
+import com.coisini.curtain.vo.OrderSimplifyVo;
 
 import java.util.Date;
 import java.util.List;
 
-public interface OrderService extends IService<OrderDO> {
+public interface OrderService extends IService<Order> {
 
     void changeOrderStatus(Integer id, Integer status);
 
-    IPage<OrderDO> getOrderByPage(Integer count, Integer page);
+    IPage<Order> getOrderByPage(Integer count, Integer page);
 
-    List<OrderSimplifyVO> convertFromDO(List<OrderDO> orders);
+    List<OrderSimplifyVo> convertFromDO(List<Order> orders);
 
-    IPage<OrderDO> search(Integer page, Integer count, String keyword, Date start, Date end);
+    IPage<Order> search(Integer page, Integer count, String keyword, Date start, Date end);
 
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.CouponMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.CouponDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.Coupon">
         <id column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="start_time" property="startTime"/>

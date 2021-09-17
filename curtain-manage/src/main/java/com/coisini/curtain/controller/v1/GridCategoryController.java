@@ -1,16 +1,16 @@
 package com.coisini.curtain.controller.v1;
 
-import com.coisini.curtain.vo.DeletedVO;
+import com.coisini.curtain.vo.DeletedVo;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.core.annotation.GroupRequired;
 import io.github.talelin.core.annotation.LoginRequired;
 import io.github.talelin.core.annotation.PermissionMeta;
 import io.github.talelin.core.annotation.PermissionModule;
-import com.coisini.curtain.dto.GridCategoryDTO;
-import com.coisini.curtain.model.GridCategoryDO;
+import com.coisini.curtain.evt.GridCategoryEvt;
+import com.coisini.curtain.model.GridCategory;
 import com.coisini.curtain.service.GridCategoryService;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.UpdatedVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,33 +29,33 @@ public class GridCategoryController {
     @PostMapping("")
     @PermissionMeta(value = "创建六宫格")
     @GroupRequired
-    public CreatedVO create(@Validated @RequestBody GridCategoryDTO dto) {
-        gridCategoryService.createGridCategory(dto);
-        return new CreatedVO();
+    public CreatedVo create(@Validated @RequestBody GridCategoryEvt evt) {
+        gridCategoryService.createGridCategory(evt);
+        return new CreatedVo();
     }
 
     @PutMapping("/{id}")
     @PermissionMeta(value = "更新六宫格")
     @GroupRequired
-    public UpdatedVO update(
-            @Validated @RequestBody GridCategoryDTO dto,
+    public UpdatedVo update(
+            @Validated @RequestBody GridCategoryEvt evt,
             @PathVariable @Positive(message = "{id.positive}") Integer id) {
-        gridCategoryService.updateGridCategory(dto, id);
-        return new UpdatedVO();
+        gridCategoryService.updateGridCategory(evt, id);
+        return new UpdatedVo();
     }
 
     @DeleteMapping("/{id}")
     @PermissionMeta(value = "删除六宫格")
     @GroupRequired
-    public DeletedVO delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
+    public DeletedVo delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
         gridCategoryService.deleteGridCategory(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
     @GetMapping("/{id}")
     @LoginRequired
-    public GridCategoryDO get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
-        GridCategoryDO gridCategory = gridCategoryService.getById(id);
+    public GridCategory get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+        GridCategory gridCategory = gridCategoryService.getById(id);
         if (gridCategory == null) {
             throw new NotFoundException(50000);
         }
@@ -64,7 +64,7 @@ public class GridCategoryController {
 
     @GetMapping("/list")
     @LoginRequired
-    public List<GridCategoryDO> getList() {
+    public List<GridCategory> getList() {
         return gridCategoryService.list();
     }
 }

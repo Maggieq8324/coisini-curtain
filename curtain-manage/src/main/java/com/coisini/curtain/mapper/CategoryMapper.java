@@ -1,7 +1,7 @@
 package com.coisini.curtain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.coisini.curtain.model.CategoryDO;
+import com.coisini.curtain.model.Category;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @since 2020-05-27
  */
 @Repository
-public interface CategoryMapper extends BaseMapper<CategoryDO> {
+public interface CategoryMapper extends BaseMapper<Category> {
 
 }

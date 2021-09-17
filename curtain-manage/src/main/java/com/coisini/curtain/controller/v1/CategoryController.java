@@ -1,19 +1,19 @@
 package com.coisini.curtain.controller.v1;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.coisini.curtain.vo.DeletedVO;
+import com.coisini.curtain.vo.DeletedVo;
 import io.github.talelin.core.annotation.GroupRequired;
 import io.github.talelin.core.annotation.LoginRequired;
 import io.github.talelin.core.annotation.PermissionMeta;
 import io.github.talelin.core.annotation.PermissionModule;
 import com.coisini.curtain.common.enumeration.CategoryRootOrNotEnum;
 import com.coisini.curtain.common.util.PageUtil;
-import com.coisini.curtain.dto.CategoryDTO;
-import com.coisini.curtain.model.CategoryDO;
+import com.coisini.curtain.evt.CategoryEvt;
+import com.coisini.curtain.model.Category;
 import com.coisini.curtain.service.CategoryService;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.PageResponseVO;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.PageResponseVo;
+import com.coisini.curtain.vo.UpdatedVo;
 import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,40 +36,40 @@ public class CategoryController {
     @PostMapping("")
     @PermissionMeta(value = "创建分类")
     @GroupRequired
-    public CreatedVO create(@Validated @RequestBody CategoryDTO dto) {
-        CategoryDO categoryDO = new CategoryDO();
-        BeanUtils.copyProperties(dto, categoryDO);
-        categoryService.save(categoryDO);
-        return new CreatedVO();
+    public CreatedVo create(@Validated @RequestBody CategoryEvt evt) {
+        Category category = new Category();
+        BeanUtils.copyProperties(evt, category);
+        categoryService.save(category);
+        return new CreatedVo();
     }
 
     @PutMapping("/{id}")
     @PermissionMeta(value = "更新分类")
-    public UpdatedVO update(
-            @RequestBody @Validated CategoryDTO dto,
+    public UpdatedVo update(
+            @RequestBody @Validated CategoryEvt evt,
             @PathVariable @Positive(message = "{id.positive}") Integer id) {
-        categoryService.updateCategory(dto, id);
-        return new UpdatedVO();
+        categoryService.updateCategory(evt, id);
+        return new UpdatedVo();
     }
 
     @DeleteMapping("/{id}")
     @PermissionMeta(value = "删除分类")
     @GroupRequired
-    public DeletedVO delete(
+    public DeletedVo delete(
             @PathVariable @Positive(message = "{id.positive}") Integer id) {
         categoryService.deleteCategory(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
     @GetMapping("/{id}")
     @LoginRequired
-    public CategoryDO get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+    public Category get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
         return categoryService.getCategoryById(id);
     }
 
     @GetMapping("/page")
     @LoginRequired
-    public PageResponseVO<CategoryDO> page(
+    public PageResponseVo<Category> page(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
@@ -77,13 +77,13 @@ public class CategoryController {
             @Min(value = 0, message = "{page.number.min}") Integer page,
             @Min(value = 0) @Max(value = 1) Integer root
     ) {
-        IPage<CategoryDO> paging = categoryService.getCategoriesByPage(count, page, root);
+        IPage<Category> paging = categoryService.getCategoriesByPage(count, page, root);
         return PageUtil.build(paging);
     }
 
     @GetMapping("/sub-page")
     @LoginRequired
-    public PageResponseVO<CategoryDO> subPage(
+    public PageResponseVo<Category> subPage(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
@@ -91,15 +91,15 @@ public class CategoryController {
             @Min(value = 0, message = "{page.number.min}") Integer page,
             @RequestParam(name = "id") @Positive(message = "{id}") Integer id
     ) {
-        IPage<CategoryDO> paging = categoryService.getSubCategoriesByPage(count, page, id);
+        IPage<Category> paging = categoryService.getSubCategoriesByPage(count, page, id);
         return PageUtil.build(paging);
     }
 
     @GetMapping("/list")
     @LoginRequired
-    public List<CategoryDO> getList() {
+    public List<Category> getList() {
         val notRoot = CategoryRootOrNotEnum.NOT_ROOT;
-        return this.categoryService.lambdaQuery().eq(CategoryDO::getIsRoot, notRoot).list();
+        return this.categoryService.lambdaQuery().eq(Category::getIsRoot, notRoot).list();
     }
 
 }

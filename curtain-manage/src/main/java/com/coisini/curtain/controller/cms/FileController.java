@@ -1,6 +1,6 @@
 package com.coisini.curtain.controller.cms;
 
-import com.coisini.curtain.bo.FileBO;
+import com.coisini.curtain.bo.FileBo;
 import io.github.talelin.core.annotation.LoginRequired;
 import com.coisini.curtain.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class FileController {
      */
     @PostMapping
     @LoginRequired
-    public List<FileBO> upload(MultipartHttpServletRequest multipartHttpServletRequest) {
+    public List<FileBo> upload(MultipartHttpServletRequest multipartHttpServletRequest) {
         MultiValueMap<String, MultipartFile> fileMap =
                 multipartHttpServletRequest.getMultiFileMap();
         return fileService.upload(fileMap);

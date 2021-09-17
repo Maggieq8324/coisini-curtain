@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import io.github.talelin.core.token.DoubleJWT;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.User;
 import com.coisini.curtain.service.GroupService;
 import com.coisini.curtain.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
                 return false;
             }
             int identity = claims.get("identity").asInt();
-            UserDO user = userService.getById(identity);
+            User user = userService.getById(identity);
             if (user == null) {
                 writeMessageToBody(response, "user is not found");
                 return false;
@@ -78,7 +78,7 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
 
     }
 
-    private boolean verifyAdmin(UserDO user) {
+    private boolean verifyAdmin(User user) {
         return groupService.checkIsRootByUserId(user.getId());
     }
 

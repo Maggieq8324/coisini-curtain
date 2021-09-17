@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.SpecValueMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpecValueDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpecValue">
         <id column="id" property="id" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -14,7 +14,7 @@
     </resultMap>
 
     <!-- SpecKeyAndValue查询映射结果 -->
-    <resultMap id="SpecKeyAndValueResultMap" type="com.coisini.curtain.model.SpecKeyValueDO">
+    <resultMap id="SpecKeyAndValueResultMap" type="com.coisini.curtain.model.SpecKeyValue">
         <result column="key_id" property="keyId"/>
         <result column="value_id" property="valueId"/>
         <result column="spec_value" property="value"/>

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
  * @author pedro@TaleLin
  */
 @Component
-@ConfigurationProperties("lin.file")
+@ConfigurationProperties("coisini.file")
 @PropertySource(
-        value = "classpath:com/coisini/curtain/extension/file/config.yml",
+        value = "classpath:com/coisini/curtain/common/file/config.yml",
         encoding = "UTF-8", factory = YamlPropertySourceFactory.class)
 public class FileProperties {
 

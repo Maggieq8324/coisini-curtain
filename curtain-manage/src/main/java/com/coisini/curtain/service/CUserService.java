@@ -2,13 +2,13 @@ package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.model.CUserDO;
+import com.coisini.curtain.model.ClientUser;
 
-public interface CUserService extends IService<CUserDO> {
+public interface CUserService extends IService<ClientUser> {
 
-    CUserDO getParsedUserById(Integer id);
+    ClientUser getParsedUserById(Integer id);
 
-    IPage<CUserDO> getUserByPage(Integer count, Integer page);
+    IPage<ClientUser> getUserByPage(Integer count, Integer page);
 
-    IPage<CUserDO> search(Integer page, Integer count, String keyword);
+    IPage<ClientUser> search(Integer page, Integer count, String keyword);
 }

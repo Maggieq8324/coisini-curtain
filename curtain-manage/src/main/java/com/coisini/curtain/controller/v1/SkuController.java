@@ -2,20 +2,20 @@ package com.coisini.curtain.controller.v1;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.coisini.curtain.common.util.PageUtil;
-import com.coisini.curtain.dto.SkuDTO;
-import com.coisini.curtain.model.SkuDO;
-import com.coisini.curtain.model.SkuDetailDO;
+import com.coisini.curtain.evt.SkuEvt;
+import com.coisini.curtain.model.Sku;
+import com.coisini.curtain.model.SkuDetail;
 import com.coisini.curtain.service.SkuSpecService;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.DeletedVO;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.DeletedVo;
+import com.coisini.curtain.vo.UpdatedVo;
 import io.github.talelin.core.annotation.GroupRequired;
 import io.github.talelin.core.annotation.LoginRequired;
 import io.github.talelin.core.annotation.PermissionMeta;
 import io.github.talelin.core.annotation.PermissionModule;
 import com.coisini.curtain.common.mybatis.Page;
 import com.coisini.curtain.service.SkuService;
-import com.coisini.curtain.vo.PageResponseVO;
+import com.coisini.curtain.vo.PageResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,50 +41,50 @@ public class SkuController {
     @PostMapping("")
     @PermissionMeta("创建SKU")
     @GroupRequired
-    public CreatedVO create(@RequestBody @Validated SkuDTO dto) {
-        skuService.create(dto);
-        return new CreatedVO();
+    public CreatedVo create(@RequestBody @Validated SkuEvt evt) {
+        skuService.create(evt);
+        return new CreatedVo();
     }
 
     @PutMapping("/{id}")
     @PermissionMeta("更新SKU")
     @GroupRequired
-    public UpdatedVO update(@RequestBody @Validated SkuDTO dto,
+    public UpdatedVo update(@RequestBody @Validated SkuEvt evt,
                             @PathVariable @Positive(message = "{id.positive}") Integer id) {
-        skuService.update(dto, id);
-        return new UpdatedVO();
+        skuService.update(evt, id);
+        return new UpdatedVo();
     }
 
     @DeleteMapping("/{id}")
     @PermissionMeta("删除SKU")
-    public DeletedVO delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
+    public DeletedVo delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
         skuService.delete(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
     @GetMapping("/{id}/detail")
     @LoginRequired
-    public SkuDetailDO getDetail(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+    public SkuDetail getDetail(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
         return skuService.getDetail(id);
     }
 
     @GetMapping("/by/spu/{id}")
     @LoginRequired
-    public List<SkuDO> getBySpuId(@PathVariable(value = "id") @Positive Integer spuId) {
-        return this.skuService.lambdaQuery().eq(SkuDO::getSpuId, spuId).list();
+    public List<Sku> getBySpuId(@PathVariable(value = "id") @Positive Integer spuId) {
+        return this.skuService.lambdaQuery().eq(Sku::getSpuId, spuId).list();
     }
 
     @GetMapping("/page")
     @LoginRequired
-    public PageResponseVO<SkuDO> page(
+    public PageResponseVo<Sku> page(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
             @RequestParam(name = "page", required = false, defaultValue = "0")
             @Min(value = 0, message = "{page.number.min}") Integer page
     ) {
-        Page<SkuDO> pager = new Page<>(page, count);
-        IPage<SkuDO> paging = skuService.getBaseMapper().selectPage(pager, null);
+        Page<Sku> pager = new Page<>(page, count);
+        IPage<Sku> paging = skuService.getBaseMapper().selectPage(pager, null);
         return PageUtil.build(paging);
     }
 

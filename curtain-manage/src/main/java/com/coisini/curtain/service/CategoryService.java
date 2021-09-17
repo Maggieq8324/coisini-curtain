@@ -2,19 +2,19 @@ package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.CategoryDTO;
-import com.coisini.curtain.model.CategoryDO;
+import com.coisini.curtain.evt.CategoryEvt;
+import com.coisini.curtain.model.Category;
 
-public interface CategoryService extends IService<CategoryDO> {
+public interface CategoryService extends IService<Category> {
 
-    void updateCategory(CategoryDTO dto, Integer id);
+    void updateCategory(CategoryEvt evt, Integer id);
 
     void deleteCategory(Integer id);
 
-    CategoryDO getCategoryById(Integer id);
+    Category getCategoryById(Integer id);
 
-    IPage<CategoryDO> getCategoriesByPage(Integer count, Integer page, Integer root);
+    IPage<Category> getCategoriesByPage(Integer count, Integer page, Integer root);
 
-    IPage<CategoryDO> getSubCategoriesByPage(Integer count, Integer page, Integer id);
+    IPage<Category> getSubCategoriesByPage(Integer count, Integer page, Integer id);
 
 }

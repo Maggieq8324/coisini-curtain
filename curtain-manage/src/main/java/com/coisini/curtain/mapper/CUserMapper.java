@@ -3,12 +3,12 @@ package com.coisini.curtain.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.model.CUserDO;
+import com.coisini.curtain.model.ClientUser;
 
 /**
  * @author TaleLin
  */
-public interface CUserMapper extends BaseMapper<CUserDO> {
+public interface CUserMapper extends BaseMapper<ClientUser> {
 
     /**
      * 模糊查询C端用户
@@ -16,6 +16,6 @@ public interface CUserMapper extends BaseMapper<CUserDO> {
      * @param keyword 关键字
      * @return IPage
      */
-    IPage<CUserDO> searchCUserByKeyword(Page<CUserDO> pager, String keyword);
+    IPage<ClientUser> searchCUserByKeyword(Page<ClientUser> pager, String keyword);
 
 }

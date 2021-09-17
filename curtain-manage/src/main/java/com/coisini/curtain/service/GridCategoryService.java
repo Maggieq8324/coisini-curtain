@@ -1,14 +1,14 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.GridCategoryDTO;
-import com.coisini.curtain.model.GridCategoryDO;
+import com.coisini.curtain.evt.GridCategoryEvt;
+import com.coisini.curtain.model.GridCategory;
 
-public interface GridCategoryService extends IService<GridCategoryDO> {
+public interface GridCategoryService extends IService<GridCategory> {
 
-    void createGridCategory(GridCategoryDTO dto);
+    void createGridCategory(GridCategoryEvt evt);
 
-    void updateGridCategory(GridCategoryDTO dto, Integer id);
+    void updateGridCategory(GridCategoryEvt evt, Integer id);
 
     void deleteGridCategory(Integer id);
 

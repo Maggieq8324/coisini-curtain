@@ -1,16 +1,16 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.ActivityDTO;
-import com.coisini.curtain.model.ActivityDO;
-import com.coisini.curtain.model.ActivityDetailDO;
+import com.coisini.curtain.evt.ActivityEvt;
+import com.coisini.curtain.model.Activity;
+import com.coisini.curtain.model.ActivityDetail;
 
-public interface ActivityService extends IService<ActivityDO> {
+public interface ActivityService extends IService<Activity> {
 
-    void create(ActivityDTO dto);
+    void create(ActivityEvt evt);
 
-    void update(ActivityDTO dto, Integer id);
+    void update(ActivityEvt evt, Integer id);
 
-    ActivityDetailDO getDetailById(Integer id);
+    ActivityDetail getDetailById(Integer id);
 
 }

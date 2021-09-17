@@ -1,6 +1,6 @@
 package com.coisini.curtain.mapper;
 
-import com.coisini.curtain.model.SpuImgDO;
+import com.coisini.curtain.model.SpuImg;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @author generator@TaleLin
  * @since 2020-05-27
  */
-public interface SpuImgMapper extends BaseMapper<SpuImgDO> {
+public interface SpuImgMapper extends BaseMapper<SpuImg> {
 
     /**
      * 物理删除spu轮播图

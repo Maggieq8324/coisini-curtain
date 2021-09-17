@@ -1,18 +1,18 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.SkuDTO;
-import com.coisini.curtain.model.SkuDO;
-import com.coisini.curtain.model.SkuDetailDO;
+import com.coisini.curtain.evt.SkuEvt;
+import com.coisini.curtain.model.Sku;
+import com.coisini.curtain.model.SkuDetail;
 
-public interface SkuService extends IService<SkuDO> {
+public interface SkuService extends IService<Sku> {
 
-    void create(SkuDTO dto);
+    void create(SkuEvt evt);
 
-    void update(SkuDTO dto, Integer id);
+    void update(SkuEvt evt, Integer id);
 
     void delete(Integer id);
 
-    SkuDetailDO getDetail(Integer id);
+    SkuDetail getDetail(Integer id);
 
 }

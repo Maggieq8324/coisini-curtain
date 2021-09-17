@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.SpuImgMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpuImgDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpuImg">
         <id column="id" property="id" />
         <result column="delete_time" property="deleteTime" />
         <result column="update_time" property="updateTime" />

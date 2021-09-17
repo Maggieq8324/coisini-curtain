@@ -1,8 +1,8 @@
 package com.coisini.curtain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.coisini.curtain.model.SpuDO;
-import com.coisini.curtain.model.SpuDetailDO;
+import com.coisini.curtain.model.Spu;
+import com.coisini.curtain.model.SpuDetail;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -15,14 +15,14 @@ import java.util.List;
  * @author generator@TaleLin
  * @since 2020-05-23
  */
-public interface SpuMapper extends BaseMapper<SpuDO> {
+public interface SpuMapper extends BaseMapper<Spu> {
 
     /**
      * 获取spu详情
      * @param id spu的id
      * @return SpuDetailDO
      */
-    SpuDetailDO getDetail(Integer id);
+    SpuDetail getDetail(Integer id);
 
     /**
      * 获取指定spu的规格id列表

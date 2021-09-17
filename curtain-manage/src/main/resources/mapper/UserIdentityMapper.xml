@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.UserIdentityMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.UserIdentityDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.UserIdentity">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
         <result column="identity_type" property="identityType" />

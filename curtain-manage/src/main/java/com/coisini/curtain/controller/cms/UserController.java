@@ -1,14 +1,14 @@
 package com.coisini.curtain.controller.cms;
 
 import com.coisini.curtain.common.LocalUser;
-import com.coisini.curtain.dto.user.ChangePasswordDTO;
-import com.coisini.curtain.dto.user.LoginDTO;
+import com.coisini.curtain.evt.user.ChangePasswordEvt;
+import com.coisini.curtain.evt.user.LoginEvt;
 import com.coisini.curtain.service.UserIdentityService;
 import com.coisini.curtain.service.UserService;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.UpdatedVO;
-import com.coisini.curtain.vo.UserInfoVO;
-import com.coisini.curtain.vo.UserPermissionVO;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.UpdatedVo;
+import com.coisini.curtain.vo.UserInfoVo;
+import com.coisini.curtain.vo.UserPermissionVo;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.autoconfigure.exception.ParameterException;
 import io.github.talelin.core.annotation.AdminRequired;
@@ -17,10 +17,10 @@ import io.github.talelin.core.annotation.PermissionModule;
 import io.github.talelin.core.annotation.RefreshRequired;
 import io.github.talelin.core.token.DoubleJWT;
 import io.github.talelin.core.token.Tokens;
-import com.coisini.curtain.dto.user.RegisterDTO;
-import com.coisini.curtain.dto.user.UpdateInfoDTO;
-import com.coisini.curtain.model.GroupDO;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.evt.user.RegisterEvt;
+import com.coisini.curtain.evt.user.UpdateInfoEvt;
+import com.coisini.curtain.model.Group;
+import com.coisini.curtain.model.User;
 import com.coisini.curtain.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -56,17 +56,17 @@ public class UserController {
      */
     @PostMapping("/register")
     @AdminRequired
-    public CreatedVO<String> register(@RequestBody @Validated RegisterDTO validator) {
+    public CreatedVo<String> register(@RequestBody @Validated RegisterEvt validator) {
         userService.createUser(validator);
-        return new CreatedVO(11);
+        return new CreatedVo(11);
     }
 
     /**
      * 用户登陆
      */
     @PostMapping("/login")
-    public Tokens login(@RequestBody @Validated LoginDTO validator) {
-        UserDO user = userService.getUserByUsername(validator.getUsername());
+    public Tokens login(@RequestBody @Validated LoginEvt validator) {
+        User user = userService.getUserByUsername(validator.getUsername());
         if (user == null) {
             throw new NotFoundException("user not found", 10021);
         }
@@ -85,9 +85,9 @@ public class UserController {
      */
     @PutMapping
     @LoginRequired
-    public UpdatedVO update(@RequestBody @Validated UpdateInfoDTO validator) {
+    public UpdatedVo update(@RequestBody @Validated UpdateInfoEvt validator) {
         userService.updateUserInfo(validator);
-        return new UpdatedVO(6);
+        return new UpdatedVo(6);
     }
 
     /**
@@ -95,9 +95,9 @@ public class UserController {
      */
     @PutMapping("/change_password")
     @LoginRequired
-    public UpdatedVO updatePassword(@RequestBody @Validated ChangePasswordDTO validator) {
+    public UpdatedVo updatePassword(@RequestBody @Validated ChangePasswordEvt validator) {
         userService.changeUserPassword(validator);
-        return new UpdatedVO(4);
+        return new UpdatedVo(4);
     }
 
     /**
@@ -106,7 +106,7 @@ public class UserController {
     @GetMapping("/refresh")
     @RefreshRequired
     public Tokens getRefreshToken() {
-        UserDO user = LocalUser.getLocalUser();
+        User user = LocalUser.getLocalUser();
         return jwt.generateTokens(user.getId());
     }
 
@@ -115,11 +115,11 @@ public class UserController {
      */
     @GetMapping("/permissions")
     @LoginRequired
-    public UserPermissionVO getPermissions() {
-        UserDO user = LocalUser.getLocalUser();
+    public UserPermissionVo getPermissions() {
+        User user = LocalUser.getLocalUser();
         boolean admin = groupService.checkIsRootByUserId(user.getId());
         List<Map<String, List<Map<String, String>>>> permissions = userService.getStructualUserPermissions(user.getId());
-        UserPermissionVO userPermissions = new UserPermissionVO(user, permissions);
+        UserPermissionVo userPermissions = new UserPermissionVo(user, permissions);
         userPermissions.setAdmin(admin);
         return userPermissions;
     }
@@ -129,9 +129,9 @@ public class UserController {
      */
     @LoginRequired
     @GetMapping("/information")
-    public UserInfoVO getInformation() {
-        UserDO user = LocalUser.getLocalUser();
-        List<GroupDO> groups = groupService.getUserGroupsByUserId(user.getId());
-        return new UserInfoVO(user, groups);
+    public UserInfoVo getInformation() {
+        User user = LocalUser.getLocalUser();
+        List<Group> groups = groupService.getUserGroupsByUserId(user.getId());
+        return new UserInfoVo(user, groups);
     }
 }

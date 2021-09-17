@@ -2,7 +2,7 @@ package com.coisini.curtain.common.aop;
 
 import cn.hutool.core.util.StrUtil;
 import com.coisini.curtain.common.configuration.CodeMessageConfiguration;
-import com.coisini.curtain.vo.UnifyResponseVO;
+import com.coisini.curtain.vo.UnifyResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -28,8 +28,8 @@ public class ResultAspect {
 
     @AfterReturning(returning = "ret", pointcut = "handlePlaceholder()")
     public void doAfterReturning(Object ret) throws Throwable {
-        if (ret instanceof UnifyResponseVO) {
-            UnifyResponseVO result = (UnifyResponseVO) ret;
+        if (ret instanceof UnifyResponseVo) {
+            UnifyResponseVo result = (UnifyResponseVo) ret;
             int code = result.getCode();
             String message = CodeMessageConfiguration.getMessage(code);
             if (StrUtil.isNotBlank(message) && StrUtil.isBlank((CharSequence) result.getMessage())) {

@@ -2,7 +2,7 @@ package com.coisini.curtain.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.model.OrderDO;
+import com.coisini.curtain.model.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,7 +16,7 @@ import java.util.Date;
  * @author generator@TaleLin
  * @since 2020-05-28
  */
-public interface OrderMapper extends BaseMapper<OrderDO> {
+public interface OrderMapper extends BaseMapper<Order> {
 
     /**
      * 修改订单状态
@@ -34,6 +34,6 @@ public interface OrderMapper extends BaseMapper<OrderDO> {
      * @param end 结束时间
      * @return IPage
      */
-    IPage<OrderDO> searchOrders(Page<OrderDO> pager, String keyword, Date start, Date end);
+    IPage<Order> searchOrders(Page<Order> pager, String keyword, Date start, Date end);
 
 }

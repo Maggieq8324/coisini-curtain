@@ -1,7 +1,7 @@
 package com.coisini.curtain.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.coisini.curtain.model.PermissionDO;
+import com.coisini.curtain.model.Permission;
 import com.coisini.curtain.service.PermissionService;
 import com.coisini.curtain.mapper.PermissionMapper;
 import org.springframework.stereotype.Service;
@@ -16,16 +16,16 @@ import java.util.Map;
  * @author Juzi@TaleLin
  */
 @Service
-public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, PermissionDO> implements PermissionService {
+public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements PermissionService {
 
 
     @Override
-    public List<PermissionDO> getPermissionByGroupId(Integer groupId) {
+    public List<Permission> getPermissionByGroupId(Integer groupId) {
         return this.baseMapper.selectPermissionsByGroupId(groupId);
     }
 
     @Override
-    public List<PermissionDO> getPermissionByGroupIds(List<Integer> groupIds) {
+    public List<Permission> getPermissionByGroupIds(List<Integer> groupIds) {
         return this.baseMapper.selectPermissionsByGroupIds(groupIds);
     }
 
@@ -37,17 +37,17 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
      * 4. 用户的分组一般都比较少，一般情况下都在2个一下
      */
     @Override
-    public Map<Long, List<PermissionDO>> getPermissionMapByGroupIds(List<Integer> groupIds) {
+    public Map<Long, List<Permission>> getPermissionMapByGroupIds(List<Integer> groupIds) {
         HashMap map = new HashMap(groupIds.size());
         groupIds.stream().forEach(groupId -> {
-            List<PermissionDO> permissions = this.baseMapper.selectPermissionsByGroupId(groupId);
+            List<Permission> permissions = this.baseMapper.selectPermissionsByGroupId(groupId);
             map.put(groupId, permissions);
         });
         return map;
     }
 
     @Override
-    public List<Map<String, List<Map<String, String>>>> structuringPermissions(List<PermissionDO> permissions) {
+    public List<Map<String, List<Map<String, String>>>> structuringPermissions(List<Permission> permissions) {
         Map<String, List<Map<String, String>>> tmp = new HashMap();
         permissions.forEach(permission -> {
             if (!tmp.containsKey(permission.getModule())) {
@@ -74,7 +74,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public Map<String, List<String>> structuringPermissionsSimply(List<PermissionDO> permissions) {
+    public Map<String, List<String>> structuringPermissionsSimply(List<Permission> permissions) {
         // mod      permission.names
         Map<String, List<String>> res = new HashMap<>();
         permissions.forEach(permission -> {
@@ -91,7 +91,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     @Override
-    public List<PermissionDO> getPermissionByGroupIdsAndModule(List<Integer> groupIds, String module) {
+    public List<Permission> getPermissionByGroupIdsAndModule(List<Integer> groupIds, String module) {
         return this.baseMapper.selectPermissionsByGroupIdsAndModule(groupIds, module);
     }
 }

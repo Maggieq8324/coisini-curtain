@@ -1,20 +1,20 @@
 package com.coisini.curtain.controller.v1;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.coisini.curtain.dto.ThemeSpuDTO;
-import com.coisini.curtain.model.SimplifySpuDO;
-import com.coisini.curtain.model.SpuDO;
-import com.coisini.curtain.model.ThemeDO;
+import com.coisini.curtain.evt.ThemeSpuEvt;
+import com.coisini.curtain.model.SimplifySpu;
+import com.coisini.curtain.model.Spu;
+import com.coisini.curtain.model.Theme;
 import com.coisini.curtain.service.ThemeService;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.DeletedVO;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.DeletedVo;
+import com.coisini.curtain.vo.UpdatedVo;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.core.annotation.*;
 import com.coisini.curtain.common.mybatis.Page;
 import com.coisini.curtain.common.util.PageUtil;
-import com.coisini.curtain.dto.ThemeDTO;
-import com.coisini.curtain.vo.PageResponseVO;
+import com.coisini.curtain.evt.ThemeEvt;
+import com.coisini.curtain.vo.PageResponseVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -36,44 +36,44 @@ public class ThemeController {
     @PostMapping("")
     @PermissionMeta("创建主题")
     @GroupRequired
-    public CreatedVO create(@Validated @RequestBody ThemeDTO dto) {
-        ThemeDO theme = new ThemeDO();
-        BeanUtils.copyProperties(dto, theme);
+    public CreatedVo create(@Validated @RequestBody ThemeEvt evt) {
+        Theme theme = new Theme();
+        BeanUtils.copyProperties(evt, theme);
         themeService.save(theme);
-        return new CreatedVO();
+        return new CreatedVo();
     }
 
     @PutMapping("/{id}")
     @PermissionMeta("更新主题")
     @GroupRequired
-    public UpdatedVO update(
-            @Validated @RequestBody ThemeDTO dto,
+    public UpdatedVo update(
+            @Validated @RequestBody ThemeEvt evt,
             @PathVariable @Positive(message = "{id.positive}") Integer id) {
-        ThemeDO theme = themeService.getById(id);
+        Theme theme = themeService.getById(id);
         if (theme == null) {
             throw new NotFoundException(30000);
         }
-        BeanUtils.copyProperties(dto, theme);
+        BeanUtils.copyProperties(evt, theme);
         themeService.updateById(theme);
-        return new UpdatedVO();
+        return new UpdatedVo();
     }
 
     @DeleteMapping("/{id}")
     @PermissionMeta("删除主题")
     @GroupRequired
-    public DeletedVO delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
-        ThemeDO theme = themeService.getById(id);
+    public DeletedVo delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
+        Theme theme = themeService.getById(id);
         if (theme == null) {
             throw new NotFoundException(30000);
         }
         themeService.getBaseMapper().deleteById(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
     @GetMapping("/{id}")
     @LoginRequired
-    public ThemeDO get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
-        ThemeDO theme = themeService.getById(id);
+    public Theme get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+        Theme theme = themeService.getById(id);
         if (theme == null) {
             throw new NotFoundException(30000);
         }
@@ -82,15 +82,15 @@ public class ThemeController {
 
     @GetMapping("/page")
     @LoginRequired
-    public PageResponseVO<ThemeDO> page(
+    public PageResponseVo<Theme> page(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
             @RequestParam(name = "page", required = false, defaultValue = "0")
             @Min(value = 0, message = "{page.number.min}") Integer page
     ) {
-        Page<ThemeDO> pager = new Page<>(page, count);
-        IPage<ThemeDO> paging = themeService.getBaseMapper().selectPage(pager, null);
+        Page<Theme> pager = new Page<>(page, count);
+        IPage<Theme> paging = themeService.getBaseMapper().selectPage(pager, null);
         return PageUtil.build(paging);
     }
 
@@ -101,30 +101,30 @@ public class ThemeController {
      */
     @GetMapping("/spus")
     @LoginRequired
-    public List<SimplifySpuDO> getSpus(@RequestParam(name = "id") @Positive(message = "{id}") Integer id) {
+    public List<SimplifySpu> getSpus(@RequestParam(name = "id") @Positive(message = "{id}") Integer id) {
         return themeService.getSpus(id);
     }
 
     @GetMapping("/spu/list")
     @LoginRequired
-    public List<SpuDO> getSpuList(@RequestParam(name = "id") @Positive(message = "{id}") Integer id) {
+    public List<Spu> getSpuList(@RequestParam(name = "id") @Positive(message = "{id}") Integer id) {
         return themeService.getSimplifySpus(id);
     }
 
     @PostMapping("/spu")
     @PermissionMeta("创建专题下的spu")
     @GroupRequired
-    public CreatedVO addThemeSpu(@RequestBody @Validated ThemeSpuDTO dto) {
-        themeService.addThemeSpu(dto);
-        return new CreatedVO();
+    public CreatedVo addThemeSpu(@RequestBody @Validated ThemeSpuEvt evt) {
+        themeService.addThemeSpu(evt);
+        return new CreatedVo();
     }
 
     @DeleteMapping("/spu/{id}")
     @PermissionMeta("删除专题下的spu")
     @GroupRequired
-    public DeletedVO deleteThemeSpu(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+    public DeletedVo deleteThemeSpu(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
         themeService.deleteThemeSpu(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
 }

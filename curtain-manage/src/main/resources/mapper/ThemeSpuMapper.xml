@@ -3,13 +3,13 @@
 <mapper namespace="com.coisini.curtain.mapper.ThemeSpuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.ThemeSpuDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.ThemeSpu">
         <id column="id" property="id" />
         <result column="theme_id" property="themeId" />
         <result column="spu_id" property="spuId" />
     </resultMap>
 
-    <select id="getSimplifySpus" resultType="com.coisini.curtain.model.SpuDO">
+    <select id="getSimplifySpus" resultType="com.coisini.curtain.model.Spu">
         select s.id id, s.title
         from spu s
         where s.delete_time is null

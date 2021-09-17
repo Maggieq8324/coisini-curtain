@@ -1,6 +1,6 @@
 package com.coisini.curtain.mapper;
 
-import com.coisini.curtain.model.SpuKeyDO;
+import com.coisini.curtain.model.SpuKey;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author generator@TaleLin
  * @since 2020-05-27
  */
-public interface SpuKeyMapper extends BaseMapper<SpuKeyDO> {
+public interface SpuKeyMapper extends BaseMapper<SpuKey> {
 
 }

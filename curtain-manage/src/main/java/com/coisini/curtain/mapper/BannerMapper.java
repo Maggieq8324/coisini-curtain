@@ -10,18 +10,18 @@ package com.coisini.curtain.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.coisini.curtain.model.BannerDO;
+import com.coisini.curtain.model.Banner;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface BannerMapper extends BaseMapper<BannerDO> {
-    List<BannerDO> getAllBanners();
+public interface BannerMapper extends BaseMapper<Banner> {
+    List<Banner> getAllBanners();
 
     @Select("SELECT * FROM banner")
-    List<BannerDO> getAllBanners1();
+    List<Banner> getAllBanners1();
 
-    long insertBanner(BannerDO bannerDO);
+    long insertBanner(Banner banner);
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.SpecKeyMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpecKeyDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpecKey">
         <id column="id" property="id"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -14,7 +14,7 @@
         <result column="description" property="description"/>
     </resultMap>
 
-    <select id="getBySpuId" resultType="com.coisini.curtain.model.SpecKeyDO">
+    <select id="getBySpuId" resultType="com.coisini.curtain.model.SpecKey">
         #         2张表 spu_key, spec_key
         SELECT sk2.*
         FROM spu_key sk

@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.LogMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.LogDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.Log">
         <id column="id" property="id"/>
         <result column="message" property="message"/>
         <result column="user_id" property="userId"/>
@@ -17,7 +17,7 @@
         <result column="delete_time" property="deleteTime"/>
     </resultMap>
 
-    <select id="findLogsByUsernameAndRange" resultType="com.coisini.curtain.model.LogDO">
+    <select id="findLogsByUsernameAndRange" resultType="com.coisini.curtain.model.Log">
         SELECT l.* FROM lin_log l
         WHERE l.delete_time IS NULL
         <if test="name != null">
@@ -29,7 +29,7 @@
         ORDER BY l.create_time DESC
     </select>
 
-    <select id="searchLogsByUsernameAndKeywordAndRange" resultType="com.coisini.curtain.model.LogDO">
+    <select id="searchLogsByUsernameAndKeywordAndRange" resultType="com.coisini.curtain.model.Log">
         SELECT l.* FROM lin_log l
         WHERE l.delete_time IS NULL
         <if test="name != null">

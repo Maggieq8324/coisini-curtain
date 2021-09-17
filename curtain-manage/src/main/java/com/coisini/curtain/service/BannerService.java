@@ -1,16 +1,16 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.bo.BannerWithItemsBO;
-import com.coisini.curtain.dto.BannerDTO;
-import com.coisini.curtain.model.BannerDO;
+import com.coisini.curtain.bo.BannerWithItemsBo;
+import com.coisini.curtain.evt.BannerEvt;
+import com.coisini.curtain.model.Banner;
 
-public interface BannerService extends IService<BannerDO> {
+public interface BannerService extends IService<Banner> {
 
-    BannerWithItemsBO getWithItems(Integer id);
+    BannerWithItemsBo getWithItems(Integer id);
 
     void delete(Integer id);
 
-    void update(BannerDTO dto, Integer id);
+    void update(BannerEvt evt, Integer id);
 
 }

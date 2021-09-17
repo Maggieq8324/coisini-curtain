@@ -3,12 +3,12 @@ package com.coisini.curtain.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.dto.user.ChangePasswordDTO;
-import com.coisini.curtain.dto.user.RegisterDTO;
-import com.coisini.curtain.dto.user.UpdateInfoDTO;
-import com.coisini.curtain.model.GroupDO;
-import com.coisini.curtain.model.PermissionDO;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.evt.user.ChangePasswordEvt;
+import com.coisini.curtain.evt.user.RegisterEvt;
+import com.coisini.curtain.evt.user.UpdateInfoEvt;
+import com.coisini.curtain.model.Group;
+import com.coisini.curtain.model.Permission;
+import com.coisini.curtain.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @author pedro@TaleLin
  * @author Juzi@TaleLin
  */
-public interface UserService extends IService<UserDO> {
+public interface UserService extends IService<User> {
 
     /**
      * 新建用户
@@ -27,7 +27,7 @@ public interface UserService extends IService<UserDO> {
      * @param validator 新建用户校验器
      * @return 被创建的用户
      */
-    UserDO createUser(RegisterDTO validator);
+    User createUser(RegisterEvt validator);
 
     /**
      * 更新用户
@@ -35,7 +35,7 @@ public interface UserService extends IService<UserDO> {
      * @param validator 更新用户信息用户校验器
      * @return 被更新的用户
      */
-    UserDO updateUserInfo(UpdateInfoDTO validator);
+    User updateUserInfo(UpdateInfoEvt validator);
 
     /**
      * 修改用户密码
@@ -43,7 +43,7 @@ public interface UserService extends IService<UserDO> {
      * @param validator 修改密码校验器
      * @return 被修改密码的用户
      */
-    UserDO changeUserPassword(ChangePasswordDTO validator);
+    User changeUserPassword(ChangePasswordEvt validator);
 
     /**
      * 获得用户的所有分组
@@ -51,7 +51,7 @@ public interface UserService extends IService<UserDO> {
      * @param userId 用户id
      * @return 所有分组
      */
-    List<GroupDO> getUserGroups(Integer userId);
+    List<Group> getUserGroups(Integer userId);
 
     /**
      * 获得用户所有权限
@@ -67,7 +67,7 @@ public interface UserService extends IService<UserDO> {
      * @param userId 用户id
      * @return 权限
      */
-    List<PermissionDO> getUserPermissions(Integer userId);
+    List<Permission> getUserPermissions(Integer userId);
 
 
     /**
@@ -77,7 +77,7 @@ public interface UserService extends IService<UserDO> {
      * @param module 权限模块
      * @return 权限
      */
-    List<PermissionDO> getUserPermissionsByModule(Integer userId, String module);
+    List<Permission> getUserPermissionsByModule(Integer userId, String module);
 
 
     /**
@@ -86,7 +86,7 @@ public interface UserService extends IService<UserDO> {
      * @param username 用户名
      * @return 用户
      */
-    UserDO getUserByUsername(String username);
+    User getUserByUsername(String username);
 
     /**
      * 根据用户名检查用户是否存在
@@ -120,7 +120,7 @@ public interface UserService extends IService<UserDO> {
      * @param groupId 分组id
      * @return 数据页
      */
-    IPage<UserDO> getUserPageByGroupId(Page<UserDO> pager, Integer groupId);
+    IPage<User> getUserPageByGroupId(Page<User> pager, Integer groupId);
 
 
     /**

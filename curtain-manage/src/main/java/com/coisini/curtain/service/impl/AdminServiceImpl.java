@@ -3,27 +3,27 @@ package com.coisini.curtain.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.coisini.curtain.mapper.GroupPermissionMapper;
-import com.coisini.curtain.model.GroupPermissionDO;
-import com.coisini.curtain.model.PermissionDO;
-import com.coisini.curtain.model.UserIdentityDO;
+import com.coisini.curtain.model.GroupPermission;
+import com.coisini.curtain.model.Permission;
+import com.coisini.curtain.model.UserIdentity;
 import com.coisini.curtain.service.AdminService;
 import com.coisini.curtain.service.PermissionService;
 import com.coisini.curtain.service.UserIdentityService;
 import com.coisini.curtain.service.UserService;
 import io.github.talelin.autoconfigure.exception.ForbiddenException;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
-import com.coisini.curtain.bo.GroupPermissionBO;
+import com.coisini.curtain.bo.GroupPermissionBo;
 import com.coisini.curtain.common.enumeration.GroupLevelEnum;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.dto.admin.DispatchPermissionDTO;
-import com.coisini.curtain.dto.admin.DispatchPermissionsDTO;
-import com.coisini.curtain.dto.admin.NewGroupDTO;
-import com.coisini.curtain.dto.admin.RemovePermissionsDTO;
-import com.coisini.curtain.dto.admin.ResetPasswordDTO;
-import com.coisini.curtain.dto.admin.UpdateGroupDTO;
-import com.coisini.curtain.dto.admin.UpdateUserInfoDTO;
-import com.coisini.curtain.model.GroupDO;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.evt.admin.DispatchPermissionEvt;
+import com.coisini.curtain.evt.admin.DispatchPermissionsEvt;
+import com.coisini.curtain.evt.admin.NewGroupEvt;
+import com.coisini.curtain.evt.admin.RemovePermissionsEvt;
+import com.coisini.curtain.evt.admin.ResetPasswordEvt;
+import com.coisini.curtain.evt.admin.UpdateGroupEvt;
+import com.coisini.curtain.evt.admin.UpdateUserInfoEvt;
+import com.coisini.curtain.model.Group;
+import com.coisini.curtain.model.User;
 import com.coisini.curtain.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,14 +59,14 @@ public class AdminServiceImpl implements AdminService {
     private GroupPermissionMapper groupPermissionMapper;
 
     @Override
-    public IPage<UserDO> getUserPageByGroupId(Integer groupId, Integer count, Integer page) {
-        Page<UserDO> pager = new Page<>(page, count);
-        IPage<UserDO> iPage;
+    public IPage<User> getUserPageByGroupId(Integer groupId, Integer count, Integer page) {
+        Page<User> pager = new Page<>(page, count);
+        IPage<User> iPage;
         // 如果group_id为空，则以分页的形式返回所有用户
         if (groupId == null) {
-            QueryWrapper<UserDO> wrapper = new QueryWrapper<>();
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
             Integer rootUserId = userService.getRootUserId();
-            wrapper.lambda().ne(UserDO::getId, rootUserId);
+            wrapper.lambda().ne(User::getId, rootUserId);
             iPage = userService.page(pager, wrapper);
         } else {
             iPage = userService.getUserPageByGroupId(pager, groupId);
@@ -75,23 +75,23 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean changeUserPassword(Integer id, ResetPasswordDTO dto) {
+    public boolean changeUserPassword(Integer id, ResetPasswordEvt evt) {
         throwUserNotExistById(id);
-        return userIdentityService.changePassword(id, dto.getNewPassword());
+        return userIdentityService.changePassword(id, evt.getNewPassword());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
     public boolean deleteUser(Integer id) {
         throwUserNotExistById(id);
         boolean userRemoved = userService.removeById(id);
-        QueryWrapper<UserIdentityDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UserIdentityDO::getUserId, id);
+        QueryWrapper<UserIdentity> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(UserIdentity::getUserId, id);
         return userRemoved && userIdentityService.remove(wrapper);
     }
 
     @Override
-    public boolean updateUserInfo(Integer id, UpdateUserInfoDTO validator) {
+    public boolean updateUserInfo(Integer id, UpdateUserInfoEvt validator) {
         List<Integer> newGroupIds = validator.getGroupIds();
         if (newGroupIds == null || newGroupIds.isEmpty()) {
             return false;
@@ -110,26 +110,26 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public IPage<GroupDO> getGroupPage(Integer page, Integer count) {
-        IPage<GroupDO> iPage = groupService.getGroupPage(page, count);
+    public IPage<Group> getGroupPage(Integer page, Integer count) {
+        IPage<Group> iPage = groupService.getGroupPage(page, count);
         return iPage;
     }
 
     @Override
-    public GroupPermissionBO getGroup(Integer id) {
+    public GroupPermissionBo getGroup(Integer id) {
         throwGroupNotExistById(id);
         return groupService.getGroupAndPermissions(id);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = RuntimeException.class)
     @Override
-    public boolean createGroup(NewGroupDTO dto) {
-        throwGroupNameExist(dto.getName());
-        GroupDO group = GroupDO.builder().name(dto.getName()).info(dto.getInfo()).build();
+    public boolean createGroup(NewGroupEvt evt) {
+        throwGroupNameExist(evt.getName());
+        Group group = Group.builder().name(evt.getName()).info(evt.getInfo()).build();
         groupService.save(group);
-        if (dto.getPermissionIds() != null && !dto.getPermissionIds().isEmpty()) {
-            List<GroupPermissionDO> relations = dto.getPermissionIds().stream()
-                    .map(id -> new GroupPermissionDO(group.getId(), id))
+        if (evt.getPermissionIds() != null && !evt.getPermissionIds().isEmpty()) {
+            List<GroupPermission> relations = evt.getPermissionIds().stream()
+                    .map(id -> new GroupPermission(group.getId(), id))
                     .collect(Collectors.toList());
             groupPermissionMapper.insertBatch(relations);
         }
@@ -137,16 +137,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean updateGroup(Integer id, UpdateGroupDTO dto) {
+    public boolean updateGroup(Integer id, UpdateGroupEvt evt) {
         // bug 如果只修改info，不修改name，则name已经存在，此时不应该报错
-        GroupDO exist = groupService.getById(id);
+        Group exist = groupService.getById(id);
         if (exist == null) {
             throw new NotFoundException("group not found", 10024);
         }
-        if (!exist.getName().equals(dto.getName())) {
-            throwGroupNameExist(dto.getName());
+        if (!exist.getName().equals(evt.getName())) {
+            throwGroupNameExist(evt.getName());
         }
-        GroupDO group = GroupDO.builder().name(dto.getName()).info(dto.getInfo()).build();
+        Group group = Group.builder().name(evt.getName()).info(evt.getInfo()).build();
         group.setId(id);
         return groupService.updateById(group);
     }
@@ -166,46 +166,46 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public boolean dispatchPermission(DispatchPermissionDTO dto) {
-        GroupPermissionDO groupPermission = new GroupPermissionDO(dto.getGroupId(), dto.getPermissionId());
+    public boolean dispatchPermission(DispatchPermissionEvt evt) {
+        GroupPermission groupPermission = new GroupPermission(evt.getGroupId(), evt.getPermissionId());
         return groupPermissionMapper.insert(groupPermission) > 0;
     }
 
     @Override
-    public boolean dispatchPermissions(DispatchPermissionsDTO dto) {
-        List<GroupPermissionDO> relations = dto.getPermissionIds().stream()
-                .map(id -> new GroupPermissionDO(dto.getGroupId(), id))
+    public boolean dispatchPermissions(DispatchPermissionsEvt evt) {
+        List<GroupPermission> relations = evt.getPermissionIds().stream()
+                .map(id -> new GroupPermission(evt.getGroupId(), id))
                 .collect(Collectors.toList());
         return groupPermissionMapper.insertBatch(relations) > 0;
     }
 
     @Override
-    public boolean removePermissions(RemovePermissionsDTO dto) {
-        return groupPermissionMapper.deleteBatchByGroupIdAndPermissionId(dto.getGroupId(), dto.getPermissionIds()) > 0;
+    public boolean removePermissions(RemovePermissionsEvt evt) {
+        return groupPermissionMapper.deleteBatchByGroupIdAndPermissionId(evt.getGroupId(), evt.getPermissionIds()) > 0;
     }
 
     @Override
-    public List<GroupDO> getAllGroups() {
-        QueryWrapper<GroupDO> wrapper = new QueryWrapper<>();
+    public List<Group> getAllGroups() {
+        QueryWrapper<Group> wrapper = new QueryWrapper<>();
         Integer rootGroupId = groupService.getParticularGroupIdByLevel(GroupLevelEnum.ROOT);
-        wrapper.lambda().ne(GroupDO::getId, rootGroupId);
-        List<GroupDO> groups = groupService.list(wrapper);
+        wrapper.lambda().ne(Group::getId, rootGroupId);
+        List<Group> groups = groupService.list(wrapper);
         return groups;
     }
 
     @Override
-    public List<PermissionDO> getAllPermissions() {
-        QueryWrapper<PermissionDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(PermissionDO::getMount, true);
+    public List<Permission> getAllPermissions() {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Permission::getMount, true);
         return permissionService.list(wrapper);
     }
 
     @Override
-    public Map<String, List<PermissionDO>> getAllStructualPermissions() {
-        QueryWrapper<PermissionDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(PermissionDO::getMount, true);
-        List<PermissionDO> permissions = getAllPermissions();
-        Map<String, List<PermissionDO>> res = new HashMap<>();
+    public Map<String, List<Permission>> getAllStructualPermissions() {
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Permission::getMount, true);
+        List<Permission> permissions = getAllPermissions();
+        Map<String, List<Permission>> res = new HashMap<>();
         permissions.forEach(permission -> {
             if (res.containsKey(permission.getModule())) {
                 res.get(permission.getModule()).add(permission);

@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.UserGroupMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.UserGroupDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.UserGroup">
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="group_id" property="groupId"/>

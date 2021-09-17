@@ -6,7 +6,7 @@
         update `order` o set o.status = #{status} where o.id = #{id}
     </update>
 
-    <select id="searchOrders" resultType="com.coisini.curtain.model.OrderDO">
+    <select id="searchOrders" resultType="com.coisini.curtain.model.Order">
         SELECT o.* FROM `order` o
         WHERE o.delete_time IS NULL
         <if test="start != null and end != null">

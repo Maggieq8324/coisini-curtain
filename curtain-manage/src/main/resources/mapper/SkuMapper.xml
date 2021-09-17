@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coisini.curtain.mapper.SkuMapper">
 
-    <select id="getDetail" resultType="com.coisini.curtain.model.SkuDetailDO">
+    <select id="getDetail" resultType="com.coisini.curtain.model.SkuDetail">
         select s.id,
         s.price,
         s.discount_price,

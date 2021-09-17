@@ -2,7 +2,7 @@ package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.model.LogDO;
+import com.coisini.curtain.model.Log;
 
 import java.util.Date;
 
@@ -10,7 +10,7 @@ import java.util.Date;
  * @author pedro@TaleLin
  * @author Juzi@TaleLin
  */
-public interface LogService extends IService<LogDO> {
+public interface LogService extends IService<Log> {
 
     /**
      * 分页获取日志
@@ -22,7 +22,7 @@ public interface LogService extends IService<LogDO> {
      * @param end   日志结束时间
      * @return 日志数据
      */
-    IPage<LogDO> getLogPage(Integer page, Integer count, String name, Date start, Date end);
+    IPage<Log> getLogPage(Integer page, Integer count, String name, Date start, Date end);
 
     /**
      * 分页搜索日志
@@ -35,7 +35,7 @@ public interface LogService extends IService<LogDO> {
      * @param end     日志结束时间
      * @return 日志数据
      */
-    IPage<LogDO> searchLogPage(Integer page, Integer count, String name, String keyword, Date start, Date end);
+    IPage<Log> searchLogPage(Integer page, Integer count, String name, String keyword, Date start, Date end);
 
     /**
      * 分页获取日志用户名（以被记录日志的用户）

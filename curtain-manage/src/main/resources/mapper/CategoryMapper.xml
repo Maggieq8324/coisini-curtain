@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.CategoryMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.CategoryDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.Category">
         <id column="id" property="id" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

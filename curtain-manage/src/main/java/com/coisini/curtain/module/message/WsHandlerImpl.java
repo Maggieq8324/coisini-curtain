@@ -1,6 +1,6 @@
 package com.coisini.curtain.module.message;
 
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.User;
 import com.coisini.curtain.service.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class WsHandlerImpl implements WsHandler {
             if (!attributes.containsKey(MessageConstant.USER_KEY)) {
                 return false;
             }
-            UserDO user = (UserDO) attributes.get(MessageConstant.USER_KEY);
+            User user = (User) attributes.get(MessageConstant.USER_KEY);
             return user.getId().equals(userId);
         }).findFirst();
         if (userSession.isPresent()) {
@@ -116,7 +116,7 @@ public class WsHandlerImpl implements WsHandler {
             if (!attributes.containsKey(MessageConstant.USER_KEY)) {
                 continue;
             }
-            UserDO user = (UserDO) attributes.get(MessageConstant.USER_KEY);
+            User user = (User) attributes.get(MessageConstant.USER_KEY);
             boolean matched = userIds.stream().anyMatch(id -> id.equals(user.getId()));
             if (!matched) {
                 continue;

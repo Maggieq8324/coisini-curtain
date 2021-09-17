@@ -1,7 +1,7 @@
 package com.coisini.curtain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.coisini.curtain.model.GroupDO;
+import com.coisini.curtain.model.Group;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * @author Juzi@TaleLin
  */
 @Repository
-public interface GroupMapper extends BaseMapper<GroupDO> {
+public interface GroupMapper extends BaseMapper<Group> {
 
     /**
      * 获得用户的所有分组
@@ -20,7 +20,7 @@ public interface GroupMapper extends BaseMapper<GroupDO> {
      * @param userId 用户id
      * @return 所有分组
      */
-    List<GroupDO> selectUserGroups(@Param("userId") Integer userId);
+    List<Group> selectUserGroups(@Param("userId") Integer userId);
 
     /**
      * 获得用户的所有分组id

@@ -7,10 +7,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.coisini.curtain.common.LocalUser;
 import com.coisini.curtain.common.enumeration.GroupLevelEnum;
-import com.coisini.curtain.dto.user.ChangePasswordDTO;
+import com.coisini.curtain.evt.user.ChangePasswordEvt;
 import com.coisini.curtain.mapper.UserGroupMapper;
-import com.coisini.curtain.model.PermissionDO;
-import com.coisini.curtain.model.UserGroupDO;
+import com.coisini.curtain.model.Permission;
+import com.coisini.curtain.model.UserGroup;
 import com.coisini.curtain.service.PermissionService;
 import com.coisini.curtain.service.UserIdentityService;
 import com.coisini.curtain.service.UserService;
@@ -19,11 +19,11 @@ import io.github.talelin.autoconfigure.exception.ForbiddenException;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.autoconfigure.exception.ParameterException;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.dto.user.RegisterDTO;
-import com.coisini.curtain.dto.user.UpdateInfoDTO;
+import com.coisini.curtain.evt.user.RegisterEvt;
+import com.coisini.curtain.evt.user.UpdateInfoEvt;
 import com.coisini.curtain.mapper.UserMapper;
-import com.coisini.curtain.model.GroupDO;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.model.Group;
+import com.coisini.curtain.model.User;
 import com.coisini.curtain.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * @author Juzi@TaleLin
  */
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private UserIdentityService userIdentityService;
@@ -56,67 +56,67 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Transactional
     @Override
-    public UserDO createUser(RegisterDTO dto) {
-        boolean exist = this.checkUserExistByUsername(dto.getUsername());
+    public User createUser(RegisterEvt evt) {
+        boolean exist = this.checkUserExistByUsername(evt.getUsername());
         if (exist) {
             throw new ForbiddenException("username already exist, please choose a new one", 10071);
         }
-        if (StrUtil.isNotBlank(dto.getEmail())) {
-            exist = this.checkUserExistByEmail(dto.getEmail());
+        if (StrUtil.isNotBlank(evt.getEmail())) {
+            exist = this.checkUserExistByEmail(evt.getEmail());
             if (exist) {
                 throw new ForbiddenException("email already exist, please choose a new one", 10076);
             }
         } else {
             // bug 前端如果传入的email为 "" 时，由于数据库中存在""的email，会报duplication错误
             // 所以如果email为blank，必须显示设置为 null
-            dto.setEmail(null);
+            evt.setEmail(null);
         }
-        UserDO user = new UserDO();
-        BeanUtil.copyProperties(dto, user);
+        User user = new User();
+        BeanUtil.copyProperties(evt, user);
         this.baseMapper.insert(user);
-        if (dto.getGroupIds() != null && !dto.getGroupIds().isEmpty()) {
-            checkGroupsValid(dto.getGroupIds());
-            checkGroupsExist(dto.getGroupIds());
-            List<UserGroupDO> relations = dto.getGroupIds()
+        if (evt.getGroupIds() != null && !evt.getGroupIds().isEmpty()) {
+            checkGroupsValid(evt.getGroupIds());
+            checkGroupsExist(evt.getGroupIds());
+            List<UserGroup> relations = evt.getGroupIds()
                     .stream()
-                    .map(groupId -> new UserGroupDO(user.getId(), groupId))
+                    .map(groupId -> new UserGroup(user.getId(), groupId))
                     .collect(Collectors.toList());
             userGroupMapper.insertBatch(relations);
         } else {
             // id为2的分组为游客分组
             Integer guestGroupId = groupService.getParticularGroupIdByLevel(GroupLevelEnum.GUEST);
-            UserGroupDO relation = new UserGroupDO(user.getId(), guestGroupId);
+            UserGroup relation = new UserGroup(user.getId(), guestGroupId);
             userGroupMapper.insert(relation);
         }
-        userIdentityService.createUsernamePasswordIdentity(user.getId(), dto.getUsername(), dto.getPassword());
+        userIdentityService.createUsernamePasswordIdentity(user.getId(), evt.getUsername(), evt.getPassword());
         return user;
     }
 
     @Transactional
     @Override
-    public UserDO updateUserInfo(UpdateInfoDTO dto) {
-        UserDO user = LocalUser.getLocalUser();
-        if (StrUtil.isNotBlank(dto.getUsername())) {
-            boolean exist = this.checkUserExistByUsername(dto.getUsername());
+    public User updateUserInfo(UpdateInfoEvt evt) {
+        User user = LocalUser.getLocalUser();
+        if (StrUtil.isNotBlank(evt.getUsername())) {
+            boolean exist = this.checkUserExistByUsername(evt.getUsername());
             if (exist) {
                 throw new ForbiddenException("username already exist, please choose a new one", 10071);
             }
-            user.setUsername(dto.getUsername());
-            userIdentityService.changeUsername(user.getId(), dto.getUsername());
+            user.setUsername(evt.getUsername());
+            userIdentityService.changeUsername(user.getId(), evt.getUsername());
         }
-        BeanUtil.copyProperties(dto, user);
+        BeanUtil.copyProperties(evt, user);
         this.baseMapper.updateById(user);
         return user;
     }
 
     @Override
-    public UserDO changeUserPassword(ChangePasswordDTO dto) {
-        UserDO user = LocalUser.getLocalUser();
-        boolean valid = userIdentityService.verifyUsernamePassword(user.getId(), user.getUsername(), dto.getOldPassword());
+    public User changeUserPassword(ChangePasswordEvt evt) {
+        User user = LocalUser.getLocalUser();
+        boolean valid = userIdentityService.verifyUsernamePassword(user.getId(), user.getUsername(), evt.getOldPassword());
         if (!valid) {
             throw new ParameterException("password invalid, please enter correct password", 10032);
         }
-        valid = userIdentityService.changePassword(user.getId(), dto.getNewPassword());
+        valid = userIdentityService.changePassword(user.getId(), evt.getNewPassword());
         if (!valid) {
             throw new FailedException("password change failed", 10011);
         }
@@ -124,18 +124,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public List<GroupDO> getUserGroups(Integer userId) {
+    public List<Group> getUserGroups(Integer userId) {
         return groupService.getUserGroupsByUserId(userId);
     }
 
     @Override
     public List<Map<String, List<Map<String, String>>>> getStructualUserPermissions(Integer userId) {
-        List<PermissionDO> permissions = getUserPermissions(userId);
+        List<Permission> permissions = getUserPermissions(userId);
         return permissionService.structuringPermissions(permissions);
     }
 
     @Override
-    public List<PermissionDO> getUserPermissions(Integer userId) {
+    public List<Permission> getUserPermissions(Integer userId) {
         // 查找用户搜索分组，查找分组下的所有权限
         List<Integer> groupIds = groupService.getUserGroupIdsByUserId(userId);
         if (groupIds == null || groupIds.size() == 0) {
@@ -145,7 +145,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public List<PermissionDO> getUserPermissionsByModule(Integer userId, String module) {
+    public List<Permission> getUserPermissionsByModule(Integer userId, String module) {
         List<Integer> groupIds = groupService.getUserGroupIdsByUserId(userId);
         if (groupIds == null || groupIds.size() == 0) {
             return new ArrayList<>();
@@ -154,9 +154,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public UserDO getUserByUsername(String username) {
-        QueryWrapper<UserDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UserDO::getUsername, username);
+    public User getUserByUsername(String username) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(User::getUsername, username);
         return this.getOne(wrapper);
     }
 
@@ -168,8 +168,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
 
     @Override
     public boolean checkUserExistByEmail(String email) {
-        QueryWrapper<UserDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UserDO::getEmail, email);
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(User::getEmail, email);
         int rows = this.baseMapper.selectCount(wrapper);
         return rows > 0;
     }
@@ -181,7 +181,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     }
 
     @Override
-    public IPage<UserDO> getUserPageByGroupId(Page<UserDO> pager, Integer groupId) {
+    public IPage<User> getUserPageByGroupId(Page<User> pager, Integer groupId) {
         Integer rootGroupId = groupService.getParticularGroupIdByLevel(GroupLevelEnum.ROOT);
         return this.baseMapper.selectPageByGroupId(pager, groupId, rootGroupId);
     }
@@ -189,10 +189,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDO> implements 
     @Override
     public Integer getRootUserId() {
         Integer rootGroupId = groupService.getParticularGroupIdByLevel(GroupLevelEnum.ROOT);
-        QueryWrapper<UserGroupDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UserGroupDO::getGroupId, rootGroupId);
-        UserGroupDO userGroupDO = userGroupMapper.selectOne(wrapper);
-        return userGroupDO == null ? 0 : userGroupDO.getUserId();
+        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(UserGroup::getGroupId, rootGroupId);
+        UserGroup userGroup = userGroupMapper.selectOne(wrapper);
+        return userGroup == null ? 0 : userGroup.getUserId();
     }
 
     private void checkGroupsExist(List<Integer> ids) {

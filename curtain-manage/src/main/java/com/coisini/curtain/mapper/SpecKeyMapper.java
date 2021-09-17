@@ -1,7 +1,7 @@
 package com.coisini.curtain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.coisini.curtain.model.SpecKeyDO;
+import com.coisini.curtain.model.SpecKey;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,13 +15,13 @@ import java.util.List;
  * @since 2020-05-24
  */
 @Repository
-public interface SpecKeyMapper extends BaseMapper<SpecKeyDO> {
+public interface SpecKeyMapper extends BaseMapper<SpecKey> {
 
     /**
      * 根据spuId获取规格键
      * @param spuId spuId
      * @return List
      */
-    List<SpecKeyDO> getBySpuId(Integer spuId);
+    List<SpecKey> getBySpuId(Integer spuId);
 
 }

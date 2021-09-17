@@ -1,7 +1,7 @@
 package com.coisini.curtain.common.listener;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.coisini.curtain.model.PermissionDO;
+import com.coisini.curtain.model.Permission;
 import com.coisini.curtain.service.PermissionService;
 import io.github.talelin.autoconfigure.bean.MetaInfo;
 import io.github.talelin.autoconfigure.bean.PermissionMetaCollector;
@@ -41,9 +41,9 @@ public class PermissionHandleListener implements ApplicationListener<ContextRefr
     }
 
     private void removeUnusedPermissions() {
-        List<PermissionDO> allPermissions = permissionService.list();
+        List<Permission> allPermissions = permissionService.list();
         Map<String, MetaInfo> metaMap = metaCollector.getMetaMap();
-        for (PermissionDO permission : allPermissions) {
+        for (Permission permission : allPermissions) {
             boolean stayedInMeta = metaMap
                     .values()
                     .stream()
@@ -57,11 +57,11 @@ public class PermissionHandleListener implements ApplicationListener<ContextRefr
     }
 
     private void createPermissionIfNotExist(String name, String module) {
-        QueryWrapper<PermissionDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(PermissionDO::getName, name).eq(PermissionDO::getModule, module);
-        PermissionDO permission = permissionService.getOne(wrapper);
+        QueryWrapper<Permission> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Permission::getName, name).eq(Permission::getModule, module);
+        Permission permission = permissionService.getOne(wrapper);
         if (permission == null) {
-            permissionService.save(PermissionDO.builder().module(module).name(name).build());
+            permissionService.save(Permission.builder().module(module).name(name).build());
         }
         if (permission != null && !permission.getMount()) {
             permission.setMount(true);

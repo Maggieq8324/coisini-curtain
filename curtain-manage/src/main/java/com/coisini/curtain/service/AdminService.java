@@ -1,17 +1,17 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.coisini.curtain.dto.admin.DispatchPermissionDTO;
-import com.coisini.curtain.dto.admin.DispatchPermissionsDTO;
-import com.coisini.curtain.dto.admin.ResetPasswordDTO;
-import com.coisini.curtain.bo.GroupPermissionBO;
-import com.coisini.curtain.dto.admin.NewGroupDTO;
-import com.coisini.curtain.dto.admin.RemovePermissionsDTO;
-import com.coisini.curtain.dto.admin.UpdateGroupDTO;
-import com.coisini.curtain.dto.admin.UpdateUserInfoDTO;
-import com.coisini.curtain.model.GroupDO;
-import com.coisini.curtain.model.PermissionDO;
-import com.coisini.curtain.model.UserDO;
+import com.coisini.curtain.evt.admin.DispatchPermissionEvt;
+import com.coisini.curtain.evt.admin.DispatchPermissionsEvt;
+import com.coisini.curtain.evt.admin.ResetPasswordEvt;
+import com.coisini.curtain.bo.GroupPermissionBo;
+import com.coisini.curtain.evt.admin.NewGroupEvt;
+import com.coisini.curtain.evt.admin.RemovePermissionsEvt;
+import com.coisini.curtain.evt.admin.UpdateGroupEvt;
+import com.coisini.curtain.evt.admin.UpdateUserInfoEvt;
+import com.coisini.curtain.model.Group;
+import com.coisini.curtain.model.Permission;
+import com.coisini.curtain.model.User;
 
 import java.util.List;
 import java.util.Map;
@@ -30,16 +30,16 @@ public interface AdminService {
      * @param page    当前分页
      * @return 用户数据
      */
-    IPage<UserDO> getUserPageByGroupId(Integer groupId, Integer count, Integer page);
+    IPage<User> getUserPageByGroupId(Integer groupId, Integer count, Integer page);
 
     /**
      * 修改用户密码（重置用户密码）
      *
      * @param id  用户id
-     * @param dto 密码信息
+     * @param evt 密码信息
      * @return 是否修改成功
      */
-    boolean changeUserPassword(Integer id, ResetPasswordDTO dto);
+    boolean changeUserPassword(Integer id, ResetPasswordEvt evt);
 
     /**
      * 删除用户
@@ -53,10 +53,10 @@ public interface AdminService {
      * 更新用户信息
      *
      * @param id  用户id
-     * @param dto 数据信息
+     * @param evt 数据信息
      * @return 是否成功
      */
-    boolean updateUserInfo(Integer id, UpdateUserInfoDTO dto);
+    boolean updateUserInfo(Integer id, UpdateUserInfoEvt evt);
 
     /**
      * 分页获取分组数据
@@ -65,7 +65,7 @@ public interface AdminService {
      * @param count 当前页数量
      * @return 分组数据
      */
-    IPage<GroupDO> getGroupPage(Integer page, Integer count);
+    IPage<Group> getGroupPage(Integer page, Integer count);
 
     /**
      * 获得分组数据
@@ -73,24 +73,24 @@ public interface AdminService {
      * @param id 分组id
      * @return 分组数据
      */
-    GroupPermissionBO getGroup(Integer id);
+    GroupPermissionBo getGroup(Integer id);
 
     /**
      * 新建分组
      *
-     * @param dto 分组信息
+     * @param evt 分组信息
      * @return 是否成功
      */
-    boolean createGroup(NewGroupDTO dto);
+    boolean createGroup(NewGroupEvt evt);
 
     /**
      * 更新分组
      *
      * @param id  分组id
-     * @param dto 分组信息
+     * @param evt 分组信息
      * @return 是否成功
      */
-    boolean updateGroup(Integer id, UpdateGroupDTO dto);
+    boolean updateGroup(Integer id, UpdateGroupEvt evt);
 
     /**
      * 删除分组
@@ -103,39 +103,39 @@ public interface AdminService {
     /**
      * 分配权限
      *
-     * @param dto 数据
+     * @param evt 数据
      * @return 是否成功
      */
-    boolean dispatchPermission(DispatchPermissionDTO dto);
+    boolean dispatchPermission(DispatchPermissionEvt evt);
 
     /**
      * 分配权限
      *
-     * @param dto 数据
+     * @param evt 数据
      * @return 是否成功
      */
-    boolean dispatchPermissions(DispatchPermissionsDTO dto);
+    boolean dispatchPermissions(DispatchPermissionsEvt evt);
 
     /**
      * 删除权限
      *
-     * @param dto 数据
+     * @param evt 数据
      * @return 是否成功
      */
-    boolean removePermissions(RemovePermissionsDTO dto);
+    boolean removePermissions(RemovePermissionsEvt evt);
 
     /**
      * 获得所有分组信息
      */
-    List<GroupDO> getAllGroups();
+    List<Group> getAllGroups();
 
     /**
      * 获得所有权限信息
      */
-    List<PermissionDO> getAllPermissions();
+    List<Permission> getAllPermissions();
 
     /**
      * 获得结构化的权限信息
      */
-    Map<String, List<PermissionDO>> getAllStructualPermissions();
+    Map<String, List<Permission>> getAllStructualPermissions();
 }

@@ -1,20 +1,20 @@
 package com.coisini.curtain.controller.v1;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.coisini.curtain.bo.SpecKeyAndItemsBO;
+import com.coisini.curtain.bo.SpecKeyAndItemsBo;
 import com.coisini.curtain.common.util.PageUtil;
-import com.coisini.curtain.dto.SpecKeyDTO;
-import com.coisini.curtain.model.SpecKeyDO;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.DeletedVO;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.evt.SpecKeyEvt;
+import com.coisini.curtain.model.SpecKey;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.DeletedVo;
+import com.coisini.curtain.vo.UpdatedVo;
 import io.github.talelin.core.annotation.GroupRequired;
 import io.github.talelin.core.annotation.LoginRequired;
 import io.github.talelin.core.annotation.PermissionMeta;
 import io.github.talelin.core.annotation.PermissionModule;
 import com.coisini.curtain.common.mybatis.Page;
 import com.coisini.curtain.service.SpecKeyService;
-import com.coisini.curtain.vo.PageResponseVO;
+import com.coisini.curtain.vo.PageResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,57 +39,57 @@ public class SpecKeyController {
     @PostMapping("")
     @PermissionMeta(value = "创建规格名")
     @GroupRequired
-    public CreatedVO create(@Validated @RequestBody SpecKeyDTO dto) {
-        specKeyService.create(dto);
-        return new CreatedVO();
+    public CreatedVo create(@Validated @RequestBody SpecKeyEvt evt) {
+        specKeyService.create(evt);
+        return new CreatedVo();
     }
 
     @PutMapping("/{id}")
     @PermissionMeta(value = "更新规格名")
     @GroupRequired
-    public UpdatedVO update(
-            @Validated @RequestBody SpecKeyDTO dto,
+    public UpdatedVo update(
+            @Validated @RequestBody SpecKeyEvt evt,
             @PathVariable @Positive(message = "{id.positive}") Integer id) {
-        specKeyService.update(dto, id);
-        return new UpdatedVO();
+        specKeyService.update(evt, id);
+        return new UpdatedVo();
     }
 
     @DeleteMapping("/{id}")
     @PermissionMeta(value = "删除规格名")
     @GroupRequired
-    public DeletedVO delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
+    public DeletedVo delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
         specKeyService.delete(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
     @GetMapping("/{id}/detail")
     @LoginRequired
-    public SpecKeyAndItemsBO detail(@PathVariable @Positive(message = "{id}") Integer id) {
-        SpecKeyAndItemsBO specKeyAndItems = specKeyService.getKeyAndValuesById(id);
+    public SpecKeyAndItemsBo detail(@PathVariable @Positive(message = "{id}") Integer id) {
+        SpecKeyAndItemsBo specKeyAndItems = specKeyService.getKeyAndValuesById(id);
         return specKeyAndItems;
     }
 
     @GetMapping("/by/spu/{id}")
-    public List<SpecKeyDO> getBySpuId(@PathVariable(value = "id") @Positive Integer spuId) {
+    public List<SpecKey> getBySpuId(@PathVariable(value = "id") @Positive Integer spuId) {
         return this.specKeyService.getBySpuId(spuId);
     }
 
     @GetMapping("/page")
-    public PageResponseVO<SpecKeyDO> page(
+    public PageResponseVo<SpecKey> page(
             @RequestParam(name = "count", required = false, defaultValue = "10")
             @Min(value = 1, message = "{page.count.min}")
             @Max(value = 30, message = "{page.count.max}") Integer count,
             @RequestParam(name = "page", required = false, defaultValue = "0")
             @Min(value = 0, message = "{page.number.min}") Integer page
     ) {
-        Page<SpecKeyDO> pager = new Page<>(page, count);
-        IPage<SpecKeyDO> paging = specKeyService.getBaseMapper().selectPage(pager, null);
+        Page<SpecKey> pager = new Page<>(page, count);
+        IPage<SpecKey> paging = specKeyService.getBaseMapper().selectPage(pager, null);
         return PageUtil.build(paging);
     }
 
     @GetMapping("/list")
     @LoginRequired
-    public List<SpecKeyDO> getList() {
+    public List<SpecKey> getList() {
         return specKeyService.list();
     }
 

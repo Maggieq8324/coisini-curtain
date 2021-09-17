@@ -1,11 +1,11 @@
 package com.coisini.curtain.controller.v1;
 
-import com.coisini.curtain.dto.SpecValueDTO;
-import com.coisini.curtain.model.SpecValueDO;
+import com.coisini.curtain.evt.SpecValueEvt;
+import com.coisini.curtain.model.SpecValue;
 import com.coisini.curtain.service.SpecValueService;
-import com.coisini.curtain.vo.CreatedVO;
-import com.coisini.curtain.vo.DeletedVO;
-import com.coisini.curtain.vo.UpdatedVO;
+import com.coisini.curtain.vo.CreatedVo;
+import com.coisini.curtain.vo.DeletedVo;
+import com.coisini.curtain.vo.UpdatedVo;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import io.github.talelin.core.annotation.GroupRequired;
 import io.github.talelin.core.annotation.LoginRequired;
@@ -29,33 +29,33 @@ public class SpecValueController {
     @PostMapping("")
     @PermissionMeta("创建规格值")
     @GroupRequired
-    public CreatedVO create(@Validated @RequestBody SpecValueDTO dto) {
-        specValueService.create(dto);
-        return new CreatedVO();
+    public CreatedVo create(@Validated @RequestBody SpecValueEvt evt) {
+        specValueService.create(evt);
+        return new CreatedVo();
     }
 
     @PutMapping("/{id}")
     @PermissionMeta("更新规格值")
     @GroupRequired
-    public UpdatedVO update(
-            @Validated @RequestBody SpecValueDTO dto,
+    public UpdatedVo update(
+            @Validated @RequestBody SpecValueEvt evt,
             @PathVariable @Positive(message = "{id.positive}") Integer id) {
-        specValueService.update(dto, id);
-        return new UpdatedVO();
+        specValueService.update(evt, id);
+        return new UpdatedVo();
     }
 
     @DeleteMapping("/{id}")
     @PermissionMeta("删除规格值")
     @GroupRequired
-    public DeletedVO delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
+    public DeletedVo delete(@PathVariable @Positive(message = "{id.positive}") Integer id) {
         specValueService.delete(id);
-        return new DeletedVO();
+        return new DeletedVo();
     }
 
     @GetMapping("/{id}")
     @LoginRequired
-    public SpecValueDO get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
-        SpecValueDO specValue = specValueService.getById(id);
+    public SpecValue get(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+        SpecValue specValue = specValueService.getById(id);
         if (specValue == null) {
             throw new NotFoundException(60002);
         }
@@ -64,8 +64,8 @@ public class SpecValueController {
 
 
     @GetMapping("/by/spec-key/{id}")
-    public List<SpecValueDO> getBySpecKeyId(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
-        return this.specValueService.lambdaQuery().eq(SpecValueDO::getSpecId, id).list();
+    public List<SpecValue> getBySpecKeyId(@PathVariable(value = "id") @Positive(message = "{id.positive}") Integer id) {
+        return this.specValueService.lambdaQuery().eq(SpecValue::getSpecId, id).list();
     }
 
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.GroupPermissionMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.GroupPermissionDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.GroupPermission">
         <id column="id" property="id"/>
         <result column="group_id" property="groupId"/>
         <result column="permission_id" property="permissionId"/>

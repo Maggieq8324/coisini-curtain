@@ -6,9 +6,9 @@ import com.coisini.curtain.common.enumeration.OrderStatusEnum;
 import com.coisini.curtain.common.mybatis.Page;
 import com.coisini.curtain.common.util.SensitiveDataUtil;
 import com.coisini.curtain.mapper.OrderMapper;
-import com.coisini.curtain.model.OrderDO;
+import com.coisini.curtain.model.Order;
 import com.coisini.curtain.service.OrderService;
-import com.coisini.curtain.vo.OrderSimplifyVO;
+import com.coisini.curtain.vo.OrderSimplifyVo;
 import io.github.talelin.autoconfigure.exception.ForbiddenException;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,11 +19,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderDO> implements OrderService {
+public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
     @Override
     public void changeOrderStatus(Integer id, Integer status) {
-        OrderDO order = this.getBaseMapper().selectById(id);
+        Order order = this.getBaseMapper().selectById(id);
         if (order == null) {
             throw new NotFoundException(110000);
         }
@@ -46,27 +46,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OrderDO> implemen
     }
 
     @Override
-    public IPage<OrderDO> getOrderByPage(Integer count, Integer page) {
-        Page<OrderDO> pager = new Page<>(page, count);
-        QueryWrapper<OrderDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().orderByDesc(OrderDO::getId);
-        IPage<OrderDO> paging = this.getBaseMapper().selectPage(pager, wrapper);
+    public IPage<Order> getOrderByPage(Integer count, Integer page) {
+        Page<Order> pager = new Page<>(page, count);
+        QueryWrapper<Order> wrapper = new QueryWrapper<>();
+        wrapper.lambda().orderByDesc(Order::getId);
+        IPage<Order> paging = this.getBaseMapper().selectPage(pager, wrapper);
         return paging;
     }
 
     @Override
-    public IPage<OrderDO> search(Integer page, Integer count, String keyword, Date start, Date end) {
-        Page<OrderDO> pager = new Page<>(page, count);
-        IPage<OrderDO> paging = this.baseMapper.searchOrders(pager, "%" + keyword + "%", start, end);
+    public IPage<Order> search(Integer page, Integer count, String keyword, Date start, Date end) {
+        Page<Order> pager = new Page<>(page, count);
+        IPage<Order> paging = this.baseMapper.searchOrders(pager, "%" + keyword + "%", start, end);
         return paging;
     }
 
     @Override
-    public List<OrderSimplifyVO> convertFromDO(List<OrderDO> orders) {
-        List<OrderSimplifyVO> orderExpires = new ArrayList<>();
+    public List<OrderSimplifyVo> convertFromDO(List<Order> orders) {
+        List<OrderSimplifyVo> orderExpires = new ArrayList<>();
         orders.forEach(order -> {
             Date expireTime = order.getExpiredTime();
-            OrderSimplifyVO orderSimplifyVO = new OrderSimplifyVO();
+            OrderSimplifyVo orderSimplifyVO = new OrderSimplifyVo();
             BeanUtils.copyProperties(order, orderSimplifyVO);
             if (expireTime != null) {
                 orderSimplifyVO.setExpired(expireTime.before(new Date()));

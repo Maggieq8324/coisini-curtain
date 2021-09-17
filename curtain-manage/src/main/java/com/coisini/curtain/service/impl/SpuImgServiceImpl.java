@@ -1,6 +1,6 @@
 package com.coisini.curtain.service.impl;
 
-import com.coisini.curtain.model.SpuImgDO;
+import com.coisini.curtain.model.SpuImg;
 import com.coisini.curtain.mapper.SpuImgMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.coisini.curtain.service.SpuImgService;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @since 2020-05-27
  */
 @Service
-public class SpuImgServiceImpl extends ServiceImpl<SpuImgMapper, SpuImgDO> implements SpuImgService {
+public class SpuImgServiceImpl extends ServiceImpl<SpuImgMapper, SpuImg> implements SpuImgService {
 
     @Override
     public void hardDeleteImgsBySpuId(Integer spuId) {

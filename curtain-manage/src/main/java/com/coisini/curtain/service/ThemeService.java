@@ -1,20 +1,20 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.ThemeSpuDTO;
-import com.coisini.curtain.model.SimplifySpuDO;
-import com.coisini.curtain.model.ThemeDO;
-import com.coisini.curtain.model.SpuDO;
+import com.coisini.curtain.evt.ThemeSpuEvt;
+import com.coisini.curtain.model.SimplifySpu;
+import com.coisini.curtain.model.Theme;
+import com.coisini.curtain.model.Spu;
 
 import java.util.List;
 
-public interface ThemeService extends IService<ThemeDO> {
+public interface ThemeService extends IService<Theme> {
 
-    List<SimplifySpuDO> getSpus(Integer id);
+    List<SimplifySpu> getSpus(Integer id);
 
-    List<SpuDO> getSimplifySpus(Integer id);
+    List<Spu> getSimplifySpus(Integer id);
 
-    void addThemeSpu(ThemeSpuDTO dto);
+    void addThemeSpu(ThemeSpuEvt evt);
 
     void deleteThemeSpu(Integer id);
 

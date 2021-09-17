@@ -2,15 +2,15 @@ package com.coisini.curtain.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.coisini.curtain.model.SpecValueDO;
+import com.coisini.curtain.model.SpecValue;
 import io.github.talelin.autoconfigure.exception.NotFoundException;
-import com.coisini.curtain.dto.SpecValueDTO;
+import com.coisini.curtain.evt.SpecValueEvt;
 import com.coisini.curtain.mapper.SkuMapper;
 import com.coisini.curtain.mapper.SkuSpecMapper;
 import com.coisini.curtain.mapper.SpecValueMapper;
-import com.coisini.curtain.model.SkuDO;
-import com.coisini.curtain.model.SkuSpecDO;
-import com.coisini.curtain.model.SpecKeyValueDO;
+import com.coisini.curtain.model.Sku;
+import com.coisini.curtain.model.SkuSpec;
+import com.coisini.curtain.model.SpecKeyValue;
 import com.coisini.curtain.service.SpecValueService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SpecValueServiceImpl extends ServiceImpl<SpecValueMapper, SpecValueDO> implements SpecValueService {
+public class SpecValueServiceImpl extends ServiceImpl<SpecValueMapper, SpecValue> implements SpecValueService {
 
     @Autowired
     private SkuSpecMapper skuSpecMapper;
@@ -33,35 +33,35 @@ public class SpecValueServiceImpl extends ServiceImpl<SpecValueMapper, SpecValue
     private SpecValueMapper specValueMapper;
 
     @Override
-    public void create(SpecValueDTO dto) {
-        SpecValueDO specValueDO = new SpecValueDO();
-        BeanUtils.copyProperties(dto, specValueDO);
-        this.save(specValueDO);
+    public void create(SpecValueEvt evt) {
+        SpecValue specValue = new SpecValue();
+        BeanUtils.copyProperties(evt, specValue);
+        this.save(specValue);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void update(SpecValueDTO dto, Integer id) {
-        SpecValueDO specValue = this.getById(id);
+    public void update(SpecValueEvt evt, Integer id) {
+        SpecValue specValue = this.getById(id);
         if (specValue == null) {
             throw new NotFoundException(60002);
         }
-        BeanUtils.copyProperties(dto, specValue);
+        BeanUtils.copyProperties(evt, specValue);
         this.updateById(specValue);
 
         List<Integer> skuIds = skuSpecMapper.getSkuIdsByValueId(id);
         if (skuIds.isEmpty()) {
             return;
         }
-        List<SkuDO> skuList = skuMapper.selectBatchIds(skuIds);
+        List<Sku> skuList = skuMapper.selectBatchIds(skuIds);
         skuList.forEach(sku -> {
-            QueryWrapper<SkuSpecDO> wrapper = new QueryWrapper<>();
-            wrapper.lambda().eq(SkuSpecDO::getValueId, id);
-            wrapper.lambda().eq(SkuSpecDO::getSkuId, sku.getId());
-            List<SkuSpecDO> skuSpecs = skuSpecMapper.selectList(wrapper);
-            List<SpecKeyValueDO> specs = new ArrayList<>();
+            QueryWrapper<SkuSpec> wrapper = new QueryWrapper<>();
+            wrapper.lambda().eq(SkuSpec::getValueId, id);
+            wrapper.lambda().eq(SkuSpec::getSkuId, sku.getId());
+            List<SkuSpec> skuSpecs = skuSpecMapper.selectList(wrapper);
+            List<SpecKeyValue> specs = new ArrayList<>();
             skuSpecs.forEach(skuSpec -> {
-                SpecKeyValueDO specKeyAndValue = specValueMapper.getSpecKeyAndValueById(skuSpec.getKeyId(), skuSpec.getValueId());
+                SpecKeyValue specKeyAndValue = specValueMapper.getSpecKeyAndValueById(skuSpec.getKeyId(), skuSpec.getValueId());
                 specs.add(specKeyAndValue);
             });
             sku.setSpecs(specs);
@@ -71,7 +71,7 @@ public class SpecValueServiceImpl extends ServiceImpl<SpecValueMapper, SpecValue
 
     @Override
     public void delete(Integer id) {
-        SpecValueDO specValue = this.getById(id);
+        SpecValue specValue = this.getById(id);
         if (specValue == null) {
             throw new NotFoundException(60002);
         }
@@ -79,7 +79,7 @@ public class SpecValueServiceImpl extends ServiceImpl<SpecValueMapper, SpecValue
     }
 
     @Override
-    public SpecKeyValueDO getSpecKeyAndValueById(Integer keyId, Integer valueId) {
+    public SpecKeyValue getSpecKeyAndValueById(Integer keyId, Integer valueId) {
         return this.getBaseMapper().
                 getSpecKeyAndValueById(keyId, valueId);
     }

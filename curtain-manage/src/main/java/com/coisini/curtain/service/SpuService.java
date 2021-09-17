@@ -1,9 +1,9 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.SpuDTO;
-import com.coisini.curtain.model.SpuDO;
-import com.coisini.curtain.model.SpuDetailDO;
+import com.coisini.curtain.evt.SpuEvt;
+import com.coisini.curtain.model.Spu;
+import com.coisini.curtain.model.SpuDetail;
 
 import java.util.List;
 
@@ -13,15 +13,15 @@ import java.util.List;
  * @date Sep 8, 2021
  * @Version 1.0
  */
-public interface SpuService extends IService<SpuDO> {
+public interface SpuService extends IService<Spu> {
 
-    void create(SpuDTO dto);
+    void create(SpuEvt evt);
 
-    void update(SpuDTO dto, Integer id);
+    void update(SpuEvt evt, Integer id);
 
     void delete(Integer id);
 
-    SpuDetailDO getDetail(Integer id);
+    SpuDetail getDetail(Integer id);
 
     List<Integer> getSpecKeys(Integer id);
 

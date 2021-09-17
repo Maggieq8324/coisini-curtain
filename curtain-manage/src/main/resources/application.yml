@@ -13,6 +13,16 @@ spring:
     # 关闭静态资源的映射
     add-mappings: false
 
+server:
+  # 服务端口
+  port: 5000
+  ssl:
+    key-store: classpath:server.keystore
+    key-alias: tomcat
+    enabled: true
+    key-store-password: 1qazxdr5
+    key-store-type: JKS
+
 
 mybatis-plus:
   configuration:
@@ -45,7 +55,7 @@ lin:
     # 令牌 secret
     token-secret: x88Wf0991079889x8796a0Ac68f9ecJJU17c5Vbe8beod7d8d3e695*4
 
-# sleeve 配置
-sleeve:
+# curtain 配置
+curtain:
   # 六宫格的最大数量
   grid-category-maximum-quantity: 6

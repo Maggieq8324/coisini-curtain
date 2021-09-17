@@ -1,22 +1,22 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.bo.SpecKeyAndItemsBO;
-import com.coisini.curtain.dto.SpecKeyDTO;
-import com.coisini.curtain.model.SpecKeyDO;
+import com.coisini.curtain.bo.SpecKeyAndItemsBo;
+import com.coisini.curtain.evt.SpecKeyEvt;
+import com.coisini.curtain.model.SpecKey;
 
 import java.util.List;
 
-public interface SpecKeyService extends IService<SpecKeyDO> {
+public interface SpecKeyService extends IService<SpecKey> {
 
-    void create(SpecKeyDTO dto);
+    void create(SpecKeyEvt evt);
 
-    void update(SpecKeyDTO dto, Integer id);
+    void update(SpecKeyEvt evt, Integer id);
 
     void delete(Integer id);
 
-    SpecKeyAndItemsBO getKeyAndValuesById(Integer id);
+    SpecKeyAndItemsBo getKeyAndValuesById(Integer id);
 
-    List<SpecKeyDO> getBySpuId(Integer spuId);
+    List<SpecKey> getBySpuId(Integer spuId);
 
 }

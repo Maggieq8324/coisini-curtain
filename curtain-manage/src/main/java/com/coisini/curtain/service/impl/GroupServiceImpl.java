@@ -3,16 +3,16 @@ package com.coisini.curtain.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.coisini.curtain.model.UserGroupDO;
+import com.coisini.curtain.model.UserGroup;
 import com.coisini.curtain.service.PermissionService;
 import io.github.talelin.autoconfigure.exception.ForbiddenException;
-import com.coisini.curtain.bo.GroupPermissionBO;
+import com.coisini.curtain.bo.GroupPermissionBo;
 import com.coisini.curtain.common.enumeration.GroupLevelEnum;
 import com.coisini.curtain.common.mybatis.Page;
 import com.coisini.curtain.mapper.GroupMapper;
 import com.coisini.curtain.mapper.UserGroupMapper;
-import com.coisini.curtain.model.GroupDO;
-import com.coisini.curtain.model.PermissionDO;
+import com.coisini.curtain.model.Group;
+import com.coisini.curtain.model.Permission;
 import com.coisini.curtain.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @author Juzi@TaleLin
  */
 @Service
-public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implements GroupService {
+public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements GroupService {
 
     @Autowired
     private PermissionService permissionService;
@@ -35,7 +35,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     private UserGroupMapper userGroupMapper;
 
     @Override
-    public List<GroupDO> getUserGroupsByUserId(Integer userId) {
+    public List<Group> getUserGroupsByUserId(Integer userId) {
         return this.baseMapper.selectUserGroups(userId);
     }
 
@@ -45,7 +45,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     }
 
     @Override
-    public IPage<GroupDO> getGroupPage(int page, int count) {
+    public IPage<Group> getGroupPage(int page, int count) {
         Page pager = new Page(page, count);
         return this.baseMapper.selectPage(pager, null);
     }
@@ -56,26 +56,26 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
     }
 
     @Override
-    public GroupPermissionBO getGroupAndPermissions(Integer id) {
-        GroupDO group = this.baseMapper.selectById(id);
-        List<PermissionDO> permissions = permissionService.getPermissionByGroupId(id);
-        return new GroupPermissionBO(group, permissions);
+    public GroupPermissionBo getGroupAndPermissions(Integer id) {
+        Group group = this.baseMapper.selectById(id);
+        List<Permission> permissions = permissionService.getPermissionByGroupId(id);
+        return new GroupPermissionBo(group, permissions);
     }
 
     @Override
     public boolean checkGroupExistByName(String name) {
-        QueryWrapper<GroupDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(GroupDO::getName, name);
+        QueryWrapper<Group> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Group::getName, name);
         return this.baseMapper.selectCount(wrapper) > 0;
     }
 
     @Override
     public boolean checkIsRootByUserId(Integer userId) {
-        QueryWrapper<UserGroupDO> wrapper = new QueryWrapper<>();
+        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         Integer rootGroupId = this.getParticularGroupIdByLevel(GroupLevelEnum.ROOT);
-        wrapper.lambda().eq(UserGroupDO::getUserId, userId)
-                .eq(UserGroupDO::getGroupId, rootGroupId);
-        UserGroupDO relation = userGroupMapper.selectOne(wrapper);
+        wrapper.lambda().eq(UserGroup::getUserId, userId)
+                .eq(UserGroup::getGroupId, rootGroupId);
+        UserGroup relation = userGroupMapper.selectOne(wrapper);
         return relation != null;
     }
 
@@ -87,10 +87,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         if (checkIsRootByUserId(userId)) {
             throw new ForbiddenException("can't modify the root user's group", 10078);
         }
-        QueryWrapper<UserGroupDO> wrapper = new QueryWrapper<>();
+        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
         wrapper.lambda()
-                .eq(UserGroupDO::getUserId, userId)
-                .in(UserGroupDO::getGroupId, deleteIds);
+                .eq(UserGroup::getUserId, userId)
+                .in(UserGroup::getGroupId, deleteIds);
         return userGroupMapper.delete(wrapper) > 0;
     }
 
@@ -103,33 +103,33 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, GroupDO> implemen
         if (!ok) {
             throw new ForbiddenException("cant't add user to non-existent group", 10077);
         }
-        List<UserGroupDO> relations = addIds.stream().map(it -> new UserGroupDO(userId, it)).collect(Collectors.toList());
+        List<UserGroup> relations = addIds.stream().map(it -> new UserGroup(userId, it)).collect(Collectors.toList());
         return userGroupMapper.insertBatch(relations) > 0;
     }
 
     @Override
     public List<Integer> getGroupUserIds(Integer id) {
-        QueryWrapper<UserGroupDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(UserGroupDO::getGroupId, id);
-        List<UserGroupDO> list = userGroupMapper.selectList(wrapper);
-        return list.stream().map(UserGroupDO::getUserId).collect(Collectors.toList());
+        QueryWrapper<UserGroup> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(UserGroup::getGroupId, id);
+        List<UserGroup> list = userGroupMapper.selectList(wrapper);
+        return list.stream().map(UserGroup::getUserId).collect(Collectors.toList());
     }
 
     @Override
-    public GroupDO getParticularGroupByLevel(GroupLevelEnum level) {
+    public Group getParticularGroupByLevel(GroupLevelEnum level) {
         if (GroupLevelEnum.USER.getValue().equals(level.getValue())) {
             return null;
         } else {
-            QueryWrapper<GroupDO> wrapper = new QueryWrapper<>();
-            wrapper.lambda().eq(GroupDO::getLevel, level);
-            GroupDO groupDO = this.baseMapper.selectOne(wrapper);
-            return groupDO;
+            QueryWrapper<Group> wrapper = new QueryWrapper<>();
+            wrapper.lambda().eq(Group::getLevel, level);
+            Group group = this.baseMapper.selectOne(wrapper);
+            return group;
         }
     }
 
     @Override
     public Integer getParticularGroupIdByLevel(GroupLevelEnum level) {
-        GroupDO group = this.getParticularGroupByLevel(level);
+        Group group = this.getParticularGroupByLevel(level);
         return group == null ? 0 : group.getId();
     }
 

@@ -1,9 +1,9 @@
 package com.coisini.curtain.common.util;
 
-import com.coisini.curtain.vo.UnifyResponseVO;
+import com.coisini.curtain.vo.UnifyResponseVo;
 import io.github.talelin.autoconfigure.bean.Code;
 import io.github.talelin.autoconfigure.util.RequestUtil;
-import com.coisini.curtain.vo.PageResponseVO;
+import com.coisini.curtain.vo.PageResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -32,62 +32,62 @@ public class ResponseUtil {
         getResponse().setStatus(httpStatus);
     }
 
-    public static <T> UnifyResponseVO<T> generateCreatedResponse(int code) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateCreatedResponse(int code) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .message(Code.CREATED.getDescription())
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static <T> UnifyResponseVO<T> generateCreatedResponse(int code, T data) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateCreatedResponse(int code, T data) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .message(data)
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static <T> UnifyResponseVO<T> generateDeletedResponse(int code) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateDeletedResponse(int code) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .message(Code.SUCCESS.getDescription())
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static <T> UnifyResponseVO<T> generateDeletedResponse(int code, T data) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateDeletedResponse(int code, T data) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .message(data)
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static <T> UnifyResponseVO<T> generateUpdatedResponse(int code) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateUpdatedResponse(int code) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .message(Code.SUCCESS.getDescription())
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static <T> UnifyResponseVO<T> generateUpdatedResponse(int code, T data) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateUpdatedResponse(int code, T data) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .message(data)
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static <T> UnifyResponseVO<T> generateUnifyResponse(int code) {
-        return (UnifyResponseVO<T>) UnifyResponseVO.builder()
+    public static <T> UnifyResponseVo<T> generateUnifyResponse(int code) {
+        return (UnifyResponseVo<T>) UnifyResponseVo.builder()
                 .code(code)
                 .request(RequestUtil.getSimpleRequest())
                 .build();
     }
 
-    public static PageResponseVO generatePageResult(int total, List items, int page, int count) {
-        return new PageResponseVO(total, items, page, count);
+    public static PageResponseVo generatePageResult(int total, List items, int page, int count) {
+        return new PageResponseVo(total, items, page, count);
     }
 }

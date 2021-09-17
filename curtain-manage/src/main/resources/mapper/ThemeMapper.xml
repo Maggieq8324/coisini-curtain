@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.ThemeMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.ThemeDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.Theme">
         <id column="id" property="id" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -19,7 +19,7 @@
         <result column="online" property="online" />
     </resultMap>
 
-    <select id="getSpus" resultType="com.coisini.curtain.model.SimplifySpuDO">
+    <select id="getSpus" resultType="com.coisini.curtain.model.SimplifySpu">
         select s.id, s.title, s.subtitle, s.img, ts.id tid
         from spu s
         right join theme_spu ts

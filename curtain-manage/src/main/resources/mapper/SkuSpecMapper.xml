@@ -3,7 +3,7 @@
 <mapper namespace="com.coisini.curtain.mapper.SkuSpecMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SkuSpecDO">
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SkuSpec">
         <id column="id" property="id" />
         <result column="spu_id" property="spuId" />
         <result column="sku_id" property="skuId" />

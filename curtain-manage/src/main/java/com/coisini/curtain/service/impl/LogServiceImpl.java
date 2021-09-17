@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.coisini.curtain.mapper.LogMapper;
 import com.coisini.curtain.service.LogService;
 import com.coisini.curtain.common.mybatis.Page;
-import com.coisini.curtain.model.LogDO;
+import com.coisini.curtain.model.Log;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,32 +15,32 @@ import java.util.Date;
  * @author Juzi@TaleLin
  */
 @Service
-public class LogServiceImpl extends ServiceImpl<LogMapper, LogDO> implements LogService {
+public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogService {
 
     @Override
-    public IPage<LogDO> getLogPage(Integer page, Integer count, String name, Date start, Date end) {
-        Page<LogDO> pager = new Page<>(page, count);
-        IPage<LogDO> iPage = this.baseMapper.findLogsByUsernameAndRange(pager, name, start, end);
+    public IPage<Log> getLogPage(Integer page, Integer count, String name, Date start, Date end) {
+        Page<Log> pager = new Page<>(page, count);
+        IPage<Log> iPage = this.baseMapper.findLogsByUsernameAndRange(pager, name, start, end);
         return iPage;
     }
 
     @Override
-    public IPage<LogDO> searchLogPage(Integer page, Integer count, String name, String keyword, Date start, Date end) {
-        Page<LogDO> pager = new Page<>(page, count);
-        IPage<LogDO> iPage = this.baseMapper.searchLogsByUsernameAndKeywordAndRange(pager, name, "%" + keyword + "%", start, end);
+    public IPage<Log> searchLogPage(Integer page, Integer count, String name, String keyword, Date start, Date end) {
+        Page<Log> pager = new Page<>(page, count);
+        IPage<Log> iPage = this.baseMapper.searchLogsByUsernameAndKeywordAndRange(pager, name, "%" + keyword + "%", start, end);
         return iPage;
     }
 
     @Override
     public IPage<String> getUserNamePage(Integer page, Integer count) {
-        Page<LogDO> pager = new Page<>(page, count);
+        Page<Log> pager = new Page<>(page, count);
         IPage<String> iPage = this.baseMapper.getUserNames(pager);
         return iPage;
     }
 
     @Override
     public boolean createLog(String message, String permission, Integer userId, String username, String method, String path, Integer status) {
-        LogDO record = LogDO.builder()
+        Log record = Log.builder()
                 .message(message)
                 .userId(userId)
                 .username(username)

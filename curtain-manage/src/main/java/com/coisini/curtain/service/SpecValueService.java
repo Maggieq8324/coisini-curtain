@@ -1,18 +1,18 @@
 package com.coisini.curtain.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.coisini.curtain.dto.SpecValueDTO;
-import com.coisini.curtain.model.SpecKeyValueDO;
-import com.coisini.curtain.model.SpecValueDO;
+import com.coisini.curtain.evt.SpecValueEvt;
+import com.coisini.curtain.model.SpecKeyValue;
+import com.coisini.curtain.model.SpecValue;
 
-public interface SpecValueService extends IService<SpecValueDO> {
+public interface SpecValueService extends IService<SpecValue> {
 
-    void create(SpecValueDTO dto);
+    void create(SpecValueEvt evt);
 
-    void update(SpecValueDTO dto, Integer id);
+    void update(SpecValueEvt evt, Integer id);
 
     void delete(Integer id);
 
-    SpecKeyValueDO getSpecKeyAndValueById(Integer keyId, Integer valueId);
+    SpecKeyValue getSpecKeyAndValueById(Integer keyId, Integer valueId);
 
 }
