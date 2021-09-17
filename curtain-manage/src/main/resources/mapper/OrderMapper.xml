@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coisini.curtain.mapper.OrderMapper">
+
+    <update id="changeOrderStatus">
+        update `order` o set o.status = #{status} where o.id = #{id}
+    </update>
+
+    <select id="searchOrders" resultType="com.coisini.curtain.model.OrderDO">
+        SELECT o.* FROM `order` o
+        WHERE o.delete_time IS NULL
+        <if test="start != null and end != null">
+            AND o.create_time BETWEEN #{start} AND #{end}
+        </if>
+        <if test="keyword != null">
+            AND o.order_no LIKE #{keyword}
+        </if>
+        ORDER BY o.create_time DESC
+    </select>
+
+</mapper>

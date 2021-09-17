@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coisini.curtain.mapper.SkuMapper">
+
+    <select id="getDetail" resultType="com.coisini.curtain.model.SkuDetailDO">
+        select s.id,
+        s.price,
+        s.discount_price,
+        s.online,
+        s.img,
+        s.title,
+        s.spu_id,
+        s.code,
+        s.stock,
+        s.specs,
+        p.title spu_name
+        from sku s
+        left join spu p on p.id = s.spu_id
+        where s.id = #{id}
+        and s.delete_time is null
+    </select>
+
+</mapper>

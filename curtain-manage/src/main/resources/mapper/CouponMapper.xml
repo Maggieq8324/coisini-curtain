@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coisini.curtain.mapper.CouponMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.CouponDO">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="description" property="description"/>
+        <result column="full_money" property="fullMoney"/>
+        <result column="minus" property="minus"/>
+        <result column="rate" property="rate"/>
+        <result column="type" property="type"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+        <result column="valitiy" property="valitiy"/>
+        <result column="activity_id" property="activityId"/>
+        <result column="remark" property="remark"/>
+        <result column="whole_store" property="wholeStore"/>
+    </resultMap>
+
+    <select id="getCouponsByActivityId" resultType="java.lang.Integer">
+        select c.id
+        from coupon c
+        where c.activity_id = #{id}
+        and c.delete_time is null
+    </select>
+
+</mapper>

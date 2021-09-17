@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coisini.curtain.mapper.SpecKeyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coisini.curtain.model.SpecKeyDO">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+        <result column="name" property="name"/>
+        <result column="unit" property="unit"/>
+        <result column="standard" property="standard"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+    <select id="getBySpuId" resultType="com.coisini.curtain.model.SpecKeyDO">
+        #         2张表 spu_key, spec_key
+        SELECT sk2.*
+        FROM spu_key sk
+                 JOIN spec_key sk2 ON sk.spec_key_id = sk2.id
+        WHERE sk.spu_id = #{spuId} AND sk2.delete_time is NULL
+
+    </select>
+
+
+</mapper>
