@@ -1,4 +1,4 @@
-package com.coisini.curtain.controller.v1;
+package com.coisini.curtain.controller.serve;
 
 import com.coisini.curtain.model.TokenModel;
 import com.coisini.curtain.model.TokenGetModel;

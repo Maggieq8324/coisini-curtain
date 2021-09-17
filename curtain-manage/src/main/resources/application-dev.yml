@@ -4,10 +4,9 @@ spring:
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: sunday
     url: jdbc:mysql://localhost:3306/curtain?useSSL=false&serverTimezone=UTC&characterEncoding=UTF8
     username: root
-
+    password: sunday
 
 # 开启权限拦截
 auth:

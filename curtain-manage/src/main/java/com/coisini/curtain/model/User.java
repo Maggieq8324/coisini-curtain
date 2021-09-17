@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("lin_user")
+@TableName("sys_user")
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseModel implements Serializable {
 

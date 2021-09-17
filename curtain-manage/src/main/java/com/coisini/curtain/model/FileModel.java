@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @Version 1.0
  */
 @Data
-@TableName("lin_file")
+@TableName("sys_file")
 @EqualsAndHashCode(callSuper = true)
 public class FileModel extends BaseModel implements Serializable {
 

@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("lin_user_identity")
+@TableName("sys_user_identity")
 public class UserIdentity extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 456555840105356178L;

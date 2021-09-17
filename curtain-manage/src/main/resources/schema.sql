@@ -4,8 +4,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- 文件表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_file;
-CREATE TABLE lin_file
+DROP TABLE IF EXISTS sys_file;
+CREATE TABLE sys_file
 (
     id          int(10) unsigned NOT NULL AUTO_INCREMENT,
     path        varchar(500)     NOT NULL,
@@ -26,8 +26,8 @@ CREATE TABLE lin_file
 -- ----------------------------
 -- 日志表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_log;
-CREATE TABLE lin_log
+DROP TABLE IF EXISTS sys_log;
+CREATE TABLE sys_log
 (
     id          int(10) unsigned NOT NULL AUTO_INCREMENT,
     message     varchar(450)              DEFAULT NULL,
@@ -48,8 +48,8 @@ CREATE TABLE lin_log
 -- ----------------------------
 -- 权限表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_permission;
-CREATE TABLE lin_permission
+DROP TABLE IF EXISTS sys_permission;
+CREATE TABLE sys_permission
 (
     id          int(10) unsigned NOT NULL AUTO_INCREMENT,
     name        varchar(60)      NOT NULL COMMENT '权限名称，例如：访问首页',
@@ -66,8 +66,8 @@ CREATE TABLE lin_permission
 -- ----------------------------
 -- 分组表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_group;
-CREATE TABLE lin_group
+DROP TABLE IF EXISTS sys_group;
+CREATE TABLE sys_group
 (
     id          int(10) unsigned NOT NULL AUTO_INCREMENT,
     name        varchar(60)      NOT NULL COMMENT '分组名称，例如：搬砖者',
@@ -85,8 +85,8 @@ CREATE TABLE lin_group
 -- ----------------------------
 -- 分组-权限表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_group_permission;
-CREATE TABLE lin_group_permission
+DROP TABLE IF EXISTS sys_group_permission;
+CREATE TABLE sys_group_permission
 (
     id            int(10) unsigned NOT NULL AUTO_INCREMENT,
     group_id      int(10) unsigned NOT NULL COMMENT '分组id',
@@ -100,8 +100,8 @@ CREATE TABLE lin_group_permission
 -- ----------------------------
 -- 用户基本信息表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_user;
-CREATE TABLE lin_user
+DROP TABLE IF EXISTS sys_user;
+CREATE TABLE sys_user
 (
     id          int(10) unsigned NOT NULL AUTO_INCREMENT,
     username    varchar(24)      NOT NULL COMMENT '用户名，唯一',
@@ -126,8 +126,8 @@ CREATE TABLE lin_user
 # identifier 标识（手机号 邮箱 用户名或第三方应用的唯一标识）
 # credential 密码凭证（站内的保存密码，站外的不保存或保存token）
 -- ----------------------------
-DROP TABLE IF EXISTS lin_user_identity;
-CREATE TABLE lin_user_identity
+DROP TABLE IF EXISTS sys_user_identity;
+CREATE TABLE sys_user_identity
 (
     id            int(10) unsigned NOT NULL AUTO_INCREMENT,
     user_id       int(10) unsigned NOT NULL COMMENT '用户id',
@@ -146,8 +146,8 @@ CREATE TABLE lin_user_identity
 -- ----------------------------
 -- 用户-分组表
 -- ----------------------------
-DROP TABLE IF EXISTS lin_user_group;
-CREATE TABLE lin_user_group
+DROP TABLE IF EXISTS sys_user_group;
+CREATE TABLE sys_user_group
 (
     id       int(10) unsigned NOT NULL AUTO_INCREMENT,
     user_id  int(10) unsigned NOT NULL COMMENT '用户id',
@@ -164,20 +164,20 @@ CREATE TABLE lin_user_group
 -- ----------------------------
 BEGIN;
 
-INSERT INTO lin_user(id, username, nickname)
+INSERT INTO sys_user(id, username, nickname)
 VALUES (1, 'root', 'root');
 
-INSERT INTO lin_user_identity (id, user_id, identity_type, identifier, credential)
+INSERT INTO sys_user_identity (id, user_id, identity_type, identifier, credential)
 VALUES (1, 1, 'USERNAME_PASSWORD', 'root',
         'pbkdf2sha256:64000:18:24:n:yUnDokcNRbwILZllmUOItIyo9MnI00QW:6ZcPf+sfzyoygOU8h/GSoirF');
 
-INSERT INTO lin_group(id, name, info, level)
+INSERT INTO sys_group(id, name, info, level)
 VALUES (1, 'root', '超级用户组', 'root');
 
-INSERT INTO lin_group(id, name, info, level)
+INSERT INTO sys_group(id, name, info, level)
 VALUES (2, 'guest', '游客组', 'guest');
 
-INSERT INTO lin_user_group(id, user_id, group_id)
+INSERT INTO sys_user_group(id, user_id, group_id)
 VALUES (1, 1, 1);
 
 COMMIT;

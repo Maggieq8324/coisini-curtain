@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @Builder
-@TableName("lin_permission")
+@TableName("sys_permission")
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor

@@ -12,6 +12,12 @@ spring:
 
 server:
   port: 8081
+  ssl:
+    key-store: classpath:server.keystore
+    key-alias: tomcat
+    enabled: true
+    key-store-password: 1qazxdr5
+    key-store-type: JKS
 
 coisini:
   api-package: com.coisini.curtain.controller

@@ -1,4 +1,4 @@
-package com.coisini.curtain.controller.v1;
+package com.coisini.curtain.controller.serve;
 
 import com.coisini.curtain.entity.Tag;
 import com.coisini.curtain.service.TagService;

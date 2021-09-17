@@ -17,15 +17,15 @@
     <select id="selectUserGroups" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         SELECT g.id, g.name, g.info,g.level,
         g.create_time,g.update_time,g.delete_time
-        from lin_group AS g
+        from sys_group AS g
         WHERE
         g.delete_time IS NULL
         AND
         g.id IN
         (
         SELECT ug.group_id
-        FROM lin_user AS u
-        LEFT JOIN lin_user_group as ug
+        FROM sys_user AS u
+        LEFT JOIN sys_user_group as ug
         ON ug.user_id = u.id
         WHERE u.id = #{userId}
         AND u.delete_time IS NULL
@@ -34,15 +34,15 @@
 
     <select id="selectUserGroupIds" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT g.id
-        from lin_group AS g
+        from sys_group AS g
         WHERE
         g.delete_time IS NULL
         AND
         g.id IN
         (
         SELECT ug.group_id
-        FROM lin_user AS u
-        LEFT JOIN lin_user_group as ug
+        FROM sys_user AS u
+        LEFT JOIN sys_user_group as ug
         ON ug.user_id = u.id
         WHERE u.id = #{userId}
         AND u.delete_time IS NULL
@@ -50,17 +50,17 @@
     </select>
 
     <select id="selectCountById" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-        SELECT COUNT(*) AS count FROM lin_group WHERE delete_time IS NULL AND id = #{id}
+        SELECT COUNT(*) AS count FROM sys_group WHERE delete_time IS NULL AND id = #{id}
     </select>
 
     <select id="selectCountUserByUserIdAndGroupName" resultType="java.lang.Integer">
         SELECT COUNT(*) AS count
-        FROM lin_user_group AS ug
+        FROM sys_user_group AS ug
         WHERE
         ug.user_id = #{userId}
         AND
         ug.group_id =
-        (SELECT g.id FROM lin_group AS g WHERE g.name = #{groupName} AND g.delete_time IS NULL)
+        (SELECT g.id FROM sys_group AS g WHERE g.name = #{groupName} AND g.delete_time IS NULL)
     </select>
 
 </mapper>

@@ -18,7 +18,7 @@
     </resultMap>
 
     <select id="findLogsByUsernameAndRange" resultType="com.coisini.curtain.model.Log">
-        SELECT l.* FROM lin_log l
+        SELECT l.* FROM sys_log l
         WHERE l.delete_time IS NULL
         <if test="name != null">
             AND l.username=#{name}
@@ -30,7 +30,7 @@
     </select>
 
     <select id="searchLogsByUsernameAndKeywordAndRange" resultType="com.coisini.curtain.model.Log">
-        SELECT l.* FROM lin_log l
+        SELECT l.* FROM sys_log l
         WHERE l.delete_time IS NULL
         <if test="name != null">
             AND l.username=#{name}
@@ -46,7 +46,7 @@
 
     <select id="getUserNames" resultType="java.lang.String">
         SELECT l.username
-        FROM lin_log l
+        FROM sys_log l
         WHERE l.delete_time IS NULL
         GROUP BY l.username
         HAVING COUNT(l.username) > 0

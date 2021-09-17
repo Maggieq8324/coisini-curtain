@@ -10,7 +10,7 @@
     </resultMap>
 
     <insert id="insertBatch">
-        INSERT INTO lin_user_group(user_id, group_id)
+        INSERT INTO sys_user_group(user_id, group_id)
         VALUES
         <foreach collection="relations" item="relation" separator=",">
             (#{relation.userId}, #{relation.groupId})

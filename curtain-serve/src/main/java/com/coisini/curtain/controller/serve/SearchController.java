@@ -1,4 +1,4 @@
-package com.coisini.curtain.controller.v1;
+package com.coisini.curtain.controller.serve;
 
 import com.coisini.curtain.core.common.PageCounter;
 import com.coisini.curtain.core.common.PagingDozer;

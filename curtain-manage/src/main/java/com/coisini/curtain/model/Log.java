@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("lin_log")
+@TableName("sys_log")
 @EqualsAndHashCode(callSuper = true)
 public class Log extends BaseModel implements Serializable {
 

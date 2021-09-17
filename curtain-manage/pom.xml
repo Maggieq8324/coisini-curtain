@@ -11,7 +11,7 @@
 
     <groupId>com.coisini</groupId>
     <artifactId>curtain-manage</artifactId>
-    <version>s0.0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>curtain-manage</name>
     <description>SpringBoot API project for Curtain</description>
 
