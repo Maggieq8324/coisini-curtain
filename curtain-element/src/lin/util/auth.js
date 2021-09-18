@@ -12,6 +12,8 @@ function hasAuth(permission, user = store.state.user || {}, permissions = store.
     return true
   }
 
+  console.log('hasAuth', permissions)
+
   if (typeof permission === 'string') {
     return permissions.includes(permission)
   }

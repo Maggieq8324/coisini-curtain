@@ -33,7 +33,7 @@ public class CategoryEvt {
     private String img;
 
     @Positive
-    private Integer index;
+    private Integer sort;
 
     @Enum(allowNull = true, target = OnlineOrNotEnum.class)
     private Integer online;

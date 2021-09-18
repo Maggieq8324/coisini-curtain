@@ -7,14 +7,14 @@
           <div class="title">
             <span>修改规格名</span>
           </div>
-          <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-            <el-form-item label="规格名名称" prop="name">
-              <el-input disabled size="medium" v-model="form.name" placeholder="请填写规格名名称"></el-input>
+          <el-form :model="form" status-icon ref="specKeyForm" label-width="100px" @submit.native.prevent>
+            <el-form-item label="规格名名称" prop="name" :rules="rules.Null">
+              <el-input size="medium" v-model="form.name" placeholder="请填写规格名名称"></el-input>
             </el-form-item>
-            <el-form-item label="规格名描述" prop="description">
+            <el-form-item label="规格名描述" prop="description" :rules="rules.Null">
               <el-input size="medium" v-model="form.description" placeholder="请填写规格名描述"></el-input>
             </el-form-item>
-            <el-form-item label="单位" prop="unit">
+            <el-form-item label="单位" prop="unit" :rules="rules.Null">
               <el-input size="medium" v-model="form.unit" placeholder="请填写单位，如：英寸"></el-input>
             </el-form-item>
             <el-form-item label="是否标准">
@@ -29,12 +29,12 @@
             </el-form-item>
             <el-form-item class="submit">
               <el-button
-                v-permission="{ permission: ['更新规格名'], type: 'disabled' }"
+                v-permission="{ permission: ['更新规格名'] }"
                 type="primary"
-                @click="submitForm('form')"
+                @click="submitForm('specKeyForm')"
                 >保 存</el-button
               >
-              <el-button @click="resetForm('form')">重 置</el-button>
+              <el-button @click="resetForm('specKeyForm')" v-permission="{ permission: ['更新规格名'] }">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -42,7 +42,12 @@
           <el-divider></el-divider>
           <div class="title plus">
             <span>规格值列表</span>
-            <el-button style="margin-left:30px;" @click.prevent="handleAdd" type="primary" plain size="medium"
+            <el-button style="margin-left:30px;"
+                       @click.prevent="handleAdd"
+                       type="primary"
+                       plain
+                       size="medium"
+                       v-permission="{ permission: ['创建规格值'] }"
               >添加规格值</el-button
             >
           </div>
@@ -53,10 +58,10 @@
             <el-table-column :show-overflow-tooltip="true" prop="extend" min-width="200" label="扩展"></el-table-column>
             <el-table-column width="150" fixed="right" label="操作">
               <template slot-scope="scope">
-                <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+                <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
                 <el-button
                   @click.prevent="handleDelete(scope.row)"
-                  v-permission="{ permission: ['删除规格值'], type: 'disabled' }"
+                  v-permission="{ permission: ['删除规格值'] }"
                   type="danger"
                   size="mini"
                   plain
@@ -83,6 +88,8 @@
 <script>
 import SpecKey from '@/model/spec-key'
 import SpecValue from '@/model/spec-value'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 import SpecValueEdit from './spec-value-edit'
 
 export default {
@@ -104,6 +111,10 @@ export default {
         unit: '',
         standard: 0,
       },
+      handleEditText: Auth.hasAuth('更新规格值') ? '编辑' : '详情',
+      rules: {
+        ...rules
+      }
     }
   },
   watch: {
@@ -116,15 +127,19 @@ export default {
     },
   },
   async mounted() {
-    this.getDetail()
+    await this.getDetail()
   },
   methods: {
-    async submitForm() {
-      const form = { ...this.form }
-      const res = await SpecKey.editSpecKey(this.id, form)
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-      }
+    async submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          const form = { ...this.form }
+          const res = await SpecKey.editSpecKey(this.id, form)
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+          }
+        }
+      })
     },
     handleDelete(row) {
       this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
@@ -134,7 +149,7 @@ export default {
       }).then(async () => {
         const res = await SpecValue.deleteSpecValue(row.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getDetail()
+          await this.getDetail()
           this.$message({
             type: 'success',
             message: `${res.message}`,
@@ -149,7 +164,7 @@ export default {
     async getDetail() {
       this.loading = true
       const { id } = this.$route.params
-      this.id = id
+      this.id = parseInt(id, 0)
       const res = await SpecKey.getSpecKeyDetail(id)
       // eslint-disable-next-line
       this.isStandard = res.standard === 1 ? true : false

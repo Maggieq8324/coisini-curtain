@@ -4,25 +4,26 @@
       <div class="dialog-title">
         <span>{{ isCreate ? '创建规格值' : '更新规格值' }}</span>
       </div>
-      <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-        <el-form-item label="规格值名称" prop="value">
+      <el-form :model="form" status-icon ref="specValueForm" label-width="100px" @submit.native.prevent>
+        <el-form-item label="规格值名称" prop="value" :rules="rules.Null">
           <el-input size="medium" v-model="form.value" placeholder="请填写规格值名称"></el-input>
         </el-form-item>
-        <el-form-item label="扩展" prop="extend">
+        <el-form-item label="扩展" prop="extend" :rules="rules.Null">
           <el-input size="medium" v-model="form.extend" placeholder="请填写规格值扩展"></el-input>
         </el-form-item>
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" style="padding-left:5px;">
-      <el-button type="primary" @click="submitForm" v-permission="{ permission: '更新规格值', type: 'disabled' }"
+      <el-button type="primary" @click="submitForm('specValueForm')" v-permission="{ permission: '更新规格值' }"
         >确 定</el-button
       >
-      <el-button @click="resetForm('form')">重 置</el-button>
+      <el-button @click="resetForm('specValueForm')" v-permission="{ permission: '更新规格值' }">重 置</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 import SpecValue from '@/model/spec-value'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {},
@@ -60,6 +61,9 @@ export default {
         value: '',
         extend: '',
       },
+      rules: {
+        ...rules
+      }
     }
   },
   async mounted() {
@@ -69,19 +73,23 @@ export default {
     }
   },
   methods: {
-    async submitForm() {
-      const form = { ...this.form }
-      let res
-      if (this.isCreate) {
-        form.spec_id = this.specId
-        res = await SpecValue.addSpecValue(form)
-      } else {
-        res = await SpecValue.editSpecValue(this.specValueId, form)
-      }
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-        this.$emit('dialogClose')
-      }
+    async submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          const form = { ...this.form }
+          let res
+          if (this.isCreate) {
+            form.spec_id = this.specId
+            res = await SpecValue.addSpecValue(form)
+          } else {
+            res = await SpecValue.editSpecValue(this.specValueId, form)
+          }
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+            this.$emit('dialogClose')
+          }
+        }
+      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
