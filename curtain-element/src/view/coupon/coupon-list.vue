@@ -2,8 +2,8 @@
   <div>
     <div v-if="!showEdit" class="container">
       <div class="header">
-        <div class="title">优惠卷列表</div>
-        <!-- <el-button @click.prevent="addCoupon" type="primary" plain size="medium">添加优惠卷</el-button> -->
+        <div class="title">优惠券列表</div>
+        <!-- <el-button @click.prevent="addCoupon" type="primary" plain size="medium">添加优惠券</el-button> -->
       </div>
 
       <el-table stripe v-loading="loading" :data="tableData">
@@ -27,11 +27,11 @@
           min-width="200"
           label="描述"
         ></el-table-column>
-        <el-table-column fixed="right" width="150" label="操作">
+        <el-table-column fixed="right" :width="columnWith" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
             <el-button
-              v-permission="{ auth: ['删除优惠卷'], type: 'disabled' }"
+              v-permission="{ permission: ['删除优惠券'] }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"
@@ -42,6 +42,9 @@
         </el-table-column>
       </el-table>
 
+      <div class="header">
+        <div class="title">优惠券模板列表</div>
+      </div>
       <el-table stripe v-loading="loading" :data="templates">
         <el-table-column prop="id" label="id" width="100"></el-table-column>
         <el-table-column prop="title" label="名称" width="250"></el-table-column>
@@ -52,10 +55,10 @@
           <template slot-scope="scope">{{ scope.row.type | typeFormat }}</template>
         </el-table-column>
         <el-table-column prop="description" label="描述" min-width="300"></el-table-column>
-        <el-table-column fixed="right" width="300" label="操作">
+        <el-table-column fixed="right" width="150" label="操作" align="center">
           <template slot-scope="scope">
             <el-button
-              v-permission="{ permission: ['创建优惠卷'], type: 'disabled' }"
+              v-permission="{ permission: ['创建优惠券'], type: 'disabled' }"
               @click.prevent="addCoupon(scope.row)"
               type="primary"
               plain
@@ -80,10 +83,16 @@
 <script>
 import dayjs from 'dayjs'
 import Coupon from '@/model/coupon'
+import Auth from '@/lin/util/auth'
 import CouponEdit from './CouponEdit'
 
 export default {
   components: { CouponEdit },
+  computed: {
+    columnWith() {
+      return Auth.hasAuth(['删除优惠券']) ? 150 : 90
+    }
+  },
   props: {
     activityId: {
       type: String,
@@ -125,7 +134,7 @@ export default {
     async handleCurrentChange(val) {
       this.currentPage = val
       this.loading = true
-      this.getCoupons()
+      await this.getCoupons()
       this.loading = false
     },
     handleEdit(val) {
@@ -141,7 +150,7 @@ export default {
       }).then(async () => {
         const res = await Coupon.deleteCoupon(val.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getCoupons()
+          await this.getCoupons()
           this.$message({
             type: 'success',
             message: `${res.message}`,

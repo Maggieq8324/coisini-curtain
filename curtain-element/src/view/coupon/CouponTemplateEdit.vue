@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="title">
-      <span>{{ isCreate ? '创建优惠卷模板' : '更新优惠卷模板' }}</span>
+      <span>{{ isCreate ? '创建优惠券模板' : '更新优惠券模板' }}</span>
       <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
     </div>
     <div class="wrap">
@@ -15,11 +15,11 @@
             </el-form-item>
 
             <el-form-item label="标题" prop="title">
-              <el-input size="medium" v-model="form.title" placeholder="请填写优惠卷标题"></el-input>
+              <el-input size="medium" v-model="form.title" placeholder="请填写优惠券标题"></el-input>
             </el-form-item>
 
             <el-form-item label="描述" prop="description">
-              <el-input size="medium" v-model="form.description" placeholder="请填写优惠卷描述"></el-input>
+              <el-input size="medium" v-model="form.description" placeholder="请填写优惠券描述"></el-input>
             </el-form-item>
 
             <el-form-item label="满减额" prop="full_money" v-if="form.type === 1 || form.type === 4">
@@ -36,7 +36,7 @@
 
             <el-form-item class="submit">
               <el-button
-                v-permission="{ permission: ['创建优惠卷模板', '更新优惠卷模板'], type: 'disabled' }"
+                v-permission="{ permission: ['创建优惠券模板', '更新优惠券模板'], type: 'disabled' }"
                 type="primary"
                 @click="submitForm('form')"
                 >保 存</el-button

@@ -41,8 +41,6 @@ public class Coupon {
      */
     private Integer type;
 
-    private Integer valitiy;
-
     private Integer activityId;
 
     private String remark;

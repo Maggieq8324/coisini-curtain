@@ -1,32 +1,32 @@
 <template>
   <div class="container">
     <div class="title">
-      <span>{{ isCreate ? '创建优惠卷' : '更新优惠卷' }}</span>
+      <span>{{ couponEditTitle }}</span>
       <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
     </div>
     <div class="wrap">
       <el-row>
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
-          <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-            <el-form-item label="标题" prop="title">
-              <el-input size="medium" v-model="form.title" placeholder="请填写优惠卷标题"></el-input>
+          <el-form :model="form" status-icon ref="couponForm" label-width="100px" @submit.native.prevent>
+            <el-form-item label="标题" prop="title" :rules="rules.Null">
+              <el-input size="medium" v-model="form.title" placeholder="请填写优惠券标题" :disabled="!hasAuth"></el-input>
             </el-form-item>
 
             <el-form-item label="满减额" prop="full_money">
-              <el-input-number v-model="form.full_money" :precision="2" :step="1"></el-input-number>
+              <el-input-number v-model="form.full_money" :precision="2" :step="1" :disabled="!hasAuth"></el-input-number>
             </el-form-item>
 
             <el-form-item label="优惠额" prop="minus">
-              <el-input-number v-model="form.minus" :precision="2" :step="1"></el-input-number>
+              <el-input-number v-model="form.minus" :precision="2" :step="1" :disabled="!hasAuth"></el-input-number>
             </el-form-item>
 
             <el-form-item label="折扣" prop="discount">
-              <el-input-number v-model="form.discount" :precision="2" :step="0.1" :max="1"></el-input-number>
+              <el-input-number v-model="form.discount" :precision="2" :step="0.1" :max="1" :disabled="!hasAuth"></el-input-number>
             </el-form-item>
 
-            <el-form-item label="类型" prop="type">
-              <!-- <el-input size="medium" v-model="form.type" placeholder="请填写优惠卷类型"></el-input> -->
-              <el-select v-model="form.type" placeholder="请填写类型">
+            <el-form-item label="类型" prop="type" :rules="rules.Null">
+              <!-- <el-input size="medium" v-model="form.type" placeholder="请填写优惠券类型"></el-input> -->
+              <el-select v-model="form.type" placeholder="请填写类型" :disabled="!hasAuth">
                 <el-option v-for="(item, index) in types" :key="item" :label="item" :value="index + 1"></el-option>
               </el-select>
             </el-form-item>
@@ -41,21 +41,23 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 :picker-options="pickerOptions"
+                :disabled="!hasAuth"
               ></el-date-picker>
             </el-form-item>
 
             <el-form-item label="描述" prop="description">
-              <el-input size="medium" v-model="form.description" placeholder="请填写优惠卷描述"></el-input>
+              <el-input size="medium" v-model="form.description" placeholder="请填写优惠券描述" :disabled="!hasAuth"></el-input>
             </el-form-item>
 
             <el-form-item class="submit">
               <el-button
-                v-permission="{ permission: ['创建优惠卷', '更新优惠卷'], type: 'disabled' }"
+                v-permission="{ permission: ['创建优惠券', '更新优惠券'] }"
                 type="primary"
-                @click="submitForm('form')"
+                @click="submitForm('couponForm')"
                 >保 存</el-button
               >
-              <el-button @click="resetForm('form')">重 置</el-button>
+              <el-button @click="resetForm('couponForm')"
+                         v-permission="{ permission: ['创建优惠券', '更新优惠券'] }">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -67,6 +69,8 @@
 <script>
 import dayjs from 'dayjs'
 import Coupon from '@/model/coupon'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   props: {
@@ -87,8 +91,15 @@ export default {
       default: null,
     },
   },
+  computed: {
+    couponEditTitle() {
+      // eslint-disable-next-line no-nested-ternary
+      return !this.hasAuth ? '优惠劵详情' : this.isCreate ? '创建优惠券' : '更新优惠券'
+    }
+  },
   data() {
     return {
+      hasAuth: Auth.hasAuth(['创建优惠券', '更新优惠券']),
       form: {
         name: '',
         title: '',
@@ -100,6 +111,9 @@ export default {
       },
       types: [],
       range: '',
+      rules: {
+        ...rules
+      },
       pickerOptions: {
         shortcuts: [
           {
@@ -148,43 +162,47 @@ export default {
   methods: {
     async submitForm(formName) {
       this.form.activity_id = this.activityId
-      try {
-        const postData = { ...this.form }
-        if (postData.discount === 0) {
-          postData.discount = null
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          try {
+            const postData = { ...this.form }
+            if (postData.discount === 0) {
+              postData.discount = null
+            }
+            if (postData.minus === 0) {
+              postData.minus = null
+            }
+            if (postData.full_money === 0) {
+              postData.full_money = null
+            }
+            postData.start_time = this.dateFormat(this.range[0])
+            postData.end_time = this.dateFormat(this.range[1])
+            let res
+            if (this.isCreate) {
+              res = await Coupon.addCoupon(postData)
+            } else {
+              res = await Coupon.editCoupon(
+                this.couponId,
+                // eslint-disable-next-line
+                postData,
+              )
+            }
+            if (res.code < window.MAX_SUCCESS_CODE) {
+              this.$message.success(`${res.message}`)
+              this.resetForm(formName)
+              this.$confirm('是否返回上一页?', '提示', {
+                confirmButtonText: '是',
+                cancelButtonText: '否',
+                type: 'info',
+              }).then(async () => {
+                this.$emit('editClose')
+              })
+            }
+          } catch (error) {
+            console.error(error)
+          }
         }
-        if (postData.minus === 0) {
-          postData.minus = null
-        }
-        if (postData.full_money === 0) {
-          postData.full_money = null
-        }
-        postData.start_time = this.dateFormat(this.range[0])
-        postData.end_time = this.dateFormat(this.range[1])
-        let res
-        if (this.isCreate) {
-          res = await Coupon.addCoupon(postData)
-        } else {
-          res = await Coupon.editCoupon(
-            this.couponId,
-            // eslint-disable-next-line
-            postData,
-          )
-        }
-        if (res.code < window.MAX_SUCCESS_CODE) {
-          this.$message.success(`${res.message}`)
-          this.resetForm(formName)
-          this.$confirm('是否返回上一页?', '提示', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'info',
-          }).then(async () => {
-            this.$emit('editClose')
-          })
-        }
-      } catch (error) {
-        console.error(error)
-      }
+      })
     },
     // 重置表单
     resetForm(formName) {

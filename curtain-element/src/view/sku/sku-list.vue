@@ -28,7 +28,7 @@
         <el-table-column :show-overflow-tooltip="true" prop="code" label="编码" width="200"></el-table-column>
         <el-table-column prop="stock" label="库存（个）" width="150"></el-table-column>
 
-        <el-table-column width="150" fixed="right" label="操作">
+        <el-table-column :width="columnWidth" fixed="right" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
             <el-button
@@ -61,13 +61,19 @@
 
 <script>
 import Sku from '@/model/sku'
-import SkuEdit from './sku-edit'
 import Auth from '@/lin/util/auth'
+import SkuEdit from './sku-edit'
 
 export default {
   components: { SkuEdit },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除SKU']) ? 150 : 90
+    }
+  },
   data() {
     return {
+      loading: false,
       skuId: null,
       isCreate: false,
       imgSrcList: [], // 用于大图预览
@@ -82,7 +88,7 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getSkus()
+    await this.getSkus()
     this.loading = false
   },
   methods: {
@@ -106,7 +112,7 @@ export default {
       this.imgSrcList = []
       this.currentPage = val
       this.loading = true
-      this.getSkus()
+      await this.getSkus()
       this.loading = false
     },
     handleEdit(val) {
@@ -122,7 +128,7 @@ export default {
       }).then(async () => {
         const res = await Sku.deleteSku(val.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getSkus()
+          await this.getSkus()
           this.$message({
             type: 'success',
             message: `${res.message}`,

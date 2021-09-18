@@ -4,6 +4,7 @@
       <div class="header">
         <div class="title">活动列表</div>
         <el-button style="margin-left:30px;" @click.prevent="addActivity" type="primary" plain size="medium"
+                   v-permission="{ permission: ['创建活动'] }"
           >添加活动</el-button
         >
       </div>
@@ -40,11 +41,11 @@
           prop="description"
           label="描述"
         ></el-table-column>
-        <el-table-column fixed="right" width="150" label="操作">
+        <el-table-column fixed="right" :width="columnWith" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
             <el-button
-              v-permission="{ permission: ['删除活动'], type: 'disabled' }"
+              v-permission="{ permission: ['删除活动'] }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"
@@ -74,12 +75,20 @@
 <script>
 import dayjs from 'dayjs'
 import Activity from '@/model/activity'
+import Auth from '@/lin/util/auth'
 import ActivityEdit from './activity-edit'
 
 export default {
   components: { ActivityEdit },
+  computed: {
+    columnWith() {
+      console.log(Auth)
+      return Auth.hasAuth(['删除活动']) ? 150 : 90
+    }
+  },
   data() {
     return {
+      loading: false,
       activityId: null,
       isCreate: false,
       tableData: [],
@@ -92,7 +101,7 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getActivities()
+    await this.getActivities()
     this.loading = false
   },
   methods: {
@@ -106,7 +115,7 @@ export default {
     async handleCurrentChange(val) {
       this.currentPage = val
       this.loading = true
-      this.getActivities()
+      await this.getActivities()
       this.loading = false
     },
     handleEdit(val) {
@@ -122,7 +131,7 @@ export default {
       }).then(async () => {
         const res = await Activity.deleteActivity(val.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getActivities()
+          await this.getActivities()
           this.$message({
             type: 'success',
             message: `${res.message}`,

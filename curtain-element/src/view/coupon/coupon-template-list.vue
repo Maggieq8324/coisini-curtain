@@ -2,7 +2,7 @@
   <div>
     <div v-if="!showEdit" class="container">
       <div class="header">
-        <div class="title">优惠卷模板列表</div>
+        <div class="title">优惠券模板列表</div>
         <el-button style="margin-left:30px;" @click.prevent="addCouponTemplate" type="primary" plain size="medium"
           >新增优惠券模板</el-button
         >
@@ -22,7 +22,7 @@
           <template slot-scope="scope">
             <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
             <el-button
-              v-permission="{ auth: ['删除优惠卷模板'], type: 'disabled' }"
+              v-permission="{ auth: ['删除优惠券模板'], type: 'disabled' }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"

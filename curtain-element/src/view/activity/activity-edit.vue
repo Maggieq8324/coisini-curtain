@@ -2,7 +2,7 @@
   <div>
     <sticky-top>
       <div class="title">
-        <span>{{ isCreate ? '创建优惠卷' : '更新优惠卷' }}</span>
+        <span>{{ activityEditTitle }}</span>
         <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
         <el-divider></el-divider>
       </div>
@@ -11,21 +11,21 @@
       <div class="wrap">
         <el-row>
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
-            <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-              <el-form-item label="标题" prop="title">
-                <el-input size="medium" v-model="form.title" placeholder="请填写优惠卷标题"></el-input>
+            <el-form :model="form" status-icon ref="activityForm" label-width="100px" @submit.native.prevent>
+              <el-form-item label="标题" prop="title" :rules="rules.Null">
+                <el-input size="medium" v-model="form.title" placeholder="请填写优惠卷标题" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
-              <el-form-item label="名称" prop="name">
-                <el-input size="medium" v-model="form.name" placeholder="请填写优惠卷名称"></el-input>
+              <el-form-item label="名称" prop="name" :rules="rules.Null">
+                <el-input size="medium" v-model="form.name" placeholder="请填写优惠卷名称" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
-              <el-form-item label="提示" prop="remark">
-                <el-input size="medium" v-model="form.remark" placeholder="请填写优惠卷提示"></el-input>
+              <el-form-item label="提示" prop="remark" :rules="rules.Null">
+                <el-input size="medium" v-model="form.remark" placeholder="请填写优惠卷提示" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
               <el-form-item label="状态" prop="online">
-                <el-select v-model="form.online" placeholder="请填写状态">
+                <el-select v-model="form.online" placeholder="请填写状态" :disabled="!hasAuth">
                   <el-option v-for="(item, index) in types" :key="item" :label="item" :value="index"></el-option>
                 </el-select>
               </el-form-item>
@@ -40,6 +40,7 @@
                   start-placeholder="开始日期"
                   end-placeholder="结束日期"
                   :picker-options="pickerOptions"
+                  :disabled="!hasAuth"
                 ></el-date-picker>
               </el-form-item>
 
@@ -51,26 +52,26 @@
                 <el-cascader placeholder="选择优惠卷" v-model="couponIds" :props="cascaderCouponProps"></el-cascader>
               </el-form-item>-->
 
-              <el-form-item label="主图" prop="cover_img">
-                <upload-imgs :max-num="maxNum" ref="uploadCoverEle" :rules="rules" :value="initCoverData" />
+              <el-form-item label="主图" prop="entrance_img" :rules="rules.Null">
+                <upload-imgs :max-num="maxNum" ref="uploadCoverEle" :rules="rules" :value="initCoverData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="顶部图" prop="internal_top_img">
-                <upload-imgs :max-num="maxNum" ref="uploadTopEle" :rules="rules" :value="initTopData" />
+              <el-form-item label="顶部图" prop="internal_top_img" :rules="rules.Null">
+                <upload-imgs :max-num="maxNum" ref="uploadTopEle" :rules="rules" :value="initTopData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="描述" prop="description">
-                <el-input size="medium" v-model="form.description" placeholder="请填写优惠卷描述"></el-input>
+              <el-form-item label="描述" prop="description" :rules="rules.Null">
+                <el-input size="medium" v-model="form.description" placeholder="请填写优惠卷描述" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
-              <el-form-item class="submit">
+              <el-form-item class="submit" v-if="hasAuth">
                 <el-button
-                  v-permission="{ permission: ['创建活动', '更新活动'], type: 'disabled' }"
+                  v-permission="{ permission: ['创建活动', '更新活动'] }"
                   type="primary"
-                  @click="submitForm('form')"
+                  @click="submitForm('activityForm')"
                   >保 存</el-button
                 >
-                <el-button @click="resetForm('form')">重 置</el-button>
+                <el-button @click="resetForm('activityForm')" >重 置</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -87,7 +88,9 @@ import Activity from '@/model/activity'
 import Category from '@/model/category'
 import coupon from '@/model/coupon'
 import UploadImgs from '@/component/base/upload-image'
+import Auth from '@/lin/util/auth'
 import CouponList from '../coupon/coupon-list'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: { UploadImgs, CouponList },
@@ -101,8 +104,18 @@ export default {
       default: null,
     },
   },
+  computed: {
+    activityEditTitle() {
+      if (!this.hasAuth) {
+        return '活动详情'
+      }
+
+      return this.isCreate ? '创建优惠卷' : '更新优惠卷'
+    }
+  },
   data() {
     return {
+      hasAuth: Auth.hasAuth(['创建活动', '更新活动']),
       form: {
         id: null,
         name: '',
@@ -110,6 +123,8 @@ export default {
         description: '',
         online: 1,
         remark: '',
+        entrance_img: '',
+        internal_top_img: '',
         coupon_ids: [],
       },
       types: ['下线', '上线'],
@@ -149,6 +164,7 @@ export default {
         minWidth: 10,
         minHeight: 10,
         maxSize: 5,
+        ...rules
       },
       initCoverData: [],
       initTopData: [],
@@ -221,41 +237,48 @@ export default {
     // eslint-disable-next-line
     async submitForm(formName) {
       await this.getValue()
-      try {
-        const postData = { ...this.form }
-        if (this.form.activity_cover_id === 0) {
-          this.form.activity_cover_id = null
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          try {
+            const postData = { ...this.form }
+            if (this.form.activity_cover_id === 0) {
+              this.form.activity_cover_id = null
+            }
+            postData.coupon_ids = this.couponIds.map(it => it[0])
+            postData.start_time = this.dateFormat(this.range[0])
+            postData.end_time = this.dateFormat(this.range[1])
+            let res
+            if (this.isCreate) {
+              res = await Activity.addActivity(postData)
+            } else {
+              res = await Activity.editActivity(
+                this.activityId,
+                // eslint-disable-next-line
+                postData,
+              )
+            }
+            if (res.code < window.MAX_SUCCESS_CODE) {
+              this.$message.success(`${res.message}`)
+              this.$confirm('是否返回上一页?', '提示', {
+                confirmButtonText: '是',
+                cancelButtonText: '否',
+                type: 'info',
+              }).then(async () => {
+                this.$emit('editClose')
+              })
+            }
+          } catch (error) {
+            console.error(error)
+          }
         }
-        postData.coupon_ids = this.couponIds.map(it => it[0])
-        postData.start_time = this.dateFormat(this.range[0])
-        postData.end_time = this.dateFormat(this.range[1])
-        let res
-        if (this.isCreate) {
-          res = await Activity.addActivity(postData)
-        } else {
-          res = await Activity.editActivity(
-            this.activityId,
-            // eslint-disable-next-line
-            postData,
-          )
-        }
-        if (res.code < window.MAX_SUCCESS_CODE) {
-          this.$message.success(`${res.message}`)
-          this.$confirm('是否返回上一页?', '提示', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'info',
-          }).then(async () => {
-            this.$emit('editClose')
-          })
-        }
-      } catch (error) {
-        console.error(error)
-      }
+      })
     },
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.range = ''
+      this.initCoverData = []
+      this.initTopData = []
     },
     back() {
       this.$emit('editClose')
