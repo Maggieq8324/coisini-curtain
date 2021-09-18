@@ -68,13 +68,12 @@ export default {
   },
   async created() {
     this.$nextTick(async () => {
-      this.getThirdUser()
+      await this.getThirdUser()
     })
   },
   methods: {
     async getThirdUser() {
-      const res = await ThirdUser.getThirdUser(this.userId)
-      this.form = res
+      this.form = await ThirdUser.getThirdUser(this.userId)
     },
     // eslint-disable-next-line
     async submitForm(formName) {},

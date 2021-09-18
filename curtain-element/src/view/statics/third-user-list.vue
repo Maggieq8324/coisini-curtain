@@ -2,7 +2,7 @@
   <div>
     <div v-if="!showEdit" class="container">
       <div class="header">
-        <div class="title">C端用户列表</div>
+        <div class="title">客户端用户列表</div>
         <div class="header-left" v-permission="'搜索用户'">
           <lin-search @query="onQueryChange" ref="searchKeyword" />
         </div>
@@ -33,9 +33,8 @@
         <el-table-column fixed="right" width="150" label="操作">
           <template slot-scope="scope">
             <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
-            <el-button disabled @click.prevent="handleDelete(scope.row)" type="danger" size="mini" plain
-              >删除</el-button
-            >
+<!--            <el-button disabled @click.prevent="handleDelete(scope.row)" type="danger" size="mini" plain-->
+<!--              >删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -65,6 +64,7 @@ export default {
   components: { LinSearch, UserDetail },
   data() {
     return {
+      loading: false,
       tableData: [],
       userId: null,
       showEdit: false,
@@ -78,7 +78,7 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getThirdUsers()
+    await this.getThirdUsers()
     this.loading = false
   },
   watch: {
@@ -119,9 +119,9 @@ export default {
       this.currentPage = val
       this.loading = true
       if (this.searchKeyword.length) {
-        this.searchPage()
+        await this.searchPage()
       } else {
-        this.getThirdUsers()
+        await this.getThirdUsers()
       }
       this.loading = false
     },
@@ -141,7 +141,7 @@ export default {
       }).then(async () => {
         const res = await ThirdUser.deleteThirdUser(val.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getThirdUsers()
+          await this.getThirdUsers()
           this.$message({
             type: 'success',
             message: `${res.message}`,

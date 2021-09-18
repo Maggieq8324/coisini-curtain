@@ -79,9 +79,10 @@
               </el-form-item>
 
               <el-form-item class="submit">
+                <!-- v-permission="{ permission: ['更新订单状态'], type: 'disabled' }" -->
                 <el-button
                   :disabled="actionDisabled"
-                  v-permission="{ permission: ['更新订单状态'], type: 'disabled' }"
+                  v-permission="{ permission: ['更新订单状态'] }"
                   type="primary"
                   @click="changeOrderStatus"
                   >{{ actionName }}</el-button
@@ -121,10 +122,10 @@ export default {
           case 3:
             return '完成'
           default:
-            return '不可操作'
+            return '当前订单不可操作'
         }
       } else {
-        return '不可操作'
+        return '当前订单不可操作'
       }
     },
     actionDisabled() {
@@ -141,7 +142,7 @@ export default {
   async created() {
     this.$nextTick(async () => {
       if (!this.isCreate) {
-        this.getOrder()
+        await this.getOrder()
       }
     })
   },
@@ -151,11 +152,10 @@ export default {
       if (res.code < window.MAX_SUCCESS_CODE) {
         this.$message.success(`${res.message}`)
       }
-      this.getOrder()
+      await this.getOrder()
     },
     async getOrder() {
-      const res = await order.getOrder(this.orderId)
-      this.form = res
+      this.form = await order.getOrder(this.orderId)
     },
     // eslint-disable-next-line
     async submitForm(formName) {},

@@ -45,10 +45,9 @@
 
         <el-table-column fixed="right" width="150" label="操作">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
-            <el-button disabled @click.prevent="handleDelete(scope.row)" type="danger" size="mini" plain
-              >删除</el-button
-            >
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
+<!--            <el-button disabled @click.prevent="handleDelete(scope.row)" type="danger" size="mini" plain-->
+<!--              >删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -77,7 +76,6 @@ import { transTimestamp } from '@/lin/util/date'
 import OrderDetail from './order-detail'
 
 export default {
-  // eslint-disable-next-line
   components: { OrderDetail, LinSearch, LinDatePicker },
   data() {
     return {
@@ -96,7 +94,7 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getOrders()
+    await this.getOrders()
     this.loading = false
   },
   watch: {
@@ -141,7 +139,6 @@ export default {
   },
   methods: {
     formatterTimestamp(row, column) {
-      console.log(row[column.property])
       return transTimestamp(row[column.property])
     },
     async getOrders() {
@@ -168,9 +165,9 @@ export default {
       this.currentPage = val
       this.loading = true
       if (this.searchKeyword.length || this.searchDate.length) {
-        this.searchPage()
+        await this.searchPage()
       } else {
-        this.getOrders()
+        await this.getOrders()
       }
       this.loading = false
     },
@@ -193,7 +190,7 @@ export default {
       }).then(async () => {
         const res = await Order.deleteOrder(val.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getOrders()
+          await this.getOrders()
           this.$message({
             type: 'success',
             message: `${res.message}`,
