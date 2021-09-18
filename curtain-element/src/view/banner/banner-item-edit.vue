@@ -2,7 +2,7 @@
   <div>
     <sticky-top>
       <div class="title">
-        <span>{{ isCreate ? '添加BannerItem' : '修改BannerItem' }}</span>
+        <span>{{ getBannerItemTitle() }}</span>
         <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
         <el-divider></el-divider>
       </div>
@@ -11,27 +11,28 @@
       <div class="wrap">
         <el-row>
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
-            <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
+            <el-form :model="form" status-icon ref="bannerItemForm" label-width="100px" @submit.native.prevent>
               <el-form-item label="名称" prop="name">
                 <el-input size="medium" v-model="form.name" placeholder="请填写名称"></el-input>
               </el-form-item>
-              <el-form-item label="关键字" prop="keyword">
+              <el-form-item label="关键字" prop="keyword" :rules="rules.Null">
                 <el-input size="medium" v-model="form.keyword" placeholder="请填写关键字"></el-input>
               </el-form-item>
-              <el-form-item label="类型" prop="type">
+              <el-form-item label="类型" prop="type" :rules="rules.InterNum">
                 <el-input size="medium" v-model="form.type" placeholder="请填写类型(数字)"></el-input>
               </el-form-item>
               <el-form-item label="图片" prop="img">
-                <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" />
+                <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" :disabled="uploadDisable"/>
               </el-form-item>
               <el-form-item class="submit">
                 <el-button
-                  v-permission="{ permission: ['创建Banner item', '更新Banner item'], type: 'disabled' }"
+                  v-permission="{ permission: ['创建Banner item', '更新Banner item'] }"
                   type="primary"
-                  @click="submitForm('form')"
+                  @click="submitForm('bannerItemForm')"
                   >保 存</el-button
                 >
-                <el-button @click="resetForm('form')">重 置</el-button>
+                <el-button @click="resetForm('bannerItemForm')"
+                           v-permission="{ permission: ['创建Banner item', '更新Banner item'] }">重 置</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -45,6 +46,8 @@
 import BannerItem from '@/model/banner-item'
 import UploadImgs from '@/component/base/upload-image'
 import StickyTop from '@/component/base/sticky-top/sticky-top'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {
@@ -62,7 +65,7 @@ export default {
     bannerId: {
       type: Number,
       default: null,
-    },
+    }
   },
   data() {
     return {
@@ -73,11 +76,13 @@ export default {
         type: null,
       },
       rules: {
+        ...rules,
         minWidth: 10,
         minHeight: 10,
         maxSize: 5,
       },
       initData: [],
+      uploadDisable: !Auth.hasAuth(['创建Banner item', '更新Banner item']),
     }
   },
   async mounted() {
@@ -93,27 +98,38 @@ export default {
     }
   },
   methods: {
+    getBannerItemTitle() {
+      if (this.uploadDisable) {
+        return 'BannerItem详情'
+      }
+
+      return this.isCreate ? '添加BannerItem' : '修改BannerItem'
+    },
     async getValue() {
       const val = await this.$refs.uploadEle.getValue()
       if (val && val.length > 0) {
         this.form.img = val[0].display
       }
     },
-    async submitForm() {
+    async submitForm(formName) {
       await this.getValue()
-      const form = { ...this.form }
-      let res
-      if (this.isCreate) {
-        form.banner_id = this.bannerId
-        res = await BannerItem.addBannerItem(form)
-      } else {
-        res = await BannerItem.editBannerItem(this.editID, form)
-      }
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-        this.resetForm('form')
-        this.$emit('editClose')
-      }
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          const form = { ...this.form }
+          let res
+          if (this.isCreate) {
+            form.banner_id = this.bannerId
+            res = await BannerItem.addBannerItem(form)
+          } else {
+            res = await BannerItem.editBannerItem(this.editID, form)
+          }
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+            this.resetForm('form')
+            this.$emit('editClose')
+          }
+        }
+      })
     },
     // 重置表单
     resetForm(formName) {

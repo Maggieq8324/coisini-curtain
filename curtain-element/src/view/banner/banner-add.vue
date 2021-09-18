@@ -4,17 +4,17 @@
     <div class="wrap">
       <el-row>
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
-          <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-            <el-form-item label="名称" prop="name">
+          <el-form :model="form" status-icon ref="bannerAddForm" label-width="100px" @submit.native.prevent>
+            <el-form-item label="名称" prop="name" :rules="rules.Null">
               <el-input size="medium" v-model="form.name" placeholder="请填写名称"></el-input>
             </el-form-item>
-            <el-form-item label="标题" prop="title">
+            <el-form-item label="标题" prop="title" :rules="rules.Null">
               <el-input size="medium" v-model="form.title" placeholder="请填写标题"></el-input>
             </el-form-item>
-            <el-form-item label="主图" prop="img">
-              <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" />
+            <el-form-item label="主图" prop="img" :rules="rules.Null">
+              <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" :disabled="uploadDisable"/>
             </el-form-item>
-            <el-form-item label="描述" prop="description">
+            <el-form-item label="描述" prop="description" :rules="rules.Null">
               <el-input size="medium" v-model="form.description" type="textarea" :rows="4" placeholder="请填写描述">
               </el-input>
             </el-form-item>
@@ -22,10 +22,10 @@
               <el-button
                 type="primary"
                 v-permission="{ permission: '创建Banner', type: 'disabled' }"
-                @click="submitForm('form')"
+                @click="submitForm('bannerAddForm')"
                 >保 存</el-button
               >
-              <el-button @click="resetForm('form')">重 置</el-button>
+              <el-button @click="resetForm('bannerAddForm')">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -37,6 +37,8 @@
 <script>
 import Banner from '@/model/banner'
 import UploadImgs from '@/component/base/upload-image'
+import rules from '@/lin/util/rules-1.0'
+import Auth from '@/lin/util/auth'
 
 export default {
   components: { UploadImgs },
@@ -50,31 +52,39 @@ export default {
       },
       initData: [],
       maxNum: 1,
+      rules: {
+        ...rules
+      },
+      uploadDisable: !Auth.hasAuth('创建Banner')
     }
   },
   methods: {
     async getValue() {
       const val = await this.$refs.uploadEle.getValue()
-      console.log(val)
       if (val && val.length > 0) {
         this.form.img = val[0].display
       }
     },
     async submitForm(formName) {
       await this.getValue()
-      const form = { ...this.form }
-      const res = await Banner.addBanner(form)
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-        this.resetForm(formName)
-        this.$confirm('是否跳转到Banner列表页？', '提示', {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'info',
-        }).then(async () => {
-          this.$router.push({ path: '/banner/list' })
-        })
-      }
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          // await this.getValue()
+          const form = { ...this.form }
+          const res = await Banner.addBanner(form)
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+            this.resetForm(formName)
+            this.$confirm('是否跳转到Banner列表页？', '提示', {
+              confirmButtonText: '是',
+              cancelButtonText: '否',
+              type: 'info',
+            }).then(async () => {
+              await this.$router.push({ path: '/banner/list' })
+            })
+          }
+        }
+      })
     },
     // 重置表单
     resetForm(formName) {

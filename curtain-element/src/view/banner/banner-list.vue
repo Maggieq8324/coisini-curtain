@@ -15,13 +15,14 @@
       <el-table-column prop="description" label="描述" min-width="200" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column fixed="right" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button @click.prevent="handleDetail(scope.row)" type="primary" plain size="mini">查看</el-button>
+          <el-button @click.prevent="handleDetail(scope.row)" type="primary" plain size="mini">详情</el-button>
+          <!-- v-permission="{ permission: '删除Banner', type: 'disabled' }" -->
           <el-button
             @click.prevent="handleDelete(scope.row)"
             type="danger"
             plain
             size="mini"
-            v-permission="{ permission: '删除Banner', type: 'disabled' }"
+            v-permission="{ permission: '删除Banner' }"
             >删除</el-button
           >
         </template>
