@@ -4,6 +4,7 @@
       <div class="header">
         <div class="title">主题列表</div>
         <el-button style="margin-left:30px;" @click.prevent="addTheme" type="primary" plain size="medium"
+                   v-permission="{ permission: ['创建主题'] }"
           >添加主题</el-button
         >
       </div>
@@ -44,11 +45,11 @@
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column fixed="right" width="150" label="操作">
+        <el-table-column fixed="right" :width="columnWith" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">查看</el-button>
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
             <el-button
-              v-permission="{ permission: ['删除主题'], type: 'disabled' }"
+              v-permission="{ permission: ['删除主题'] }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"
@@ -77,12 +78,19 @@
 
 <script>
 import Theme from '@/model/theme'
+import Auth from '@/lin/util/auth'
 import ThemeEdit from './theme-edit'
 
 export default {
   components: { ThemeEdit },
+  computed: {
+    columnWith() {
+      return Auth.hasAuth('删除主题') ? 150 : 90
+    }
+  },
   data() {
     return {
+      loading: false,
       themeId: null,
       isCreate: false,
       titleImgSrcList: [],
@@ -98,10 +106,11 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getThemes()
+    await this.getThemes()
     this.loading = false
   },
   methods: {
+
     async getThemes() {
       const page = this.currentPage - 1
       const count = this.pageCount
@@ -136,7 +145,7 @@ export default {
       this.internalTopImgSrcList = []
       this.currentPage = val
       this.loading = true
-      this.getThemes()
+      await this.getThemes()
       this.loading = false
     },
     handleEdit(val) {
@@ -152,7 +161,7 @@ export default {
       }).then(async () => {
         const res = await Theme.deleteTheme(val.id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          this.getThemes()
+          await this.getThemes()
           this.$message({
             type: 'success',
             message: `${res.message}`,

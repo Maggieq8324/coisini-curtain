@@ -2,7 +2,7 @@
   <div>
     <sticky-top>
       <div class="title">
-        <span>{{ isCreate ? '创建主题' : '更新主题' }}</span>
+        <span>{{ getThemEditTitle() }}</span>
         <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
         <el-divider></el-divider>
       </div>
@@ -11,19 +11,19 @@
       <div class="wrap">
         <el-row>
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
-            <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-              <el-form-item label="标题" prop="title">
-                <el-input size="medium" v-model="form.title" placeholder="请填写标题"></el-input>
+            <el-form :model="form" status-icon ref="themeForm" label-width="100px" @submit.native.prevent>
+              <el-form-item label="标题" prop="title" :rules="rules.Null">
+                <el-input size="medium" v-model="form.title" placeholder="请填写标题" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="名称" prop="title">
-                <el-input size="medium" v-model="form.name" placeholder="请填写名称"></el-input>
+              <el-form-item label="名称" prop="name" :rules="rules.Null">
+                <el-input size="medium" v-model="form.name" placeholder="请填写名称" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="主题描述" prop="description">
-                <el-input size="medium" v-model="form.description" placeholder="请填写主题描述"></el-input>
+              <el-form-item label="主题描述" prop="description" :rules="rules.Null">
+                <el-input size="medium" v-model="form.description" placeholder="请填写主题描述" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
-              <el-form-item label="模板名" prop="tpl_name">
-                <el-select v-model="form.tpl_name" placeholder="请选择模板名">
+              <el-form-item label="模板名" prop="tpl_name" :rules="rules.Null">
+                <el-select v-model="form.tpl_name" placeholder="请选择模板名" :disabled="!hasAuth">
                   <el-option v-for="item in tpl_options" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
               </el-form-item>
@@ -36,29 +36,31 @@
                   inactive-color="#ff4949"
                   active-text="上线"
                   inactive-text="下线"
+                  :disabled="!hasAuth"
                 ></el-switch>
               </el-form-item>
 
-              <el-form-item label="标题图" prop="title_img">
-                <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadImgEle" :value="initImgData" />
+              <el-form-item label="标题图" prop="title_img" :rules="rules.Null">
+                <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadImgEle" :value="initImgData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="入口图" prop="entrance_img">
-                <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadEntranceEle" :value="initEntranceData" />
+              <el-form-item label="入口图" prop="entrance_img" :rules="rules.Null">
+                <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadEntranceEle" :value="initEntranceData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="外部图" prop="entrance_img">
-                <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadInternalEle" :value="initInternalData" />
+              <el-form-item label="外部图" prop="entrance_img" :rules="rules.Null">
+                <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadInternalEle" :value="initInternalData" :disabled="!hasAuth"/>
               </el-form-item>
 
               <el-form-item class="submit">
                 <el-button
-                  v-permission="{ permission: ['创建主题', '更新主题'], type: 'disabled' }"
+                  v-permission="{ permission: ['创建主题', '更新主题'] }"
                   type="primary"
-                  @click="submitForm('form')"
+                  @click="submitForm('themeForm')"
                   >保 存</el-button
                 >
-                <el-button @click="resetForm('form')">重 置</el-button>
+                <el-button @click="resetForm('themeForm')"
+                           v-permission="{ permission: ['创建主题', '更新主题'] }">重 置</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -79,7 +81,7 @@
             </el-table-column>
             <el-table-column prop="title" label="标题" width="150"></el-table-column>
             <el-table-column prop="subtitle" label="副标题" min-width="300"></el-table-column>
-            <el-table-column fixed="right" width="150" label="操作">
+            <el-table-column v-if="hasAuth" fixed="right" width="150" label="操作">
               <template slot-scope="scope">
                 <el-button
                   v-permission="{ permission: ['删除主题下的spu'], type: 'disabled' }"
@@ -102,6 +104,7 @@
               :fetch-suggestions="querySpuSearch"
               placeholder="添加SPU"
               @select="handleSpuSelect"
+              v-permission="{ permission: ['添加主题下的spu'] }"
             >
               <template slot-scope="{ item }">
                 <span class="id">{{ item.id }}</span>
@@ -109,7 +112,7 @@
               </template>
             </el-autocomplete>
             <el-button
-              v-permission="{ permission: ['添加主题下的spu'], type: 'disabled' }"
+              v-permission="{ permission: ['添加主题下的spu'] }"
               class="add"
               @click.prevent="addThemeSpu"
               type="primary"
@@ -127,6 +130,8 @@
 <script>
 import theme from '@/model/theme'
 import UploadImgs from '@/component/base/upload-image'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {
@@ -170,6 +175,10 @@ export default {
       spuSuggestions: [],
       onlined: true,
       tpl_options: ['diana', 'irelia', 'camille', 'janna', 'spu-list'],
+      hasAuth: Auth.hasAuth(['创建主题', '更新主题']),
+      rules: {
+        ...rules
+      }
     }
   },
   watch: {
@@ -206,30 +215,41 @@ export default {
     }
   },
   methods: {
+    getThemEditTitle() {
+      if (!this.hasAuth) {
+        return '主题详情'
+      }
+
+      return this.isCreate ? '创建主题' : '更新主题'
+    },
     // eslint-disable-next-line
     async submitForm(formName) {
       await this.getValue()
-      try {
-        const postData = { ...this.form }
-        let res
-        if (this.isCreate) {
-          res = await theme.addTheme(postData)
-        } else {
-          res = await theme.editTheme(this.themeId, postData)
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          try {
+            const postData = { ...this.form }
+            let res
+            if (this.isCreate) {
+              res = await theme.addTheme(postData)
+            } else {
+              res = await theme.editTheme(this.themeId, postData)
+            }
+            if (res.code < window.MAX_SUCCESS_CODE) {
+              this.$message.success(`${res.message}`)
+              this.$confirm('是否返回上一页', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+              }).then(async () => {
+                this.$emit('editClose')
+              })
+            }
+          } catch (error) {
+            console.error(error)
+          }
         }
-        if (res.code < window.MAX_SUCCESS_CODE) {
-          this.$message.success(`${res.message}`)
-          this.$confirm('是否返回上一页', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-          }).then(async () => {
-            this.$emit('editClose')
-          })
-        }
-      } catch (error) {
-        console.error(error)
-      }
+      })
     },
     async addThemeSpu() {
       const info = { theme_id: this.form.id, spu_id: this.spuId }
@@ -308,6 +328,9 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.initImgData = []
+      this.initEntranceData = []
+      this.initInternalData = []
     },
     back() {
       this.$emit('editClose')
