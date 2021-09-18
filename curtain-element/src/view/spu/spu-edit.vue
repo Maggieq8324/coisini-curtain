@@ -2,7 +2,7 @@
   <div>
     <sticky-top>
       <div class="title">
-        <span>{{ isCreate ? '创建SPU' : '更新SPU' }}</span>
+        <span>{{getSpuEditTitle()}}</span>
         <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
         <el-divider></el-divider>
       </div>
@@ -11,20 +11,20 @@
       <div class="wrap">
         <el-row>
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
-            <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-              <el-form-item label="标题" prop="title">
-                <el-input size="medium" v-model="form.title" placeholder="请填写标题"></el-input>
+            <el-form :model="form" status-icon ref="spuForm" label-width="100px" @submit.native.prevent>
+              <el-form-item label="标题" prop="title" :rules="rules.Null">
+                <el-input size="medium" v-model="form.title" placeholder="请填写标题" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="副标题" prop="subtitle">
-                <el-input size="medium" v-model="form.subtitle" placeholder="请填写副标题"></el-input>
+              <el-form-item label="副标题" prop="subtitle" :rules="rules.Null">
+                <el-input size="medium" v-model="form.subtitle" placeholder="请填写副标题" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="价格" prop="price">
-                <el-input size="medium" v-model="form.price" placeholder="请填写价格"></el-input>
+              <el-form-item label="价格" prop="price" :rules="rules.NumPrice">
+                <el-input size="medium" v-model="form.price" placeholder="请填写价格" :disabled="!hasAuth"></el-input>
               </el-form-item>
               <el-form-item label="折扣" prop="discount_price">
-                <el-input size="medium" v-model="form.discount_price" placeholder="请填写折扣"></el-input>
+                <el-input size="medium" v-model="form.discount_price" placeholder="请填写折扣" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="分类" prop="category_id">
+              <el-form-item label="分类" prop="category_id" :rules="rules.Null">
                 <el-autocomplete
                   @focus="loadCategorySuggestions"
                   popper-class="my-autocomplete"
@@ -33,6 +33,7 @@
                   :fetch-suggestions="queryCategorySearch"
                   placeholder="请填写所属分类"
                   @select="handleCategorySelect"
+                  :disabled="!hasAuth"
                 >
                   <template slot-scope="{ item }">
                     <span class="id">{{ item.id }}</span>
@@ -49,6 +50,7 @@
                   :fetch-suggestions="querySkuSearch"
                   placeholder="请填写默认sku"
                   @select="handleSkuSelect"
+                  :disabled="!hasAuth"
                 >
                   <template slot-scope="{ item }">
                     <span class="id">{{ item.id }}</span>
@@ -65,6 +67,7 @@
                   inactive-color="#ff4949"
                   active-text="上架"
                   inactive-text="下架"
+                  :disabled="!hasAuth"
                 ></el-switch>
               </el-form-item>
 
@@ -75,28 +78,28 @@
                   content="主图可以选择不上传，默认选择轮播图的第一张为主图"
                   placement="top-start"
                 >
-                  <upload-imgs multiple :max-num="mainMaxNun" ref="uploadEle" :value="initData" />
+                  <upload-imgs multiple :max-num="mainMaxNun" ref="uploadEle" :value="initData" :disabled="!hasAuth"/>
                 </el-tooltip>
               </el-form-item>
 
               <el-form-item label="主题图" prop="for_theme_img">
-                <upload-imgs :max-num="mainMaxNun" ref="uploadThmeEle" :value="initThemeData" />
+                <upload-imgs :max-num="mainMaxNun" ref="uploadThmeEle" :value="initThemeData" :disabled="!hasAuth"/>
               </el-form-item>
 
               <el-form-item label="轮播图" prop="spu_img_list">
-                <upload-imgs multiple sortable :max-num="maxNum" ref="uploadBannerEle" :value="initBannerData" />
+                <upload-imgs multiple sortable :max-num="maxNum" ref="uploadBannerEle" :value="initBannerData" :disabled="!hasAuth"/>
               </el-form-item>
 
               <el-form-item label="详情图" prop="spu_detail_img_list">
-                <upload-imgs multiple sortable :max-num="maxNum" ref="uploadDetailEle" :value="initDetailData" />
+                <upload-imgs multiple sortable :max-num="maxNum" ref="uploadDetailEle" :value="initDetailData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="标签" prop="tags">
-                <dynamic-tag v-model="dynamicTags"></dynamic-tag>
+              <el-form-item label="标签" prop="tags" :rules="rules.Null">
+                <dynamic-tag v-model="form.tags" :disabled="hasAuth"></dynamic-tag>
               </el-form-item>
 
               <el-form-item label="选择规格" prop="specs">
-                <el-cascader placeholder="选择规格（可多选）" v-model="specs" :props="cascaderProps"></el-cascader>
+                <el-cascader placeholder="选择规格（可多选）" v-model="specs" :props="cascaderProps" :disabled="!hasAuth"></el-cascader>
               </el-form-item>
 
               <el-form-item label="可视规格" prop="sketch_spec_id">
@@ -108,6 +111,7 @@
                   :fetch-suggestions="querySpecKeySearch"
                   placeholder="请填写可视规格id"
                   @select="handleSpecKeySelect"
+                  :disabled="!hasAuth"
                 >
                   <template slot-scope="{ item }">
                     <span class="id">{{ item.id }}</span>
@@ -117,17 +121,18 @@
               </el-form-item>
 
               <el-form-item label="描述" prop="description">
-                <el-input size="medium" v-model="form.description" placeholder="请填写描述"></el-input>
+                <el-input size="medium" v-model="form.description" placeholder="请填写描述" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
               <el-form-item class="submit">
                 <el-button
-                  v-permission="{ permission: ['创建SPU', '更新SPU'], type: 'disabled' }"
+                  v-permission="{ permission: ['创建SPU', '更新SPU'] }"
                   type="primary"
-                  @click="submitForm('form')"
+                  @click="submitForm('spuForm')"
                   >保 存</el-button
                 >
-                <el-button @click="resetForm('form')">重 置</el-button>
+                <el-button @click="resetForm('spuForm')"
+                           v-permission="{ permission: ['创建SPU', '更新SPU'] }">重 置</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -144,6 +149,8 @@ import Sku from '@/model/sku'
 import SpecKey from '@/model/spec-key'
 import UploadImgs from '@/component/base/upload-image'
 import DynamicTag from '@/component/tag/DynamicTag.vue'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {
@@ -175,13 +182,14 @@ export default {
         description: null,
         spu_img_list: null,
         spu_detail_img_list: null,
+        tags: []
       },
       rules: {
         minWidth: 100,
         minHeight: 100,
         maxSize: 5,
+        ...rules
       },
-      dynamicTags: [],
       initData: [],
       initThemeData: [],
       initBannerData: [],
@@ -214,6 +222,7 @@ export default {
           }
         },
       },
+      hasAuth: Auth.hasAuth(['创建SPU', '更新SPU'])
     }
   },
   watch: {
@@ -224,7 +233,30 @@ export default {
   async mounted() {
     if (!this.isCreate) {
       const res = await Spu.getDetail(this.spuId)
-      this.form = res
+      console.log(JSON.stringify(res))
+      this.form = {
+        id: res.id,
+        title: res.title,
+        subtitle: res.subtitle,
+        category_id: res.category_id,
+        root_category_id: res.root_category_id,
+        online: res.online,
+        price: res.price,
+        sketch_spec_id: res.sketch_spec_id,
+        default_sku_id: res.default_sku_id,
+        img: res.img,
+        discount_price: res.discount_price,
+        description: res.description,
+        tags: res.tags.split('$') ? res.tags.split('$') : [],
+        is_test: res.is_test,
+        spu_theme_img: res.spu_theme_img,
+        for_theme_img: res.for_theme_img,
+        category_name: res.category_name,
+        sketch_spec_key_name: res.sketch_spec_key_name,
+        default_sku_title: res.default_sku_title,
+        spu_img_list: res.spu_img_list,
+        spu_detail_img_list: res.spu_detail_img_list
+      }
       const initData = [
         {
           id: res.id,
@@ -250,34 +282,48 @@ export default {
       this.skuState = res.default_sku_title
       const hitSpecKeys = await Spu.getSpecKeys(this.spuId)
       this.specs = hitSpecKeys.map(item => [item])
-      this.dynamicTags = res.tags ? res.tags.split('$') : []
+      // this.form.tags = res.tags.split('$') ? res.tags.split('$') : []
+      // console.log(this.form.tags)
+      // console.log('tags', typeof (this.form.tags))
     }
   },
   methods: {
+    getSpuEditTitle() {
+      if (!this.hasAuth) {
+        return 'SPU详情'
+      }
+
+      return this.isCreate ? '创建SPU' : '更新SPU'
+    },
     // eslint-disable-next-line
     async submitForm(formName) {
+      console.log(this.form)
       await this.getValue()
-      const postData = { ...this.form }
-      const tags = this.dynamicTags.join('$')
-      postData.spec_key_id_list = this.specs.map(spec => spec[0])
-      postData.tags = tags
-      let res
-      if (this.isCreate) {
-        res = await Spu.addSpu(postData)
-      } else {
-        res = await Spu.editSpu(this.spuId, postData)
-      }
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-        // this.resetForm(formName)
-        this.$confirm('是否返回上一页', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        }).then(async () => {
-          this.$emit('editClose')
-        })
-      }
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          const postData = { ...this.form }
+          const tags = this.form.tags.join('$')
+          postData.spec_key_id_list = this.specs.map(spec => spec[0])
+          postData.tags = tags
+          let res
+          if (this.isCreate) {
+            res = await Spu.addSpu(postData)
+          } else {
+            res = await Spu.editSpu(this.spuId, postData)
+          }
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+            // this.resetForm(formName)
+            this.$confirm('是否返回上一页', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+            }).then(async () => {
+              this.$emit('editClose')
+            })
+          }
+        }
+      })
     },
     // 重置表单
     resetForm(formName) {

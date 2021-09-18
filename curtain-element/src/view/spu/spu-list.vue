@@ -4,6 +4,7 @@
       <div class="header">
         <div class="title">SPU列表</div>
         <el-button style="margin-left:30px;" @click.prevent="addSpu" type="primary" plain size="medium"
+                   v-permission="{ permission: ['创建SPU'] }"
           >添加SPU</el-button
         >
       </div>
@@ -23,9 +24,9 @@
         </el-table-column>
         <el-table-column width="150" fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
             <el-button
-              v-permission="{ permission: ['删除SPU'], type: 'disabled' }"
+              v-permission="{ permission: ['删除SPU'] }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"
@@ -54,12 +55,14 @@
 
 <script>
 import Spu from '@/model/spu'
+import Auth from '@/lin/util/auth'
 import SpuEdit from './spu-edit'
 
 export default {
   components: { SpuEdit },
   data() {
     return {
+      loading: false,
       spuId: null,
       isCreate: false,
       imgSrcList: [], // 用于大图预览
@@ -69,11 +72,12 @@ export default {
       currentPage: 1,
       pageCount: 10,
       refreshPagination: true,
+      handleEditText: Auth.hasAuth('更新SPU') ? '编辑' : '详情'
     }
   },
   async created() {
     this.loading = true
-    this.getSpus()
+    await this.getSpus()
     this.loading = false
   },
   methods: {

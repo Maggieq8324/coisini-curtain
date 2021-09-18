@@ -11,7 +11,7 @@ export default {
   Null: [{
     required: true,
     pattern: /^(?=.*\S).+$/,
-    trigger: 'blur',
+    trigger: ['blur', 'change'],
     message: '必填项不能为空'
   }],
   // 登录密码
@@ -29,7 +29,7 @@ export default {
     trigger: 'blur'
   }],
   // 类似金钱,首位不为0,最多2位小数
-  NumPot2: [{
+  NumPrice: [{
     required: true,
     pattern: /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
     trigger: 'blur',
