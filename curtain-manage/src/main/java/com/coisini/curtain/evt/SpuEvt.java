@@ -21,10 +21,10 @@ public class SpuEvt {
     @Length(min = 1, max = 255)
     private String subtitle;
 
-    @Length(min = 1, max = 255)
+    @Length(min = 0, max = 255)
     private String img;
 
-    @Length(min = 1, max = 255)
+    @Length(min = 0, max = 255)
     private String forThemeImg;
 
     @Positive
