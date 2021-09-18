@@ -10,12 +10,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 /**
- * <p>
- *  Mapper 接口
- * </p>
- *
- * @author generator@TaleLin
- * @since 2020-05-28
+ * @Description Order Mapper 接口
+ * @author coisini
+ * @date Sep 17, 2021
+ * @Version 1.0
  */
 @Repository
 public interface OrderMapper extends BaseMapper<Order> {

@@ -22,7 +22,12 @@
         <el-table-column :show-overflow-tooltip="true" prop="order_no" label="订单号" width="150"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="user_id" label="用户id" width="150"></el-table-column>
         <el-table-column prop="total_count" label="单品数量" width="150"></el-table-column>
-        <el-table-column prop="total_price" width="200" label="总价格"></el-table-column>
+        <el-table-column prop="total_price" width="120" label="总价格"></el-table-column>
+        <el-table-column prop="create_time" width="200" label="创建时间" :formatter="formatterTimestamp">
+<!--          <template slot-scope="scope">-->
+<!--            {{transTimestamp(scope.row.createTime)}}-->
+<!--          </template>-->
+        </el-table-column>
         <el-table-column prop="status" min-width="100" label="状态">
           <template v-if="scope.row.status" slot-scope="scope">
             <div class="tags">
@@ -68,6 +73,7 @@
 import LinSearch from '@/component/base/search/lin-search'
 import LinDatePicker from '@/component/base/date-picker/lin-date-picker'
 import Order from '@/model/order'
+import { transTimestamp } from '@/lin/util/date'
 import OrderDetail from './order-detail'
 
 export default {
@@ -134,6 +140,10 @@ export default {
     },
   },
   methods: {
+    formatterTimestamp(row, column) {
+      console.log(row[column.property])
+      return transTimestamp(row[column.property])
+    },
     async getOrders() {
       const page = this.currentPage - 1
       const count = this.pageCount

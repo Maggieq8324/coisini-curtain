@@ -9,7 +9,6 @@ import spuConfig from './spu'
 import skuConfig from './sku'
 import themeConfig from './theme'
 import activityConfig from './activity'
-import bookConfig from './book' // 引入图书管理路由文件
 
 // eslint-disable-next-line import/no-mutable-exports
 let homeRouter = [
@@ -61,7 +60,6 @@ let homeRouter = [
   skuConfig,
   themeConfig,
   activityConfig,
-  bookConfig,
   adminConfig,
 ]
 

@@ -19,6 +19,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @Description Order 实现类
+ * @author coisini
+ * @date Sep 18, 2021
+ * @Version 1.0
+ */
 @Service
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
@@ -61,7 +67,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public IPage<Order> search(Integer page, Integer count, String keyword, Date start, Date end) {
         Page<Order> pager = new Page<>(page, count);
-        IPage<Order> paging = orderMapper.searchOrders(pager, keyword, start, end);
+        IPage<Order> paging = orderMapper.searchOrders(pager, "%" + keyword + "%", start, end);
         return paging;
     }
 
@@ -70,13 +76,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<OrderSimplifyVo> orderExpires = new ArrayList<>();
         orders.forEach(order -> {
             Date expireTime = order.getExpiredTime();
-            OrderSimplifyVo orderSimplifyVO = new OrderSimplifyVo();
-            BeanUtils.copyProperties(order, orderSimplifyVO);
+            OrderSimplifyVo orderSimplifyVo = new OrderSimplifyVo();
+            BeanUtils.copyProperties(order, orderSimplifyVo);
             if (expireTime != null) {
-                orderSimplifyVO.setExpired(expireTime.before(new Date()));
+                orderSimplifyVo.setExpired(expireTime.before(new Date()));
             }
-            orderSimplifyVO.setPrepayId(SensitiveDataUtil.defaultHide(orderSimplifyVO.getPrepayId()));
-            orderExpires.add(orderSimplifyVO);
+            orderSimplifyVo.setPrepayId(SensitiveDataUtil.defaultHide(orderSimplifyVo.getPrepayId()));
+            orderExpires.add(orderSimplifyVo);
         });
         return orderExpires;
     }
