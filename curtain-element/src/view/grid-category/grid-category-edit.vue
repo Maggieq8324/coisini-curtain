@@ -2,16 +2,16 @@
   <el-dialog :append-to-body="true" :before-close="handleClose" :visible.sync="visible">
     <div style="margin-top:-25px;">
       <div class="dialog-title">
-        <span>{{ isCreate ? '创建六宫格' : '更新六宫格' }}</span>
+        <span>{{getGridCategoryTitle()}}</span>
       </div>
-      <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-        <el-form-item label="标题" prop="title">
+      <el-form :model="form" status-icon ref="gridCategoryEditForm" label-width="100px" @submit.native.prevent>
+        <el-form-item label="标题" prop="title" :rules="rules.Null">
           <el-input size="medium" v-model="form.title" placeholder="请填写宫格标题"></el-input>
         </el-form-item>
-        <el-form-item label="名称" prop="name">
+        <el-form-item label="名称" prop="name" :rules="rules.Null">
           <el-input size="medium" v-model="form.name" placeholder="请填写宫格名"></el-input>
         </el-form-item>
-        <el-form-item label="分类" prop="category_id">
+        <el-form-item label="分类" prop="category_id" :rules="rules.Null">
           <el-autocomplete
             @focus="loadSuggestions"
             popper-class="my-autocomplete"
@@ -27,16 +27,16 @@
             </template>
           </el-autocomplete>
         </el-form-item>
-        <el-form-item label="图片" prop="img">
+        <el-form-item label="图片" prop="img" :rules="rules.Null">
           <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" />
         </el-form-item>
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" style="padding-left:5px;">
-      <el-button type="primary" @click="submitForm" v-permission="{ permission: '更新六宫格', type: 'disabled' }"
+      <el-button type="primary" @click="submitForm('gridCategoryEditForm')" v-permission="{ permission: '更新六宫格' }"
         >确 定</el-button
       >
-      <el-button @click="resetForm('form')">重 置</el-button>
+      <el-button @click="resetForm('gridCategoryEditForm')" v-permission="{ permission: '更新六宫格' }">重 置</el-button>
     </div>
   </el-dialog>
 </template>
@@ -44,6 +44,8 @@
 import GridCategory from '@/model/grid-category'
 import Category from '@/model/category'
 import UploadImgs from '@/component/base/upload-image'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {
@@ -81,9 +83,13 @@ export default {
       form: {
         name: '',
         title: '',
+        img: '',
         category_id: null,
         root_category_id: null,
       },
+      rules: {
+        ...rules
+      }
     }
   },
   watch: {
@@ -97,22 +103,34 @@ export default {
       this.form = res
       this.initData = [{ display: res.img }]
     }
-    this.loadSuggestions()
+    await this.loadSuggestions()
   },
   methods: {
-    async submitForm() {
+    getGridCategoryTitle() {
+      const hasAuth = Auth.hasAuth(['创建六宫格', '更新六宫格'])
+      if (!hasAuth) {
+        return '六宫格详情'
+      }
+
+      return this.isCreate ? '创建六宫格' : '更新六宫格'
+    },
+    async submitForm(formName) {
       await this.getValue()
-      const form = { ...this.form }
-      let res
-      if (this.isCreate) {
-        res = await GridCategory.addGridCategory(form)
-      } else {
-        res = await GridCategory.editGridCategory(this.gridCategoryId, form)
-      }
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-        this.$emit('dialogClose')
-      }
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          const form = { ...this.form }
+          let res
+          if (this.isCreate) {
+            res = await GridCategory.addGridCategory(form)
+          } else {
+            res = await GridCategory.editGridCategory(this.gridCategoryId, form)
+          }
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+            this.$emit('dialogClose')
+          }
+        }
+      })
     },
     querySearch(queryString, cb) {
       // eslint-disable-next-line

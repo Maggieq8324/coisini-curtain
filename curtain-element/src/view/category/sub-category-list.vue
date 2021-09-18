@@ -130,7 +130,7 @@ export default {
       this.imgSrcList = []
       this.currentPage = val
       this.loading = true
-      this.getSubCategories()
+      await this.getSubCategories()
       this.loading = false
     },
     initImgSrcList() {
@@ -169,7 +169,7 @@ export default {
           if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
             this.currentPage--
           }
-          this.getSubCategories()
+          await this.getSubCategories()
           this.$message({
             type: 'success',
             message: `${res.message}`,

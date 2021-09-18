@@ -8,7 +8,7 @@
         type="primary"
         plain
         size="medium"
-        v-permission="{ permission: '创建六宫格', type: 'disabled' }"
+        v-permission="{ permission: '创建六宫格' }"
         >创建六宫格</el-button
       >
     </div>
@@ -21,18 +21,18 @@
         </template>
       </el-table-column>
       <el-table-column prop="title" label="标题" width="200"></el-table-column>
+      <el-table-column prop="name" label="名称" width="200"></el-table-column>
       <el-table-column prop="category_id" label="分类id" width="150"></el-table-column>
       <el-table-column prop="root_category_id" label="父分类id" width="150"></el-table-column>
-      <el-table-column prop="index" label="排序" width="150"></el-table-column>
       <el-table-column fixed="right" width="150" label="操作">
         <template slot-scope="scope">
-          <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+          <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
           <el-button
             @click.prevent="handleDelete(scope.row)"
             type="danger"
             plain
             size="mini"
-            v-permission="{ permission: '删除六宫格', type: 'disabled' }"
+            v-permission="{ permission: '删除六宫格' }"
             >删除</el-button
           >
         </template>
@@ -52,6 +52,7 @@
 <script>
 import GridCategory from '@/model/grid-category'
 import GridCategoryEdit from './grid-category-edit'
+import Auth from '@/lin/util/auth'
 
 export default {
   components: {
@@ -59,6 +60,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       display: true,
       tableData: [],
       imgSrcList: [], // 用于大图预览
@@ -73,11 +75,12 @@ export default {
         online: 1,
         index: null,
       },
+      handleEditText: Auth.hasAuth('更新六宫格') ? '编辑' : '详情'
     }
   },
   async created() {
     this.loading = true
-    this.getGridCategories()
+    await this.getGridCategories()
     this.loading = false
   },
   methods: {
@@ -122,7 +125,7 @@ export default {
           if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
             this.currentPage--
           }
-          this.getSubCategories()
+          await this.getGridCategories()
           this.$message({
             type: 'success',
             message: `${res.message}`,
