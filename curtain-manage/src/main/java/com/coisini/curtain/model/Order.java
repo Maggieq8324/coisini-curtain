@@ -16,7 +16,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Data
-@TableName(value = "sys_order", autoResultMap = true)
+@TableName(value = "`order`", autoResultMap = true)
 public class Order {
 
     @TableId(value = "id", type = IdType.AUTO)
