@@ -8,7 +8,7 @@
         type="primary"
         plain
         size="medium"
-        v-permission="{ permission: '创建分类', type: 'disabled' }"
+        v-permission="{ permission: '创建分类' }"
         >创建分类</el-button
       >
     </div>
@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="名称" width="150"></el-table-column>
-      <el-table-column prop="index" label="排序" width="150"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="150"></el-table-column>
       <el-table-column prop="online" label="状态" width="100">
         <template slot-scope="scope">{{ scope.row.online | onlineFormat }}</template>
       </el-table-column>
@@ -29,13 +29,13 @@
       <el-table-column fixed="right" width="220" label="操作">
         <template slot-scope="scope">
           <el-button @click.prevent="handleSubList(scope.row)" type="primary" plain size="mini">子分类</el-button>
-          <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+          <el-button @click.prevent="handleEdit(scope.row)" type="danger" plain size="mini">{{handleEditText}}</el-button>
           <el-button
             @click.prevent="handleDelete(scope.row)"
             type="danger"
             plain
             size="mini"
-            v-permission="{ permission: '删除分类', type: 'disabled' }"
+            v-permission="{ permission: '删除分类' }"
             >删除</el-button
           >
         </template>
@@ -65,6 +65,7 @@
 
 <script>
 import Category from '@/model/category'
+import Auth from '@/lin/util/auth'
 import CategoryEdit from './category-edit'
 
 export default {
@@ -73,6 +74,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       display: true,
       tableData: [],
       categoryId: 0,
@@ -92,11 +94,12 @@ export default {
         online: 1,
         index: null,
       },
+      handleEditText: Auth.hasAuth('更新分类') ? '编辑' : '详情'
     }
   },
   async created() {
     this.loading = true
-    this.getCategories()
+    await this.getCategories()
     this.loading = false
   },
   filters: {
@@ -123,7 +126,7 @@ export default {
       this.imgSrcList = []
       this.currentPage = val
       this.loading = true
-      this.getCategories()
+      await this.getCategories()
       this.loading = false
     },
     initImgSrcList() {
@@ -163,7 +166,7 @@ export default {
           if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
             this.currentPage--
           }
-          this.getCategories()
+          await this.getCategories()
           this.$message({
             type: 'success',
             message: `${res.message}`,

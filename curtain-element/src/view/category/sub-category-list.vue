@@ -8,7 +8,7 @@
         type="primary"
         plain
         size="medium"
-        v-permission="{ permission: '创建分类', type: 'disabled' }"
+        v-permission="{ permission: '创建分类' }"
         >创建子分类</el-button
       >
     </div>
@@ -21,20 +21,20 @@
         </template>
       </el-table-column>
       <el-table-column prop="name" label="名称" width="150"></el-table-column>
-      <el-table-column prop="index" label="排序" width="150"></el-table-column>
+      <el-table-column prop="sort" label="排序" width="150"></el-table-column>
       <el-table-column prop="online" label="状态" width="100">
         <template slot-scope="scope">{{ scope.row.online | onlineFormat }}</template>
       </el-table-column>
       <el-table-column prop="description" label="描述" min-width="200" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column fixed="right" width="200" label="操作">
         <template slot-scope="scope">
-          <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+          <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
           <el-button
             @click.prevent="handleDelete(scope.row)"
             type="danger"
             plain
             size="mini"
-            v-permission="{ permission: '删除分类', type: 'disabled' }"
+            v-permission="{ permission: '删除分类' }"
             >删除</el-button
           >
         </template>
@@ -65,6 +65,7 @@
 
 <script>
 import Category from '@/model/category'
+import Auth from '@/lin/util/auth'
 import CategoryEdit from './category-edit'
 
 export default {
@@ -73,6 +74,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       display: true,
       tableData: [],
       superCategoryId: 0,
@@ -94,13 +96,14 @@ export default {
         online: 1,
         index: null,
       },
+      handleEditText: Auth.hasAuth('更新分类') ? '编辑' : '详情'
     }
   },
   async created() {
     this.loading = true
     this.superCategoryId = this.$route.params.id
     this.superCategoryName = this.$route.query.categoryName
-    this.getSubCategories()
+    await this.getSubCategories()
     this.loading = false
   },
   filters: {

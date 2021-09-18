@@ -2,14 +2,14 @@
   <el-dialog :append-to-body="true" :before-close="handleClose" :visible.sync="visible">
     <div style="margin-top:-25px;">
       <div class="dialog-title">
-        <span>{{ isCreate ? '创建分类' : '更新分类' }}</span>
+        <span>{{ getCategoryEditTitle() }}</span>
       </div>
-      <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-        <el-form-item label="名称" prop="name">
+      <el-form :model="form" status-icon ref="categoryEditForm" label-width="100px" @submit.native.prevent>
+        <el-form-item label="名称" prop="name" :rules="rules.Null">
           <el-input size="medium" v-model="form.name" placeholder="请填写分类名"></el-input>
         </el-form-item>
-        <el-form-item label="排序" prop="index">
-          <el-input size="medium" v-model="form.index" placeholder="请填写分类排序"></el-input>
+        <el-form-item label="排序" prop="sort" :rules="rules.InterNum">
+          <el-input size="medium" v-model="form.sort" placeholder="请填写分类排序"></el-input>
         </el-form-item>
         <el-form-item label="显示上线" prop="online">
           <el-switch
@@ -20,26 +20,28 @@
             inactive-text="下线"
           ></el-switch>
         </el-form-item>
-        <el-form-item label="图片" prop="img">
+        <el-form-item label="图片" prop="img" :rules="rules.Null">
           <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" />
         </el-form-item>
-        <el-form-item label="描述" prop="description">
+        <el-form-item label="描述" prop="description" :rules="rules.Null">
           <el-input size="medium" v-model="form.description" type="textarea" :rows="1" placeholder="请填写描述">
           </el-input>
         </el-form-item>
       </el-form>
     </div>
     <div slot="footer" class="dialog-footer" style="padding-left:5px;">
-      <el-button type="primary" @click="submitForm" v-permission="{ permission: '更新分类', type: 'disabled' }"
+      <el-button type="primary" @click="submitForm('categoryEditForm')" v-permission="{ permission: '更新分类' }"
         >确 定</el-button
       >
-      <el-button @click="resetForm('form')">重 置</el-button>
+      <el-button @click="resetForm('categoryEditForm')" v-permission="{ permission: '更新分类' }">重 置</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 import Category from '@/model/category'
 import UploadImgs from '@/component/base/upload-image'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {
@@ -69,7 +71,7 @@ export default {
         return this.dialogFormVisible
       },
       set() {},
-    },
+    }
   },
   data() {
     return {
@@ -82,8 +84,12 @@ export default {
         parent_id: null,
         description: '',
         online: 1,
-        index: null,
+        sort: null,
+        img: '',
       },
+      rules: {
+        ...rules
+      }
     }
   },
   watch: {
@@ -107,19 +113,31 @@ export default {
     }
   },
   methods: {
-    async submitForm() {
+    getCategoryEditTitle() {
+      const hasAuth = Auth.hasAuth('更新分类')
+      if (!hasAuth) {
+        return '分类详情'
+      }
+
+      return this.isCreate ? '创建分类' : '更新分类'
+    },
+    async submitForm(formName) {
       await this.getValue()
-      const form = { ...this.form }
-      let res
-      if (this.isCreate) {
-        res = await Category.addCategory(form)
-      } else {
-        res = await Category.editCategory(this.categoryId, form)
-      }
-      if (res.code < window.MAX_SUCCESS_CODE) {
-        this.$message.success(`${res.message}`)
-        this.$emit('dialogClose')
-      }
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          const form = { ...this.form }
+          let res
+          if (this.isCreate) {
+            res = await Category.addCategory(form)
+          } else {
+            res = await Category.editCategory(this.categoryId, form)
+          }
+          if (res.code < window.MAX_SUCCESS_CODE) {
+            this.$message.success(`${res.message}`)
+            this.$emit('dialogClose')
+          }
+        }
+      })
     },
     async getValue() {
       const val = await this.$refs.uploadEle.getValue()
