@@ -2,7 +2,7 @@
   <div>
     <sticky-top>
       <div class="title">
-        <span>{{ isCreate ? '创建SKU' : '更新SKU' }}</span>
+        <span>{{getSkuEditTitle()}}</span>
         <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
         <el-divider></el-divider>
       </div>
@@ -11,18 +11,18 @@
       <div class="wrap">
         <el-row>
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
-            <el-form :model="form" status-icon ref="form" label-width="100px" @submit.native.prevent>
-              <el-form-item label="标题" prop="title">
-                <el-input size="medium" v-model="form.title" placeholder="请填写标题"></el-input>
+            <el-form :model="form" status-icon ref="skuForm" label-width="100px" @submit.native.prevent>
+              <el-form-item label="标题" prop="title" :rules="rules.Null">
+                <el-input size="medium" v-model="form.title" placeholder="请填写标题" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
               <el-form-item label="价格" prop="price">
-                <el-input-number v-model="form.price" :precision="2" :step="0.1"></el-input-number>
+                <el-input-number v-model="form.price" :precision="2" :step="0.1" :disabled="!hasAuth"></el-input-number>
               </el-form-item>
 
               <!-- 折扣价 打折，或者折扣价 -->
               <el-form-item label="折扣价" prop="discount_price">
-                <el-radio-group v-model="radio">
+                <el-radio-group v-model="radio" :disabled="!hasAuth">
                   <el-radio :label="1">无折扣</el-radio>
                   <el-radio :label="2">折扣价</el-radio>
                   <el-radio :label="3">打折</el-radio>
@@ -40,19 +40,20 @@
                 <el-input disabled size="medium" v-model="form.code" placeholder="请填写编码"></el-input>
               </el-form-item>
 
-              <el-form-item label="库存" prop="stock">
-                <el-input-number v-model="form.stock" :step="1" step-strictly></el-input-number>
+              <el-form-item label="库存" prop="stock" :rules="rules.NumPos">
+                <el-input-number v-model="form.stock" :step="1" step-strictly :disabled="!hasAuth"></el-input-number>
               </el-form-item>
 
-              <el-form-item label="SPU" prop="spu_id">
+              <el-form-item label="SPU" prop="spu_name" :rules="rules.Null">
                 <el-autocomplete
                   @focus="loadSpuSuggestions"
                   popper-class="my-autocomplete"
                   class="inline-input"
-                  v-model="spuState"
+                  v-model="form.spu_name"
                   :fetch-suggestions="querySpuSearch"
                   placeholder="请填写所属SPU"
                   @select="handleSpuSelect"
+                  :disabled="!hasAuth"
                 >
                   <template slot-scope="{ item }">
                     <span class="id">{{ item.id }}</span>
@@ -69,11 +70,12 @@
                   inactive-color="#ff4949"
                   active-text="上架"
                   inactive-text="下架"
+                  :disabled="!hasAuth"
                 ></el-switch>
               </el-form-item>
 
-              <el-form-item label="图片" prop="img">
-                <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" />
+              <el-form-item label="图片" prop="img" :rules="rules.Null">
+                <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" :disabled="!hasAuth"/>
               </el-form-item>
 
               <el-form-item
@@ -86,17 +88,19 @@
                   :placeholder="`选择${specKey.name}`"
                   v-model="specs[index]"
                   :props="makeProps(specKey.id)"
+                  :disabled="!hasAuth"
                 ></el-cascader>
               </el-form-item>
 
               <el-form-item class="submit">
                 <el-button
-                  v-permission="{ permission: ['创建SKU', '更新SKU'], type: 'disabled' }"
+                  v-permission="{ permission: ['创建SKU', '更新SKU']}"
                   type="primary"
-                  @click="submitForm('form')"
+                  @click="submitForm('skuForm')"
                   >保 存</el-button
                 >
-                <el-button @click="resetForm('form')">重 置</el-button>
+                <el-button @click="resetForm('skuForm')"
+                           v-permission="{ permission: ['创建SKU', '更新SKU']}">重 置</el-button>
               </el-form-item>
             </el-form>
           </el-col>
@@ -112,6 +116,8 @@ import Sku from '@/model/sku'
 import SpecKey from '@/model/spec-key'
 import SpecValue from '@/model/spec-value'
 import UploadImgs from '@/component/base/upload-image'
+import Auth from '@/lin/util/auth'
+import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: {
@@ -138,8 +144,11 @@ export default {
         code: null,
         stock: null,
         img: null,
+        spu_id: null,
+        spu_name: null
       },
       rules: {
+        ...rules,
         minWidth: 10,
         minHeight: 10,
         maxSize: 5,
@@ -149,10 +158,10 @@ export default {
       initData: [],
       maxNum: 1,
       saled: true,
-      spuState: '',
       spuList: [],
       specs: [],
       specKeys: [],
+      hasAuth: Auth.hasAuth(['创建SKU', '更新SKU']),
     }
   },
   watch: {
@@ -190,12 +199,19 @@ export default {
         ]
         this.saled = res.online === 1
         this.initData = initData
-        this.spuState = res.spu_name
+        this.form.spu_name = res.spu_name
         await this.loadKeyAndValues(res.spu_id)
       }
     })
   },
   methods: {
+    getSkuEditTitle() {
+      if (!this.hasAuth) {
+        return 'SKU详情'
+      }
+
+      return this.isCreate ? '创建SKU' : '更新SKU'
+    },
     async loadKeyAndValues(spuId) {
       const specKeys = await SpecKey.getBySpuId(spuId)
       this.specKeys = specKeys
@@ -209,39 +225,48 @@ export default {
     // eslint-disable-next-line
     async submitForm(formName) {
       await this.getValue()
-      try {
-        const postData = { ...this.form }
-        const selectors = []
-        for (let i = 0; i < this.specs.length; i++) {
-          const spec = this.specs[i]
-          const specKeyTmp = this.specKeys[i]
-          const tmp = {
-            key_id: specKeyTmp.id,
-            value_id: spec[0],
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          try {
+            const postData = { ...this.form }
+            const selectors = []
+            for (let i = 0; i < this.specs.length; i++) {
+              const specKeyTmp = this.specKeys[i]
+              const spec = this.specs[i]
+
+              if (!spec[0]) {
+                this.$message.warning(`请选择${specKeyTmp.name}`)
+                return
+              }
+              const tmp = {
+                key_id: specKeyTmp.id,
+                value_id: spec[0],
+              }
+              selectors.push(tmp)
+            }
+            postData.selectors = selectors
+            let res
+            if (this.isCreate) {
+              res = await Sku.addSku(postData)
+            } else {
+              res = await Sku.editSku(this.skuId, postData)
+            }
+            if (res.code < window.MAX_SUCCESS_CODE) {
+              this.$message.success(`${res.message}`)
+              // this.resetForm(formName)
+              this.$confirm('是否返回上一页?', '提示', {
+                confirmButtonText: '是',
+                cancelButtonText: '否',
+                type: 'info',
+              }).then(async () => {
+                this.$emit('editClose')
+              })
+            }
+          } catch (error) {
+            console.error(error)
           }
-          selectors.push(tmp)
         }
-        postData.selectors = selectors
-        let res
-        if (this.isCreate) {
-          res = await Sku.addSku(postData)
-        } else {
-          res = await Sku.editSku(this.skuId, postData)
-        }
-        if (res.code < window.MAX_SUCCESS_CODE) {
-          this.$message.success(`${res.message}`)
-          // this.resetForm(formName)
-          this.$confirm('是否返回上一页?', '提示', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'info',
-          }).then(async () => {
-            this.$emit('editClose')
-          })
-        }
-      } catch (error) {
-        console.error(error)
-      }
+      })
     },
     makeProps(key_id) {
       return {
@@ -260,6 +285,9 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+      this.specKeys = []
+      this.specs = []
+      this.initData = []
     },
     querySpuSearch(queryString, cb) {
       // eslint-disable-next-line
@@ -274,7 +302,7 @@ export default {
       }
     },
     handleSpuSelect(item) {
-      this.spuState = item.title
+      this.form.spu_name = item.title
       this.form.spu_id = item.id
       this.loadKeyAndValues(item.id)
     },

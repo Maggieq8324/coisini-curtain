@@ -42,6 +42,13 @@ export default {
     trigger: 'blur',
     message: '请输入整数'
   }],
+  // 正整数
+  NumPos: [{
+    required: true,
+    pattern: /^[1-9]\d*$/,
+    trigger: ['blur', 'change'],
+    message: '请输入正整数'
+  }],
   // 邮箱
   Email: [{
     required: true,

@@ -4,6 +4,7 @@
       <div class="header">
         <div class="title">SKU列表</div>
         <el-button style="margin-left:30px;" @click.prevent="addSku" type="primary" plain size="medium"
+                   v-permission="{ permission: ['创建SKU'] }"
           >添加SKU</el-button
         >
       </div>
@@ -29,9 +30,9 @@
 
         <el-table-column width="150" fixed="right" label="操作">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
             <el-button
-              v-permission="{ permission: ['删除SKU'], type: 'disabled' }"
+              v-permission="{ permission: ['删除SKU'] }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"
@@ -61,6 +62,7 @@
 <script>
 import Sku from '@/model/sku'
 import SkuEdit from './sku-edit'
+import Auth from '@/lin/util/auth'
 
 export default {
   components: { SkuEdit },
@@ -75,6 +77,7 @@ export default {
       currentPage: 1,
       pageCount: 10,
       refreshPagination: true, // 页数增加的时候，因为缓存的缘故，需要刷新Pagination组件
+      handleEditText: Auth.hasAuth('更新SKU') ? '编辑' : '详情'
     }
   },
   async created() {
