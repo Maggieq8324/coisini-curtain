@@ -4,6 +4,7 @@
       <div class="header">
         <div class="title">优惠券模板列表</div>
         <el-button style="margin-left:30px;" @click.prevent="addCouponTemplate" type="primary" plain size="medium"
+                   v-permission="{ permission: ['创建优惠券模板'] }"
           >新增优惠券模板</el-button
         >
       </div>
@@ -18,11 +19,11 @@
           <template slot-scope="scope">{{ scope.row.type | typeFormat }}</template>
         </el-table-column>
         <el-table-column prop="description" label="描述" min-width="300"></el-table-column>
-        <el-table-column fixed="right" width="150" label="操作">
+        <el-table-column fixed="right" :width="columnWidth" label="操作" align="center">
           <template slot-scope="scope">
-            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+            <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
             <el-button
-              v-permission="{ auth: ['删除优惠券模板'], type: 'disabled' }"
+              v-permission="{ permission: ['删除优惠券模板'] }"
               @click.prevent="handleDelete(scope.row)"
               type="danger"
               size="mini"
@@ -46,9 +47,15 @@
 import dayjs from 'dayjs'
 import Coupon from '@/model/coupon'
 import CouponTemplateEdit from './CouponTemplateEdit'
+import Auth from '@/lin/util/auth'
 
 export default {
   components: { CouponTemplateEdit },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除优惠券模板']) ? 150 : 90
+    }
+  },
   props: {
     activityId: {
       type: String,
@@ -57,6 +64,7 @@ export default {
   },
   data() {
     return {
+      hasAuth: Auth.hasAuth(),
       couponId: null,
       isCreate: false,
       tableData: [],
