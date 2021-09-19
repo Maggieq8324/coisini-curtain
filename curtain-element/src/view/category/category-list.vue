@@ -26,7 +26,7 @@
         <template slot-scope="scope">{{ scope.row.online | onlineFormat }}</template>
       </el-table-column>
       <el-table-column prop="description" label="描述" min-width="200" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column fixed="right" width="220" label="操作">
+      <el-table-column fixed="right" :width="columnWidth" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click.prevent="handleSubList(scope.row)" type="primary" plain size="mini">子分类</el-button>
           <el-button @click.prevent="handleEdit(scope.row)" type="danger" plain size="mini">{{handleEditText}}</el-button>
@@ -71,6 +71,11 @@ import CategoryEdit from './category-edit'
 export default {
   components: {
     CategoryEdit,
+  },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth('删除分类') ? 220 : 150
+    }
   },
   data() {
     return {

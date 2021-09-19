@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="!showEdit">
     <div class="title">
-      <span>{{ uploadDisable ? 'Banner详情' : '修改Banner' }}</span> <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
+      <span>{{ hasAuth ? '修改Banner' : 'Banner详情' }}</span> <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
     </div>
     <el-divider></el-divider>
     <div class="wrap">
@@ -9,16 +9,17 @@
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-form ref="bannerForm" :model="form" status-icon label-width="100px" v-loading="loading" @submit.native.prevent>
             <el-form-item label="名称" prop="name" :rules="rules.Null">
-              <el-input size="medium" v-model="form.name" placeholder="请填写名称"></el-input>
+              <el-input size="medium" v-model="form.name" placeholder="请填写名称" :readonly="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="标题" prop="title" :rules="rules.Null">
-              <el-input size="medium" v-model="form.title" placeholder="请填写标题"></el-input>
+              <el-input size="medium" v-model="form.title" placeholder="请填写标题" :readonly="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="主图" prop="img" :rules="rules.Null">
-              <upload-imgs ref="uploadEle" :value="initData" :max-num="mainMaxNum" :disabled="uploadDisable"/>
+              <upload-imgs ref="uploadEle" :value="initData" :max-num="mainMaxNum" :disabled="!hasAuth"/>
             </el-form-item>
             <el-form-item label="描述" prop="description" :rules="rules.Null">
-              <el-input size="medium" v-model="form.description" type="textarea" :rows="4" placeholder="请填写描述">
+              <el-input size="medium" v-model="form.description" type="textarea"
+                        :rows="4" placeholder="请填写描述" :readonly="!hasAuth">
               </el-input>
             </el-form-item>
             <el-form-item class="submit">
@@ -90,8 +91,8 @@ import Banner from '@/model/banner'
 import BannerItem from '@/model/banner-item'
 import UploadImgs from '@/component/base/upload-image'
 import rules from '@/lin/util/rules-1.0'
-import BannerItemEdit from './banner-item-edit'
 import Auth from '@/lin/util/auth'
+import BannerItemEdit from './banner-item-edit'
 
 export default {
   components: {
@@ -105,6 +106,7 @@ export default {
   },
   data() {
     return {
+      hasAuth: Auth.hasAuth(['更新Banner']),
       loading: false,
       form: {
         name: '',
@@ -121,8 +123,7 @@ export default {
       // 验证规则
       rules: {
         ...rules
-      },
-      uploadDisable: !Auth.hasAuth('更新Banner')
+      }
     }
   },
   async mounted() {

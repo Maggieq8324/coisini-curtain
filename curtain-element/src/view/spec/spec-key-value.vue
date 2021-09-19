@@ -5,17 +5,17 @@
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-divider></el-divider>
           <div class="title">
-            <span>修改规格名</span>
+            <span>{{ hasAuth ? '修改规格名' : '规格名详情'}}</span>
           </div>
           <el-form :model="form" status-icon ref="specKeyForm" label-width="100px" @submit.native.prevent>
             <el-form-item label="规格名名称" prop="name" :rules="rules.Null">
-              <el-input size="medium" v-model="form.name" placeholder="请填写规格名名称"></el-input>
+              <el-input size="medium" v-model="form.name" placeholder="请填写规格名名称" :readonly="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="规格名描述" prop="description" :rules="rules.Null">
-              <el-input size="medium" v-model="form.description" placeholder="请填写规格名描述"></el-input>
+              <el-input size="medium" v-model="form.description" placeholder="请填写规格名描述" :readonly="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="单位" prop="unit" :rules="rules.Null">
-              <el-input size="medium" v-model="form.unit" placeholder="请填写单位，如：英寸"></el-input>
+              <el-input size="medium" v-model="form.unit" placeholder="请填写单位，如：英寸" :readonly="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="是否标准">
               <el-switch
@@ -25,6 +25,7 @@
                 inactive-color="#ff4949"
                 active-text="标准"
                 inactive-text="非标准"
+                :disabled="!hasAuth"
               ></el-switch>
             </el-form-item>
             <el-form-item class="submit">
@@ -34,7 +35,8 @@
                 @click="submitForm('specKeyForm')"
                 >保 存</el-button
               >
-              <el-button @click="resetForm('specKeyForm')" v-permission="{ permission: ['更新规格名'] }">重 置</el-button>
+              <el-button @click="resetForm('specKeyForm')"
+                         v-permission="{ permission: ['更新规格名'] }">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -56,9 +58,9 @@
             <el-table-column prop="id" label="id" width="150"></el-table-column>
             <el-table-column prop="value" label="规格值名称" width="150"></el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="extend" min-width="200" label="扩展"></el-table-column>
-            <el-table-column width="150" fixed="right" label="操作">
+            <el-table-column :width="columnWidth" fixed="right" label="操作" align="center">
               <template slot-scope="scope">
-                <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
+                <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{hasAuth ? '编辑' : '详情'}}</el-button>
                 <el-button
                   @click.prevent="handleDelete(scope.row)"
                   v-permission="{ permission: ['删除规格值'] }"
@@ -96,8 +98,14 @@ export default {
   components: {
     SpecValueEdit,
   },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除规格值']) ? 150 : 90
+    }
+  },
   data() {
     return {
+      hasAuth: Auth.hasAuth('更新规格值'),
       tableData: [],
       specValueId: 0,
       dialogFormVisible: false,
@@ -111,7 +119,6 @@ export default {
         unit: '',
         standard: 0,
       },
-      handleEditText: Auth.hasAuth('更新规格值') ? '编辑' : '详情',
       rules: {
         ...rules
       }

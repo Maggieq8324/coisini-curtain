@@ -17,7 +17,7 @@
         </div>
       </transition>
       <el-table stripe v-loading="loading" :data="tableData">
-        <el-table-column prop="id" label="id" width="100"></el-table-column>
+        <el-table-column prop="id" label="ID" width="100"></el-table-column>
         <el-table-column prop="avatar" label="头像" width="200">
           <template v-if="scope.row.avatar" slot-scope="scope">
             <img class="display_img" :src="scope.row.avatar" :alt="scope.row.avatar" />

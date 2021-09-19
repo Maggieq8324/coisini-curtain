@@ -33,7 +33,7 @@
         :fixed="item.fixed ? item.fixed : false"
         :width="item.width ? item.width : ''"
       ></el-table-column>
-      <el-table-column v-if="operate.length > 0" label="操作" fixed="right" width="275">
+      <el-table-column v-if="operate.length > 0" label="操作" fixed="right" width="150">
         <template slot-scope="scope">
           <el-button
             v-for="(item, index) in operate"

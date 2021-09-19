@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column prop="name" label="名称" width="150"></el-table-column>
       <el-table-column prop="description" label="描述" min-width="200" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column fixed="right" width="150" label="操作">
+      <el-table-column fixed="right" :width="columnWidth" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click.prevent="handleDetail(scope.row)" type="primary" plain size="mini">详情</el-button>
           <!-- v-permission="{ permission: '删除Banner', type: 'disabled' }" -->
@@ -46,11 +46,17 @@
 
 <script>
 import Banner from '@/model/banner'
+import Auth from '@/lin/util/auth'
 import BannerWithItems from './banner-with-items'
 
 export default {
   components: {
     BannerWithItems,
+  },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除Banner']) ? 150 : 90
+    }
   },
   data() {
     return {

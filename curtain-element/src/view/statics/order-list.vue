@@ -18,9 +18,9 @@
         </div>
       </transition>
       <el-table stripe v-loading="loading" :data="tableData">
-        <el-table-column prop="id" label="id" width="100"></el-table-column>
+        <el-table-column prop="id" label="ID" width="100"></el-table-column>
         <el-table-column :show-overflow-tooltip="true" prop="order_no" label="订单号" width="150"></el-table-column>
-        <el-table-column :show-overflow-tooltip="true" prop="user_id" label="用户id" width="150"></el-table-column>
+        <el-table-column :show-overflow-tooltip="true" prop="user_id" label="用户ID" width="150"></el-table-column>
         <el-table-column prop="total_count" label="单品数量" width="150"></el-table-column>
         <el-table-column prop="total_price" width="120" label="总价格"></el-table-column>
         <el-table-column prop="create_time" width="200" label="创建时间" :formatter="formatterTimestamp">
@@ -28,7 +28,7 @@
 <!--            {{transTimestamp(scope.row.createTime)}}-->
 <!--          </template>-->
         </el-table-column>
-        <el-table-column prop="status" min-width="100" label="状态">
+        <el-table-column prop="status" min-width="150" label="状态">
           <template v-if="scope.row.status" slot-scope="scope">
             <div class="tags">
               <el-tag :type="computeTagType(scope.row.status)">{{ scope.row.status | orderStatus }}</el-tag>
@@ -43,7 +43,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column fixed="right" width="150" label="操作">
+        <el-table-column fixed="right" width="90" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">详情</el-button>
 <!--            <el-button disabled @click.prevent="handleDelete(scope.row)" type="danger" size="mini" plain-->

@@ -2,14 +2,14 @@
   <el-dialog :append-to-body="true" :before-close="handleClose" :visible.sync="visible">
     <div style="margin-top:-25px;">
       <div class="dialog-title">
-        <span>{{ getCategoryEditTitle() }}</span>
+        <span>{{ categoryEditTitle }}</span>
       </div>
       <el-form :model="form" status-icon ref="categoryEditForm" label-width="100px" @submit.native.prevent>
         <el-form-item label="名称" prop="name" :rules="rules.Null">
-          <el-input size="medium" v-model="form.name" placeholder="请填写分类名"></el-input>
+          <el-input size="medium" v-model="form.name" placeholder="请填写分类名" :readonly="!hasAuth"></el-input>
         </el-form-item>
         <el-form-item label="排序" prop="sort" :rules="rules.InterNum">
-          <el-input size="medium" v-model="form.sort" placeholder="请填写分类排序"></el-input>
+          <el-input size="medium" v-model="form.sort" placeholder="请填写分类排序" :readonly="!hasAuth"></el-input>
         </el-form-item>
         <el-form-item label="显示上线" prop="online">
           <el-switch
@@ -18,13 +18,14 @@
             inactive-color="#ff4949"
             active-text="上线"
             inactive-text="下线"
+            :disabled="!hasAuth"
           ></el-switch>
         </el-form-item>
         <el-form-item label="图片" prop="img" :rules="rules.Null">
-          <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" />
+          <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" :disabled="!hasAuth"/>
         </el-form-item>
         <el-form-item label="描述" prop="description" :rules="rules.Null">
-          <el-input size="medium" v-model="form.description" type="textarea" :rows="1" placeholder="请填写描述">
+          <el-input size="medium" v-model="form.description" type="textarea" :rows="1" placeholder="请填写描述" :readonly="!hasAuth">
           </el-input>
         </el-form-item>
       </el-form>
@@ -71,10 +72,18 @@ export default {
         return this.dialogFormVisible
       },
       set() {},
-    }
+    },
+    categoryEditTitle() {
+      if (!this.hasAuth) {
+        return '分类详情'
+      }
+
+      return this.isCreate ? '创建分类' : '更新分类'
+    },
   },
   data() {
     return {
+      hasAuth: Auth.hasAuth(['更新分类', '创建分类']),
       display: true,
       initData: [],
       maxNum: 1,
@@ -113,14 +122,6 @@ export default {
     }
   },
   methods: {
-    getCategoryEditTitle() {
-      const hasAuth = Auth.hasAuth('更新分类')
-      if (!hasAuth) {
-        return '分类详情'
-      }
-
-      return this.isCreate ? '创建分类' : '更新分类'
-    },
     async submitForm(formName) {
       await this.getValue()
       this.$refs[formName].validate(async valid => {

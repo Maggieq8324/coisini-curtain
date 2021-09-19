@@ -6,13 +6,13 @@
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-form :model="form" status-icon ref="specKeyForm" label-width="100px" @submit.native.prevent>
             <el-form-item label="规格名名称" prop="name" :rules="rules.Null">
-              <el-input size="medium" v-model="form.name" placeholder="请填写规格名名称"></el-input>
+              <el-input size="medium" v-model="form.name" placeholder="请填写规格名名称" :disabled="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="规格名描述" prop="description" :rules="rules.Null">
-              <el-input size="medium" v-model="form.description" placeholder="请填写规格名描述"></el-input>
+              <el-input size="medium" v-model="form.description" placeholder="请填写规格名描述" :disabled="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="单位" prop="unit" :rules="rules.Null">
-              <el-input size="medium" v-model="form.unit" placeholder="请填写单位，如：英寸"></el-input>
+              <el-input size="medium" v-model="form.unit" placeholder="请填写单位，如：英寸" :disabled="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="是否标准">
               <el-switch
@@ -21,6 +21,7 @@
                 inactive-color="#ff4949"
                 active-text="标准"
                 inactive-text="非标准"
+                :disabled="!hasAuth"
               ></el-switch>
             </el-form-item>
             <el-form-item class="submit">
@@ -30,7 +31,8 @@
                 @click="submitForm('specKeyForm')"
                 >保 存</el-button
               >
-              <el-button @click="resetForm('specKeyForm')">重 置</el-button>
+              <el-button @click="resetForm('specKeyForm')"
+                         v-permission="{ permission: ['创建规格名'], type: 'disabled' }">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -42,10 +44,12 @@
 <script>
 import SpecKey from '@/model/spec-key'
 import rules from '@/lin/util/rules-1.0'
+import Auth from '@/lin/util/auth'
 
 export default {
   data() {
     return {
+      hasAuth: Auth.hasAuth(['创建规格名']),
       isStandard: true,
       form: {
         name: '',

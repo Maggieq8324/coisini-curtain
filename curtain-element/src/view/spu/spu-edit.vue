@@ -169,6 +169,7 @@ export default {
   },
   data() {
     return {
+      hasAuth: Auth.hasAuth(['创建SPU', '更新SPU']),
       form: {
         title: '',
         subtitle: '',
@@ -222,7 +223,6 @@ export default {
           }
         },
       },
-      hasAuth: Auth.hasAuth(['创建SPU', '更新SPU'])
     }
   },
   watch: {

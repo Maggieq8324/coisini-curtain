@@ -2,7 +2,7 @@
   <div>
     <sticky-top>
       <div class="title">
-        <span>{{ getBannerItemTitle() }}</span>
+        <span>{{ getBannerItemTitle }}</span>
         <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
         <el-divider></el-divider>
       </div>
@@ -13,16 +13,16 @@
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
             <el-form :model="form" status-icon ref="bannerItemForm" label-width="100px" @submit.native.prevent>
               <el-form-item label="名称" prop="name">
-                <el-input size="medium" v-model="form.name" placeholder="请填写名称"></el-input>
+                <el-input size="medium" v-model="form.name" placeholder="请填写名称" :readonly="!hasAuth"></el-input>
               </el-form-item>
               <el-form-item label="关键字" prop="keyword" :rules="rules.Null">
-                <el-input size="medium" v-model="form.keyword" placeholder="请填写关键字"></el-input>
+                <el-input size="medium" v-model="form.keyword" placeholder="请填写关键字" :readonly="!hasAuth"></el-input>
               </el-form-item>
               <el-form-item label="类型" prop="type" :rules="rules.InterNum">
-                <el-input size="medium" v-model="form.type" placeholder="请填写类型(数字)"></el-input>
+                <el-input size="medium" v-model="form.type" placeholder="请填写类型" :readonly="!hasAuth"></el-input>
               </el-form-item>
               <el-form-item label="图片" prop="img">
-                <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" :disabled="uploadDisable"/>
+                <upload-imgs :max-num="maxNum" ref="uploadEle" :value="initData" :disabled="!hasAuth"/>
               </el-form-item>
               <el-form-item class="submit">
                 <el-button
@@ -67,6 +67,15 @@ export default {
       default: null,
     }
   },
+  computed: {
+    getBannerItemTitle() {
+      if (!this.hasAuth) {
+        return 'BannerItem详情'
+      }
+
+      return this.isCreate ? '添加BannerItem' : '修改BannerItem'
+    }
+  },
   data() {
     return {
       maxNum: 1,
@@ -82,7 +91,7 @@ export default {
         maxSize: 5,
       },
       initData: [],
-      uploadDisable: !Auth.hasAuth(['创建Banner item', '更新Banner item']),
+      hasAuth: Auth.hasAuth(['创建Banner item', '更新Banner item']),
     }
   },
   async mounted() {
@@ -98,13 +107,6 @@ export default {
     }
   },
   methods: {
-    getBannerItemTitle() {
-      if (this.uploadDisable) {
-        return 'BannerItem详情'
-      }
-
-      return this.isCreate ? '添加BannerItem' : '修改BannerItem'
-    },
     async getValue() {
       const val = await this.$refs.uploadEle.getValue()
       if (val && val.length > 0) {

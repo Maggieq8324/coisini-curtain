@@ -24,7 +24,7 @@
       <el-table-column prop="name" label="名称" width="200"></el-table-column>
       <el-table-column prop="category_id" label="分类id" width="150"></el-table-column>
       <el-table-column prop="root_category_id" label="父分类id" width="150"></el-table-column>
-      <el-table-column fixed="right" width="150" label="操作">
+      <el-table-column fixed="right" :width="columnWidth" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
           <el-button
@@ -51,12 +51,17 @@
 
 <script>
 import GridCategory from '@/model/grid-category'
-import GridCategoryEdit from './grid-category-edit'
 import Auth from '@/lin/util/auth'
+import GridCategoryEdit from './grid-category-edit'
 
 export default {
   components: {
     GridCategoryEdit,
+  },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除六宫格']) ? 150 : 90
+    }
   },
   data() {
     return {

@@ -6,16 +6,17 @@
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-form :model="form" status-icon ref="bannerAddForm" label-width="100px" @submit.native.prevent>
             <el-form-item label="名称" prop="name" :rules="rules.Null">
-              <el-input size="medium" v-model="form.name" placeholder="请填写名称"></el-input>
+              <el-input size="medium" v-model="form.name" placeholder="请填写名称" :disabled="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="标题" prop="title" :rules="rules.Null">
-              <el-input size="medium" v-model="form.title" placeholder="请填写标题"></el-input>
+              <el-input size="medium" v-model="form.title" placeholder="请填写标题" :disabled="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="主图" prop="img" :rules="rules.Null">
-              <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" :disabled="uploadDisable"/>
+              <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" :disabled="!hasAuth"/>
             </el-form-item>
             <el-form-item label="描述" prop="description" :rules="rules.Null">
-              <el-input size="medium" v-model="form.description" type="textarea" :rows="4" placeholder="请填写描述">
+              <el-input size="medium" v-model="form.description" type="textarea"
+                        :rows="4" placeholder="请填写描述" :disabled="!hasAuth">
               </el-input>
             </el-form-item>
             <el-form-item class="submit">
@@ -25,7 +26,8 @@
                 @click="submitForm('bannerAddForm')"
                 >保 存</el-button
               >
-              <el-button @click="resetForm('bannerAddForm')">重 置</el-button>
+              <el-button @click="resetForm('bannerAddForm')"
+                         v-permission="{ permission: '创建Banner', type: 'disabled' }">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
@@ -55,7 +57,7 @@ export default {
       rules: {
         ...rules
       },
-      uploadDisable: !Auth.hasAuth('创建Banner')
+      hasAuth: Auth.hasAuth('创建Banner')
     }
   },
   methods: {

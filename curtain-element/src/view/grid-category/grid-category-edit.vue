@@ -2,14 +2,14 @@
   <el-dialog :append-to-body="true" :before-close="handleClose" :visible.sync="visible">
     <div style="margin-top:-25px;">
       <div class="dialog-title">
-        <span>{{getGridCategoryTitle()}}</span>
+        <span>{{gridCategoryTitle}}</span>
       </div>
       <el-form :model="form" status-icon ref="gridCategoryEditForm" label-width="100px" @submit.native.prevent>
         <el-form-item label="标题" prop="title" :rules="rules.Null">
-          <el-input size="medium" v-model="form.title" placeholder="请填写宫格标题"></el-input>
+          <el-input size="medium" v-model="form.title" placeholder="请填写宫格标题" :disabled="!hasAuth"></el-input>
         </el-form-item>
         <el-form-item label="名称" prop="name" :rules="rules.Null">
-          <el-input size="medium" v-model="form.name" placeholder="请填写宫格名"></el-input>
+          <el-input size="medium" v-model="form.name" placeholder="请填写宫格名" :disabled="!hasAuth"></el-input>
         </el-form-item>
         <el-form-item label="分类" prop="category_id" :rules="rules.Null">
           <el-autocomplete
@@ -20,6 +20,7 @@
             :fetch-suggestions="querySearch"
             placeholder="请填写所属分类"
             @select="handleSelect"
+            :disabled="!hasAuth"
           >
             <template slot-scope="{ item }">
               <span class="id">{{ item.id }}</span>
@@ -28,7 +29,7 @@
           </el-autocomplete>
         </el-form-item>
         <el-form-item label="图片" prop="img" :rules="rules.Null">
-          <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" />
+          <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" :disabled="!hasAuth"/>
         </el-form-item>
       </el-form>
     </div>
@@ -72,9 +73,17 @@ export default {
       },
       set() {},
     },
+    gridCategoryTitle() {
+      if (!this.hasAuth) {
+        return '六宫格详情'
+      }
+
+      return this.isCreate ? '创建六宫格' : '更新六宫格'
+    }
   },
   data() {
     return {
+      hasAuth: Auth.hasAuth(['创建六宫格', '更新六宫格']),
       state: '',
       suggestions: [],
       display: true,
@@ -106,14 +115,6 @@ export default {
     await this.loadSuggestions()
   },
   methods: {
-    getGridCategoryTitle() {
-      const hasAuth = Auth.hasAuth(['创建六宫格', '更新六宫格'])
-      if (!hasAuth) {
-        return '六宫格详情'
-      }
-
-      return this.isCreate ? '创建六宫格' : '更新六宫格'
-    },
     async submitForm(formName) {
       await this.getValue()
       this.$refs[formName].validate(async valid => {

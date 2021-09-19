@@ -9,7 +9,7 @@
       <el-table-column prop="description" label="描述" min-width="200" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="unit" label="单位" width="150"></el-table-column>
       <el-table-column prop="standard" label="标准" width="150"></el-table-column>
-      <el-table-column fixed="right" width="150" label="操作">
+      <el-table-column fixed="right" :width="columnWidth" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click.prevent="handleDetail(scope.row)" type="primary" plain size="mini">详情</el-button>
           <el-button
@@ -39,11 +39,18 @@
 
 <script>
 import SpecKey from '@/model/spec-key'
+import Auth from '@/lin/util/auth'
 
 export default {
   components: {},
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除规格名']) ? 150 : 90
+    }
+  },
   data() {
     return {
+      loading: false,
       tableData: [],
       totalNums: 0,
       currentPage: 1,
@@ -53,7 +60,7 @@ export default {
   },
   async created() {
     this.loading = true
-    this.getSpecKeys()
+    await this.getSpecKeys()
     this.loading = false
   },
   methods: {
@@ -70,7 +77,7 @@ export default {
       this.imgSrcList = []
       this.currentPage = val
       this.loading = true
-      this.getSpecKeys()
+      await this.getSpecKeys()
       this.loading = false
     },
     initImgSrcList() {

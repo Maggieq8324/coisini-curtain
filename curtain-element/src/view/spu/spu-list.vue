@@ -22,7 +22,7 @@
         <el-table-column prop="online" label="是否上架" width="150">
           <template v-if="scope.row.online" slot-scope="scope">{{ scope.row.online | onLine }}</template>
         </el-table-column>
-        <el-table-column width="150" fixed="right" label="操作">
+        <el-table-column :width="columnWidth" fixed="right" label="操作" align="center">
           <template slot-scope="scope">
             <el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">{{handleEditText}}</el-button>
             <el-button
@@ -60,6 +60,11 @@ import SpuEdit from './spu-edit'
 
 export default {
   components: { SpuEdit },
+  computed: {
+    columnWidth() {
+      return Auth.hasAuth(['删除SPU']) ? 150 : 90
+    }
+  },
   data() {
     return {
       loading: false,
