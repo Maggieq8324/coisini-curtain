@@ -1,4 +1,4 @@
-import { post, get, put, _delete } from '@/lin/plugin/axios'
+import { post, get, put, _delete } from '@/core/plugin/axios'
 
 class Banner {
   static async addBanner(data) {

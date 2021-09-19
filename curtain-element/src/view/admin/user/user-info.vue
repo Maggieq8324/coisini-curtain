@@ -49,8 +49,8 @@
 </template>
 
 <script>
-import Admin from '@/lin/model/admin'
-import User from '@/lin/model/user'
+import Admin from '@/core/model/admin'
+import User from '@/core/model/user'
 
 export default {
   props: {

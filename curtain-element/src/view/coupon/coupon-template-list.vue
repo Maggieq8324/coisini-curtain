@@ -46,8 +46,8 @@
 <script>
 import dayjs from 'dayjs'
 import Coupon from '@/model/coupon'
+import Auth from '@/core/util/auth'
 import CouponTemplateEdit from './CouponTemplateEdit'
-import Auth from '@/lin/util/auth'
 
 export default {
   components: { CouponTemplateEdit },

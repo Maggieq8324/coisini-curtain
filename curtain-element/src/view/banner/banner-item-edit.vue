@@ -46,8 +46,8 @@
 import BannerItem from '@/model/banner-item'
 import UploadImgs from '@/component/base/upload-image'
 import StickyTop from '@/component/base/sticky-top/sticky-top'
-import Auth from '@/lin/util/auth'
-import rules from '@/lin/util/rules-1.0'
+import Auth from '@/core/util/auth'
+import rules from '@/core/util/rules-1.0'
 
 export default {
   components: {

@@ -90,8 +90,8 @@
 <script>
 import SpecKey from '@/model/spec-key'
 import SpecValue from '@/model/spec-value'
-import Auth from '@/lin/util/auth'
-import rules from '@/lin/util/rules-1.0'
+import Auth from '@/core/util/auth'
+import rules from '@/core/util/rules-1.0'
 import SpecValueEdit from './spec-value-edit'
 
 export default {

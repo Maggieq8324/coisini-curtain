@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import Admin from '@/lin/model/admin'
+import Admin from '@/core/model/admin'
 import LinTable from '@/component/base/table/lin-table'
 
 export default {

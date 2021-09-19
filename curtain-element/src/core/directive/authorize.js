@@ -26,7 +26,6 @@ Vue.directive('permission', {
     } else {
       permission = binding.value
     }
-    console.log('permissions', store.state.permissions)
     const isAllow = isAllowed(permission, store.state.user || {}, store.state.permissions)
     const element = el
     if (!isAllow && permission) {

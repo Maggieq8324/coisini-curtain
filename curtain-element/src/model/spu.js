@@ -1,4 +1,4 @@
-import { post, get, _delete, put } from '@/lin/plugin/axios'
+import { post, get, _delete, put } from '@/core/plugin/axios'
 
 class Spu {
   static async addSpu(data) {

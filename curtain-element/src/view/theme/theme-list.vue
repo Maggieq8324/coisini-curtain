@@ -78,7 +78,7 @@
 
 <script>
 import Theme from '@/model/theme'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import ThemeEdit from './theme-edit'
 
 export default {

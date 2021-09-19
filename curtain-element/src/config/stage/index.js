@@ -1,4 +1,4 @@
-import Utils from '@/lin/util/util'
+import Utils from '@/core/util/util'
 import adminConfig from './admin'
 import staticsConfig from './statics'
 import bannerConfig from './banner'

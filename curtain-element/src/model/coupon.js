@@ -1,4 +1,4 @@
-import { post, get, put, _delete } from '@/lin/plugin/axios'
+import { post, get, put, _delete } from '@/core/plugin/axios'
 
 class Coupon {
   static types = ['满减券', '折扣券', '无门槛券', '满金额折扣券']

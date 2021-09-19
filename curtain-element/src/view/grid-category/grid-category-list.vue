@@ -51,7 +51,7 @@
 
 <script>
 import GridCategory from '@/model/grid-category'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import GridCategoryEdit from './grid-category-edit'
 
 export default {

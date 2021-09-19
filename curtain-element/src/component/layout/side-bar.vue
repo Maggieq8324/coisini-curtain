@@ -94,7 +94,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Utils from '@/lin/util/util'
+import Utils from '@/core/util/util'
 import Config from '../../config/index'
 
 export default {

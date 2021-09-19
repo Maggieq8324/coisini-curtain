@@ -88,9 +88,9 @@ import Activity from '@/model/activity'
 import Category from '@/model/category'
 import coupon from '@/model/coupon'
 import UploadImgs from '@/component/base/upload-image'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
+import rules from '@/core/util/rules-1.0'
 import CouponList from '../coupon/coupon-list'
-import rules from '@/lin/util/rules-1.0'
 
 export default {
   components: { UploadImgs, CouponList },

@@ -28,7 +28,7 @@ import Breadcrumb from './breadcrumb'
 import Screenfull from './screen-full'
 import User from './user'
 import ClearTab from './clear-tab'
-// import { getToken } from '@/lin/util/token'
+// import { getToken } from '@/core/util/token'
 // import store from '@/store'
 
 export default {

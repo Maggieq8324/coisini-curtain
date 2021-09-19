@@ -1,4 +1,4 @@
-import _axios, { post, get, put } from '@/lin/plugin/axios'
+import _axios, { post, get, put } from '@/core/plugin/axios'
 import { saveTokens } from '../util/token'
 import store from '@/store'
 

@@ -20,8 +20,8 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex'
-import User from '@/lin/model/user'
-import Utils from '@/lin/util/util'
+import User from '@/core/model/user'
+import Utils from '@/core/util/util'
 
 export default {
   name: 'login',

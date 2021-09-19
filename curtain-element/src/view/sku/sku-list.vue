@@ -61,7 +61,7 @@
 
 <script>
 import Sku from '@/model/sku'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import SkuEdit from './sku-edit'
 
 export default {

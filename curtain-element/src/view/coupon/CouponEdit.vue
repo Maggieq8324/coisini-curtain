@@ -69,8 +69,8 @@
 <script>
 import dayjs from 'dayjs'
 import Coupon from '@/model/coupon'
-import Auth from '@/lin/util/auth'
-import rules from '@/lin/util/rules-1.0'
+import Auth from '@/core/util/auth'
+import rules from '@/core/util/rules-1.0'
 
 export default {
   props: {

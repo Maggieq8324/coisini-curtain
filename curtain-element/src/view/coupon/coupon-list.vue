@@ -83,7 +83,7 @@
 <script>
 import dayjs from 'dayjs'
 import Coupon from '@/model/coupon'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import CouponEdit from './CouponEdit'
 
 export default {

@@ -46,7 +46,7 @@
 
 <script>
 import Banner from '@/model/banner'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import BannerWithItems from './banner-with-items'
 
 export default {

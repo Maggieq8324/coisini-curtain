@@ -55,7 +55,7 @@
 
 <script>
 import Spu from '@/model/spu'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import SpuEdit from './spu-edit'
 
 export default {

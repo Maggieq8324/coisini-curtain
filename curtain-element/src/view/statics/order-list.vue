@@ -72,7 +72,7 @@
 import LinSearch from '@/component/base/search/lin-search'
 import LinDatePicker from '@/component/base/date-picker/lin-date-picker'
 import Order from '@/model/order'
-import { transTimestamp } from '@/lin/util/date'
+import { transTimestamp } from '@/core/util/date'
 import OrderDetail from './order-detail'
 
 export default {

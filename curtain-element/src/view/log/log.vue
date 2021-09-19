@@ -71,8 +71,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import log from 'lin/model/log'
-import { searchLogKeyword } from 'lin/util/search'
+import log from '@/core/model/log'
+import { searchLogKeyword } from '@/core/util/search'
 import LinSearch from '@/component/base/search/lin-search'
 import LinDatePicker from '@/component/base/date-picker/lin-date-picker'
 

@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import _axios, { get } from '@/lin/plugin/axios'
+import _axios, { get } from '@/core/plugin/axios'
 
 class Log {
   name = null

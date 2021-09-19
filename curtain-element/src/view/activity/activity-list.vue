@@ -75,7 +75,7 @@
 <script>
 import dayjs from 'dayjs'
 import Activity from '@/model/activity'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import ActivityEdit from './activity-edit'
 
 export default {

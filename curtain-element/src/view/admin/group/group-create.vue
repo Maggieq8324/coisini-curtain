@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import Admin from '@/lin/model/admin'
+import Admin from '@/core/model/admin'
 import GroupPermissions from './group-permission'
 
 export default {

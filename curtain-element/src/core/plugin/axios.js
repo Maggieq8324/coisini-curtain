@@ -4,7 +4,7 @@ import axios from 'axios'
 import Config from '@/config'
 import ErrorCode from '@/config/error-code'
 import store from '@/store'
-import { getToken, saveAccessToken } from '@/lin/util/token'
+import { getToken, saveAccessToken } from '@/core/util/token'
 
 const config = {
   baseURL: Config.baseURL || process.env.apiUrl || '',

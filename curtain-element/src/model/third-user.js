@@ -1,4 +1,4 @@
-import { get, put, _delete } from '@/lin/plugin/axios'
+import { get, put, _delete } from '@/core/plugin/axios'
 
 class ThirdUser {
   static async getThirdUser(id) {

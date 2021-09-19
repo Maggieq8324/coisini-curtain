@@ -43,8 +43,8 @@
 
 <script>
 import SpecKey from '@/model/spec-key'
-import rules from '@/lin/util/rules-1.0'
-import Auth from '@/lin/util/auth'
+import rules from '@/core/util/rules-1.0'
+import Auth from '@/core/util/auth'
 
 export default {
   data() {

@@ -90,8 +90,8 @@
 import Banner from '@/model/banner'
 import BannerItem from '@/model/banner-item'
 import UploadImgs from '@/component/base/upload-image'
-import rules from '@/lin/util/rules-1.0'
-import Auth from '@/lin/util/auth'
+import rules from '@/core/util/rules-1.0'
+import Auth from '@/core/util/auth'
 import BannerItemEdit from './banner-item-edit'
 
 export default {

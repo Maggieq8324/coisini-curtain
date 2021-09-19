@@ -65,7 +65,7 @@
 
 <script>
 import Category from '@/model/category'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 import CategoryEdit from './category-edit'
 
 export default {

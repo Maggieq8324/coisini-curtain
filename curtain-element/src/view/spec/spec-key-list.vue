@@ -39,7 +39,7 @@
 
 <script>
 import SpecKey from '@/model/spec-key'
-import Auth from '@/lin/util/auth'
+import Auth from '@/core/util/auth'
 
 export default {
   components: {},

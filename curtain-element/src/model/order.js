@@ -1,4 +1,4 @@
-import { post, get, put } from '@/lin/plugin/axios'
+import { post, get, put } from '@/core/plugin/axios'
 
 class Order {
   static async addOrder(data) {
