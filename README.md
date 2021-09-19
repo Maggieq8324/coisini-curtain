@@ -20,7 +20,7 @@ SpringBoot + Mysql + RocketMQ + Vue + 小程序
 ├── curtain-server      小程序 Java API
 ├── curtain-store        小程序-窗帘商城
 ├── resource          资源
-	├── data          数据库
+	├── data          数据库（请联系maggieq8324@gmail.com获取）
 
 
 #### 安装教程
