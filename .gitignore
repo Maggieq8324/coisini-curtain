@@ -1,2 +1,3 @@
 deploy/
+resource/
 /curtain-manage/src/main/resources/*.yml
