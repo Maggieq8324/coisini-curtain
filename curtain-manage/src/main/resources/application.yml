@@ -15,7 +15,7 @@ spring:
 
 server:
   # 服务端口
-  port: 5000
+  port: 31092
   ssl:
     key-store: classpath:server.keystore
     key-alias: tomcat
