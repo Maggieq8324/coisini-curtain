@@ -39,7 +39,7 @@
     "showES6CompileOption": false
   },
   "compileType": "miniprogram",
-  "libVersion": "2.19.2",
+  "libVersion": "2.19.6",
   "appid": "wx773b260ad2ca5502",
   "projectname": "curtain-store",
   "debugOptions": {
