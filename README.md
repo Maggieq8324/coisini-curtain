@@ -9,6 +9,7 @@
 
 #### 项目地址
 CMS：[美佳窗帘布艺 - https://120.26.89.60/](https://120.26.89.60/)
+<br>
 小程序：微信搜一搜（暂未上架）
 
 
@@ -20,11 +21,14 @@ SpringBoot + Mysql + RocketMQ + Vue + 小程序
 #### 目录结构
 
 ├── curtain-manage   CMS Java API
+<br>
 ├── curtain-element   CMS Vue 前端
+<br>
 ├── curtain-server      小程序 Java API
+<br>
 ├── curtain-store        小程序-窗帘商城
-├── resource          资源
-	├── data          数据库（请联系maggieq8324@gmail.com获取）
+<br>
+├── data          数据库（请联系maggieq8324@gmail.com获取）
 
 
 #### 安装教程
