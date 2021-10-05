@@ -31,6 +31,7 @@ class Fence {
      * 初始化栅栏单元格属性
      */
     _initCells() {
+        console.log("specs", this.specs)
         this.specs.forEach(s => {
             /**
              * cell去重
@@ -40,14 +41,16 @@ class Fence {
              * map 返回一个新的array，数组元素由每一次调用函数产生结果组成
              * @type {boolean}
              */
-            const existed = this.cells.some(c=>{
-                return c.id === s.value_id
-            })
-            if(existed){
-                return
+            if (s) {
+                const existed = this.cells.some(c=>{
+                    return c.id === s.value_id
+                })
+                if(existed){
+                    return
+                }
+                const cell = new Cell(s)
+                this.cells.push(cell)
             }
-            const cell = new Cell(s)
-            this.cells.push(cell)
         })
     }
 

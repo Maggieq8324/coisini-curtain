@@ -245,6 +245,9 @@ export default {
               selectors.push(tmp)
             }
             postData.selectors = selectors
+
+            console.log(postData)
+            // return
             let res
             if (this.isCreate) {
               res = await Sku.addSku(postData)

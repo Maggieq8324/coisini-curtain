@@ -19,11 +19,12 @@ public class SpecValueEvt {
     @Length(min = 1, max = 255)
     private String value;
 
-    @Length(min = 1, max = 255)
     private String extend;
 
     @Positive
     @NotNull
     private Integer specId;
+
+    private String img;
 
 }

@@ -14,7 +14,7 @@
             <el-form-item label="规格名描述" prop="description" :rules="rules.Null">
               <el-input size="medium" v-model="form.description" placeholder="请填写规格名描述" :readonly="!hasAuth"></el-input>
             </el-form-item>
-            <el-form-item label="单位" prop="unit" :rules="rules.Null">
+            <el-form-item label="单位" prop="unit">
               <el-input size="medium" v-model="form.unit" placeholder="请填写单位，如：英寸" :readonly="!hasAuth"></el-input>
             </el-form-item>
             <el-form-item label="是否标准">
@@ -57,6 +57,12 @@
           <el-table stripe v-loading="loading" :data="tableData">
             <el-table-column prop="id" label="id" width="150"></el-table-column>
             <el-table-column prop="value" label="规格值名称" width="150"></el-table-column>
+            <el-table-column prop="img" label="图片" width="200">
+              <template v-if="scope.row.img" slot-scope="scope">
+                <el-image :src="scope.row.img" :preview-src-list="imgSrcList" style="max-height: 50px; max-width: 100px;">
+                </el-image>
+              </template>
+            </el-table-column>
             <el-table-column :show-overflow-tooltip="true" prop="extend" min-width="200" label="扩展"></el-table-column>
             <el-table-column :width="columnWidth" fixed="right" label="操作" align="center">
               <template slot-scope="scope">
@@ -119,6 +125,7 @@ export default {
         unit: '',
         standard: 0,
       },
+      imgSrcList: [], // 用于大图预览
       rules: {
         ...rules
       }
@@ -137,6 +144,14 @@ export default {
     await this.getDetail()
   },
   methods: {
+    initImgSrcList() {
+      this.tableData.forEach(item => {
+        if (!item.img) {
+          return
+        }
+        this.imgSrcList.push(item.img)
+      })
+    },
     async submitForm(formName) {
       this.$refs[formName].validate(async valid => {
         if (valid) {
@@ -182,6 +197,7 @@ export default {
         standard: res.standard,
       }
       this.tableData = res.items
+      this.initImgSrcList()
       this.loading = false
     },
     handleAdd() {

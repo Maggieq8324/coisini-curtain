@@ -25,4 +25,6 @@ public class SpecKeyValue {
     private String value;
 
     private String key;
+
+    private String img;
 }

@@ -22,7 +22,7 @@
     </resultMap>
 
     <select id="getSpecKeyAndValueById" resultMap="SpecKeyAndValueResultMap">
-        select v.id value_id, v.value spec_value, k.id key_id, k.name spec_key
+        select v.id value_id, v.value spec_value, v.img, k.id key_id, k.name spec_key
         from spec_value as v
         left join spec_key as k on v.spec_id=k.id
         where v.id = #{valueId}

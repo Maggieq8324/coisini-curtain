@@ -6,7 +6,7 @@ const staticsRouter = {
   icon: 'el-icon-s-data',
   filePath: 'view/statics/', // 文件路径
   order: null,
-  inNav: true,
+  inNav: false,
   children: [
     {
       title: '订单列表',
@@ -14,7 +14,7 @@ const staticsRouter = {
       name: 'orderList',
       route: '/statics/order/list',
       filePath: 'view/statics/order-list.vue',
-      inNav: true,
+      inNav: false,
       icon: '',
     },
     {
@@ -23,7 +23,7 @@ const staticsRouter = {
       name: 'thirdUserList',
       route: '/statics/third_user/list',
       filePath: 'view/statics/third-user-list.vue',
-      inNav: true,
+      inNav: false,
       icon: '',
     },
   ],

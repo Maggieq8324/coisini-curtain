@@ -56,13 +56,13 @@ router.beforeEach((to, from, next) => {
   // 权限验证
   if (store && store.state && store.getters) {
     const { permissions, user } = store.getters
-    if (to.path !== '/about' && !Util.hasPermission(permissions, to.meta, user)) {
+    if (to.path !== '/dashboard' && !Util.hasPermission(permissions, to.meta, user)) {
       Vue.prototype.$notify({
         title: '无权限',
         dangerouslyUseHTMLString: true,
         message: '<strong class="my-notify">您无此页面的权限哟</strong>',
       })
-      next({ path: '/about' })
+      next({ path: '/dashboard' })
       return
     }
   }

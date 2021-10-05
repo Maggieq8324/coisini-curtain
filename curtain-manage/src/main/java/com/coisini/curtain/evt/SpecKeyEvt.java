@@ -22,7 +22,7 @@ public class SpecKeyEvt {
     @Length(min = 1, max = 255)
     private String description;
 
-    @Length(min = 1, max = 30)
+//    @Length(min = 1, max = 30)
     private String unit;
 
     @Enum(target = StandardOrNotEnum.class, allowNull = true)

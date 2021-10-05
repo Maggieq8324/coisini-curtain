@@ -3,7 +3,8 @@
 coisini:
   file:
     # 文件服务域名
-    domain: https://localhost:5000/
+    domain: http://120.26.89.60:8080/
+#    domain: https://localhost:31092/
     # 排除文件类型
     exclude:
     # 包括文件类型

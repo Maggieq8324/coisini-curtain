@@ -45,7 +45,7 @@ public class SpuEvt {
     @Length(min = 1, max = 20)
     private String price;
 
-    @Length(min = 1, max = 20)
+//    @Length(min = 1, max = 20)
     private String discountPrice;
 
     @Length(min = 1, max = 255)

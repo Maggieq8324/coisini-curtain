@@ -5,7 +5,7 @@ export default {
   logined: false, // 是否登录
   user: {}, // 当前用户
   sideBarLevel: AppConfig.sideBarLevel || 3,
-  defaultRoute: AppConfig.defaultRoute || '/about',
+  defaultRoute: AppConfig.defaultRoute || '/dashboard',
   // 推送消息
   readedMessages: [],
   unreadMessages: [],

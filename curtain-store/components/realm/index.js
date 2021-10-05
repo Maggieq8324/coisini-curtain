@@ -185,6 +185,7 @@ Component({
      * @param fenceGroup
      */
     bindFenceGroupData(fenceGroup) {
+      console.log("fences", fenceGroup.fences)
       this.setData({
         fences:fenceGroup.fences,
       })

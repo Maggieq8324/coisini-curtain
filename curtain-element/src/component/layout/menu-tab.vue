@@ -24,6 +24,7 @@ export default {
       return this.$store.getters.getStageInfo(this.$route.name)
     },
     menuTabs() {
+      console.log(this.stageInfo)
       if (this.stageInfo.length < 2) {
         return []
       }

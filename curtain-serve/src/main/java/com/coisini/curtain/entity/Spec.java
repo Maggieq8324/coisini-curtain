@@ -17,5 +17,6 @@ public class Spec {
     private String value;
     private Long keyId;
     private Long valueId;
+    private String img;
 
 }

@@ -37,7 +37,6 @@ public class SpecValue {
 
     private String extend;
 
-
-
+    private String img;
 
 }

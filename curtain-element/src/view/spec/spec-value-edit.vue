@@ -8,7 +8,10 @@
         <el-form-item label="规格值名称" prop="value" :rules="rules.Null">
           <el-input size="medium" v-model="form.value" placeholder="请填写规格值名称" :readonly="!hasAuth"></el-input>
         </el-form-item>
-        <el-form-item label="扩展" prop="extend" :rules="rules.Null">
+        <el-form-item label="图片" prop="img">
+          <upload-imgs ref="uploadEle" :max-num="maxNum" :value="initData" :disabled="!hasAuth"/>
+        </el-form-item>
+        <el-form-item label="扩展" prop="extend">
           <el-input size="medium" v-model="form.extend" placeholder="请填写规格值扩展" :readonly="!hasAuth"></el-input>
         </el-form-item>
       </el-form>
@@ -25,9 +28,10 @@
 import SpecValue from '@/model/spec-value'
 import rules from '@/core/util/rules-1.0'
 import Auth from '@/core/util/auth'
+import UploadImgs from '@/component/base/upload-image'
 
 export default {
-  components: {},
+  components: { UploadImgs },
   props: {
     dialogFormVisible: {
       type: Boolean,
@@ -62,7 +66,10 @@ export default {
         spec_id: 0,
         value: '',
         extend: '',
+        img: '',
       },
+      initData: [],
+      maxNum: 1,
       rules: {
         ...rules
       }
@@ -75,7 +82,14 @@ export default {
     }
   },
   methods: {
+    async getValue() {
+      const val = await this.$refs.uploadEle.getValue()
+      if (val && val.length > 0) {
+        this.form.img = val[0].display
+      }
+    },
     async submitForm(formName) {
+      await this.getValue()
       this.$refs[formName].validate(async valid => {
         if (valid) {
           const form = { ...this.form }
