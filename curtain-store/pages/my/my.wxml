@@ -18,7 +18,7 @@
           title-color="#157658"
           bind:linconfirm="onDialogConfirm"
           show="{{showDialog}}"
-          content="请先授权《风袖》获取您的收货地址"
+          content="请先授权《美佳布艺》获取您的收货地址"
           title="授权">
 
 </l-dialog>

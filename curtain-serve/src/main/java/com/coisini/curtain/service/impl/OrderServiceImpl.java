@@ -179,7 +179,8 @@ public class OrderServiceImpl implements OrderService {
      * 库存扣减
      * @param orderChecker
      */
-    private void reduceStock(OrderChecker orderChecker) {
+    @Transactional(rollbackFor = Exception.class)
+    public void reduceStock(OrderChecker orderChecker) {
         List<OrderSku> orderSkuList = orderChecker.getOrderSkuList();
 
         for (OrderSku orderSku : orderSkuList) {
@@ -198,7 +199,8 @@ public class OrderServiceImpl implements OrderService {
      * @param oid
      * @param uid
      */
-    private void writeOffCoupon(Long couponId, Long oid, Long uid) {
+    @Transactional(rollbackFor = Exception.class)
+    public void writeOffCoupon(Long couponId, Long oid, Long uid) {
         int result = this.userCouponRepository.writeOff(couponId, oid, uid);
         if (result != 1) {
             throw new ForbiddenException(40012);

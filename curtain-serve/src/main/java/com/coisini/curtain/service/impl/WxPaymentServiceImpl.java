@@ -16,6 +16,7 @@ import com.github.wxpay.sdk.MyWxPayConfig;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConstants;
 import com.github.wxpay.sdk.WXPayUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Service
+@Slf4j
 public class WxPaymentServiceImpl implements WxPaymentService {
 
     @Autowired
@@ -81,9 +83,9 @@ public class WxPaymentServiceImpl implements WxPaymentService {
         Map<String, String> params = this.makePreOrderParams(order.getFinalTotalPrice(), order.getOrderNo());
         Map<String, String> wxOrder;
         try {
-            System.out.println("微信统一下单unifiedOrder入参：【" + JSON.toJSONString(params) + "】");
+            log.info("微信统一下单unifiedOrder入参：【" + JSON.toJSONString(params) + "】");
             wxOrder = wxPay.unifiedOrder(params);
-            System.out.println("微信统一下单unifiedOrder出参：【" + JSON.toJSONString(wxOrder) + "】");
+            log.info("微信统一下单unifiedOrder出参：【" + JSON.toJSONString(wxOrder) + "】");
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServerErrorException(9999);

@@ -44,7 +44,8 @@ public class OrderCancelServiceImpl implements OrderCancelService{
      * 订单取消
      * @param oid 订单ID
      */
-    private void cancel(Long oid) {
+    @Transactional(rollbackFor = Exception.class)
+    public void cancel(Long oid) {
         Optional<Order> orderOptional = orderRepository.findById(oid);
 
         Order order = orderOptional.orElseThrow(() -> new ServerErrorException(9999));

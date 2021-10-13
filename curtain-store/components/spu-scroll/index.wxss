@@ -9,7 +9,7 @@
 
 .title {
     width: 692rpx;
-    height: 90rpx;
+    height: 70rpx;
 }
 
 .price-unit{

@@ -7,8 +7,8 @@ Page({
      * 页面的初始数据
      */
     data: {
-        urlCourse: 'https://www.cnblogs.com/maggieq8324',
-        urlGit: 'https://gitee.com/maggieq8324/coisini-curtain.git'
+        iphone: '13330582938',
+        mail: 'maggieq8324@foxmail.com'
     },
 
     /**
@@ -20,13 +20,13 @@ Page({
 
     onCopyGit() {
         wx.setClipboardData({
-            data: this.data.urlGit
+            data: this.data.mail
         })
     },
 
     onCopyCourse() {
         wx.setClipboardData({
-            data: this.data.urlCourse
+            data: this.data.iphone
         })
     },
 

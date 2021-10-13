@@ -1,7 +1,7 @@
 {
   "name": "curtain-store",
   "version": "1.0.0",
-  "description": "美佳窗帘布艺",
+  "description": "美佳布艺",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

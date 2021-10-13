@@ -1,6 +1,6 @@
 <!-- 购物车空数据组件 -->
 <view wx:if="{{show}}" class="container">
-    <!-- <image class="img" src="/components/imgs/empty.png"></image> -->
+    <!-- <image class="img" src="/components/imgs/empty_back.png"></image> -->
     <!-- <view class="empty-cart">
         <view class="cart-icon">
             <image src="/components/imgs/cart_empty.png" mode="aspectFill" />

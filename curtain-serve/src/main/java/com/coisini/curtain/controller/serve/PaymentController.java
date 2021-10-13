@@ -4,6 +4,7 @@ import com.coisini.curtain.core.annotation.ScopeLevel;
 import com.coisini.curtain.lib.WxNotify;
 import com.coisini.curtain.service.WxPaymentNotifyService;
 import com.coisini.curtain.service.WxPaymentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,9 @@ import java.util.Map;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("payment")
+@RequestMapping("/payment")
 @Validated
+@Slf4j
 public class PaymentController {
 
     @Autowired
@@ -62,6 +64,8 @@ public class PaymentController {
         }
 
         String xml = WxNotify.readNotify(o);
+
+        log.info("微信支付回调参数：" + xml);
 
         try{
             wxPaymentNotifyService.processPayNotify(xml);

@@ -10,7 +10,7 @@
                         <text class="subtitle">{{item.subtitle}}</text>
                     </view>
                     <view class="bottom">
-                        <l-price value="{{199}}"
+                        <l-price value="{{item.price}}"
                                  color="#157658"
                                  unit-size="20"
                                  count-size="30"

@@ -10,7 +10,7 @@ page{
 }
 
 .top{
-    height:200rpx;
+    height:100rpx;
     width:690rpx;
 }
 
@@ -39,6 +39,16 @@ page{
     margin-bottom: 46rpx;
 }
 
+.label {
+    margin-left: 10rpx;
+    width: 70px;
+}
+
+.dis {
+    max-width: 250px;
+    margin-left: 10rpx;
+}
+
 .next-inner text{
     font-size:32rpx;
     z-index: 99;
@@ -57,7 +67,7 @@ page{
 .block{
     width:64rpx;
     height:20rpx;
-    background-color: #DCEBE6;
+    /*background-color: #DCEBE6;*/
     position: absolute;
     /*left:-60rpx;*/
     top:25rpx;
@@ -66,7 +76,7 @@ page{
 
 .next3{
     width: 100%;
-    margin-top:20rpx;
+    margin-top:50rpx;
     background-color: #ffffff;
     display:flex;
     flex-direction:column;

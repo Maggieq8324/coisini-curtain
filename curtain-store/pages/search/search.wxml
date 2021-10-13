@@ -48,7 +48,7 @@
         </view>
     </view>
     <view wx:else>
-        <l-loadmore show end-text="- 今日上上签 -" type="{{loadingType}}" loading-text="努力加载中...">
+        <l-loadmore show end-text="- 美佳布艺 -" type="{{loadingType}}" loading-text="努力加载中...">
             <view slot="content" hidden="{{!search}}" class="spu-bottom">
                 <block wx:for="{{items}}" wx:key="index">
                     <s-spu-preview-r data="{{item}}"></s-spu-preview-r>

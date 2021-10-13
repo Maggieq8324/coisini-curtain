@@ -12,7 +12,7 @@
 
 .title{
     width: 690rpx;
-    height: 90rpx;
+    height: 70rpx;
 }
 
 .inner-container{

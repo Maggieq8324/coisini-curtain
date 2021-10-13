@@ -55,9 +55,14 @@
                     <span class="name">{{ form.snap_address.user_name }}</span>
                     <span class="mobile">{{ form.snap_address.mobile }}</span>
                   </div>
-                  <div class="detail">
+                  <div v-if="!hasAuth" class="detail">
                     {{ form.snap_address.province }} {{ form.snap_address.city }}{{ form.snap_address.county }}
                     **************
+                    <!-- {{ form.snap_address.detail }} -->
+                  </div>
+                  <div v-else class="detail">
+                    {{ form.snap_address.province }} {{ form.snap_address.city }}{{ form.snap_address.county }}
+                    {{form.snap_address.detail}}
                     <!-- {{ form.snap_address.detail }} -->
                   </div>
                 </div>
@@ -99,6 +104,7 @@
 <script>
 import order from '@/model/order'
 import StickyTop from '@/component/base/sticky-top/sticky-top'
+import Auth from '@/core/util/auth'
 
 export default {
   components: { StickyTop },
@@ -111,6 +117,7 @@ export default {
   data() {
     return {
       form: {},
+      hasAuth: Auth.hasAuth(['更新订单状态']),
     }
   },
   computed: {

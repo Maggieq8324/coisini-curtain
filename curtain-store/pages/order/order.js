@@ -133,10 +133,10 @@ Page({
     //   url: `/pages/my-order/my-order?key=${1}`
     // })
     // return;
-    wx.redirectTo({
-      url: `/pages/pay-success/pay-success?oid=${oid}`
-    });
-    return;
+    // wx.redirectTo({
+    //   url: `/pages/pay-success/pay-success?oid=${oid}`
+    // });
+    // return;
     /* ################ 跳过支付*/
 
 
