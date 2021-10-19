@@ -18,7 +18,10 @@
           <menu-tab></menu-tab>
           <app-main ref="appMain"></app-main>
         </el-main>
-        <back-top :right="50" :bottom="50" :fontSize="34"></back-top>
+        <el-footer style="border: 1px solid #f8f9fa; height: 35px;padding-top: 7px;">
+          <p>Copyright&copy; 2021 美佳窗帘布艺 <a href="https://beian.miit.gov.cn" target="_blank">滇ICP备2021007167号-1</a></p>
+        </el-footer>
+        <back-top :right="50" :bottom="20" :fontSize="34"></back-top>
       </el-container>
       <div class="sidenav-mask" :class="{ show: isPhone && isCollapse }" @click="changeSlidebarState"></div>
     </el-container>
