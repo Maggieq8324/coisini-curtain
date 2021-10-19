@@ -32,7 +32,7 @@ Page({
 
     save(event) {
         wx.previewImage({
-            urls: ["http://i2.sleeve.7yue.pro/wx.jpg"]
+            urls: ["https://www.meijia.pub/assets/2021/10/19/0c3ff2f3cf844ae69640b682094bdd04.jpg"]
         })
         // wx.saveImageToPhotosAlbum()
     },
