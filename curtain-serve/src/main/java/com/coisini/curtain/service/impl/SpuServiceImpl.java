@@ -31,7 +31,8 @@ public class SpuServiceImpl implements SpuService {
 
     @Override
     public Page<Spu> getLatestPagingSpu(Integer pageNum, Integer size) {
-        Pageable page = PageRequest.of(pageNum, size, Sort.by("createTime").descending());
+//        Pageable page = PageRequest.of(pageNum, size, Sort.by("createTime").descending());
+        Pageable page = PageRequest.of(pageNum, size, Sort.by("createTime").ascending());
         return spuRepository.findAll(page);
     }
 
