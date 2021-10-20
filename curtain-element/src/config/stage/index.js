@@ -15,7 +15,7 @@ let homeRouter = [
   {
     route: '/dashboard',
     name: 'DashBoard',
-    title: '数据分析',
+    title: '首页',
     type: 'view',
     icon: 'iconfont icon-weibiaoti--',
     filePath: 'view/dashboard/dashboard.vue',

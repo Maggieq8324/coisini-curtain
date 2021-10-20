@@ -1,45 +1,46 @@
 <template>
   <div class="container">
-    <el-row :gutter="20">
-      <el-col :span="16">
-        <div class="grid-content bg-purple">
-          <group-column></group-column>
-        </div>
-      </el-col>
-      <el-col :span="8" class="none">
-        <div class="grid-content bg-purple">
-          <radar></radar>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :span="16">
-        <el-row :gutter="20">
-          <el-col :span="12">
-            <div class="grid-content bg-purple">
-              <tiny-area-july></tiny-area-july>
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="grid-content bg-purple">
-              <tiny-area-june></tiny-area-june>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20">
-          <el-col :span="24">
-            <div class="grid-content bg-purple">
-              <line-charts></line-charts>
-            </div>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="8" class="none">
-        <div class="grid-content bg-purple">
-          <rose></rose>
-        </div>
-      </el-col>
-    </el-row>
+    <img alt="无奈" class="img" src="@/assets/image/dashboard.jpg" />
+<!--    <el-row :gutter="20">-->
+<!--      <el-col :span="16">-->
+<!--        <div class="grid-content bg-purple">-->
+<!--          <group-column></group-column>-->
+<!--        </div>-->
+<!--      </el-col>-->
+<!--      <el-col :span="8" class="none">-->
+<!--        <div class="grid-content bg-purple">-->
+<!--          <radar></radar>-->
+<!--        </div>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
+<!--    <el-row :gutter="20">-->
+<!--      <el-col :span="16">-->
+<!--        <el-row :gutter="20">-->
+<!--          <el-col :span="12">-->
+<!--            <div class="grid-content bg-purple">-->
+<!--              <tiny-area-july></tiny-area-july>-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--          <el-col :span="12">-->
+<!--            <div class="grid-content bg-purple">-->
+<!--              <tiny-area-june></tiny-area-june>-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
+<!--        <el-row :gutter="20">-->
+<!--          <el-col :span="24">-->
+<!--            <div class="grid-content bg-purple">-->
+<!--              <line-charts></line-charts>-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
+<!--      </el-col>-->
+<!--      <el-col :span="8" class="none">-->
+<!--        <div class="grid-content bg-purple">-->
+<!--          <rose></rose>-->
+<!--        </div>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
   </div>
 </template>
 
@@ -96,6 +97,20 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding: 20px;
+  text-align: center;
+  position: relative;
+
+  img {
+    position: absolute;
+    margin: auto;
+    top: 500px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 300px;
+    height: auto;
+  }
+
   .el-row {
     .el-col {
       .grid-content {
