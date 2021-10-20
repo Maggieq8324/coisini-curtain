@@ -2,15 +2,14 @@
 
 #### 介绍
 
-窗帘商城小程序
-江川美佳窗帘布艺
+美佳布艺 - 窗帘电商小程序
 
 项目架构：Java API + CMS + 小程序
 
 #### 项目地址
-CMS：[美佳窗帘布艺 - https://120.26.89.60/](https://120.26.89.60/)
+CMS：[美佳窗帘布艺 - https://www.meijia.pub](https://www.meijia.pub)
 <br>
-小程序：微信搜一搜（暂未上架）
+小程序：美佳布艺（微信搜一搜）
 
 
 #### 软件架构
@@ -28,7 +27,7 @@ SpringBoot + Mysql + RocketMQ + Vue + 小程序
 <br>
 ├── curtain-store        小程序-窗帘商城
 <br>
-├── data          数据库（请联系maggieq8324@gmail.com获取）
+├── data          数据（请联系maggieq8324@gmail.com获取）
 
 
 #### 安装教程
