@@ -78,22 +78,39 @@ Component({
             })
             const payParams = await Payment.getPayParams(oid)
             // let payStatus = OrderStatus.UNPAID
-            let res
+            // let res
+            // try {
+            //     res = await Payment.pay(payParams)
+            //     // payStatus = OrderStatus.PAID
+            //     wx.lin.hideLoading()
+            //     this.triggerEvent('paysuccess',{
+            //         oid
+            //     })
+            // } catch (e) {
+            //     console.error(e)
+            //     wx.lin.hideLoading()
+            // }
+            // // //必须使用redirectTo防止Order页面被频繁打开
+            // // wx.redirectTo({
+            // //     url: `/pages/my-order/my-order?key=${payStatus}`
+            // // })
+
+            if (!payParams) {
+                return;
+            }
+
             try {
-                res = await Payment.pay(payParams)
-                // payStatus = OrderStatus.PAID
-                wx.lin.hideLoading()
-                this.triggerEvent('paysuccess',{
-                    oid
+                // 拉起微信支付
+                const res = await wx.requestPayment(payParams);
+                wx.redirectTo({
+                    url: `/pages/pay-success/pay-success?oid=${oid}`
                 })
             } catch (e) {
-                console.error(e)
-                wx.lin.hideLoading()
+                // 1 is payStatus
+                wx.redirectTo({
+                    url: `/pages/my-order/my-order?key=${1}`
+                })
             }
-            // //必须使用redirectTo防止Order页面被频繁打开
-            // wx.redirectTo({
-            //     url: `/pages/my-order/my-order?key=${payStatus}`
-            // })
         }
     }
 })

@@ -14,7 +14,6 @@ class FenceGroup {
      * @param spu
      */
     constructor(spu) {
-        console.log('fences group constructor')
         this.spu = spu
         this.skuList = spu.sku_list
     }
@@ -92,10 +91,8 @@ class FenceGroup {
      */
     initFences() {
         const matrix = this._createMatrix(this.skuList);
-        console.log("matrix", matrix)
         const fences = [];
         const at = matrix.transpose();
-        console.log('at', at)
         at.forEach(r => {
             const fence = new Fence(r);
             fence.init();
@@ -108,8 +105,6 @@ class FenceGroup {
         })
 
         this.fences = fences;
-
-        console.log("fences-group fences", fences)
     }
 
     /**
@@ -157,7 +152,6 @@ class FenceGroup {
      * @private
      */
     _createMatrix(skuList){
-        console.log('_createMatrix')
         const m = []
         skuList.forEach(sku => {
             m.push(sku.specs)
