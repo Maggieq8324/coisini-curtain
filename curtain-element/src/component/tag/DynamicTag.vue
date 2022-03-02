@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted() {
-    console.log('dynamicTags',this.dynamicTags)
+    console.log('dynamicTags', this.dynamicTags)
   },
   methods: {
     handleClose(tag) {

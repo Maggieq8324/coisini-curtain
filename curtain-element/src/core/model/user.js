@@ -1,6 +1,6 @@
 import _axios, { post, get, put } from '@/core/plugin/axios'
-import { saveTokens } from '../util/token'
 import store from '@/store'
+import { saveTokens } from '../util/token'
 
 export default class User {
   /**

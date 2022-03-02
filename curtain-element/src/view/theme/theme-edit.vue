@@ -12,17 +12,17 @@
         <el-row>
           <el-col :lg="16" :md="20" :sm="24" :xs="24">
             <el-form :model="form" status-icon ref="themeForm" label-width="100px" @submit.native.prevent>
-              <el-form-item label="标题" prop="title" :rules="rules.Null">
+              <el-form-item label="标题" prop="title" :rules="verifyRules.Null">
                 <el-input size="medium" v-model="form.title" placeholder="请填写标题" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="名称" prop="name" :rules="rules.Null">
+              <el-form-item label="名称" prop="name" :rules="verifyRules.Null">
                 <el-input size="medium" v-model="form.name" placeholder="请填写名称" :disabled="!hasAuth"></el-input>
               </el-form-item>
-              <el-form-item label="主题描述" prop="description" :rules="rules.Null">
+              <el-form-item label="主题描述" prop="description" :rules="verifyRules.Null">
                 <el-input size="medium" v-model="form.description" placeholder="请填写主题描述" :disabled="!hasAuth"></el-input>
               </el-form-item>
 
-              <el-form-item label="模板名" prop="tpl_name" :rules="rules.Null">
+              <el-form-item label="模板名" prop="tpl_name" :rules="verifyRules.Null">
                 <el-select v-model="form.tpl_name" placeholder="请选择模板名" :disabled="!hasAuth">
                   <el-option v-for="item in tpl_options" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -40,15 +40,15 @@
                 ></el-switch>
               </el-form-item>
 
-              <el-form-item label="标题图" prop="title_img" :rules="rules.Null">
+              <el-form-item label="标题图" prop="title_img" :rules="verifyRules.Null">
                 <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadImgEle" :value="initImgData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="入口图" prop="entrance_img" :rules="rules.Null">
+              <el-form-item label="入口图" prop="entrance_img" :rules="verifyRules.Null">
                 <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadEntranceEle" :value="initEntranceData" :disabled="!hasAuth"/>
               </el-form-item>
 
-              <el-form-item label="外部图" prop="entrance_img" :rules="rules.Null">
+              <el-form-item label="外部图" prop="entrance_img" :rules="verifyRules.Null">
                 <upload-imgs :rules="rules" :max-num="maxNum" ref="uploadInternalEle" :value="initInternalData" :disabled="!hasAuth"/>
               </el-form-item>
 
@@ -176,7 +176,7 @@ export default {
       onlined: true,
       tpl_options: ['diana', 'irelia', 'camille', 'janna', 'spu-list'],
       hasAuth: Auth.hasAuth(['创建主题', '更新主题']),
-      rules: {
+      verifyRules: {
         ...rules
       }
     }

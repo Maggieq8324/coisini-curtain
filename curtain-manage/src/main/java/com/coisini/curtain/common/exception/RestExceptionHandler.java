@@ -49,7 +49,7 @@ public class RestExceptionHandler {
      * HttpException
      */
     @ExceptionHandler({HttpException.class})
-    public UnifyResponseVo processException(HttpException exception, HttpServletRequest request, HttpServletResponse response) {
+    public UnifyResponseVo<?> processException(HttpException exception, HttpServletRequest request, HttpServletResponse response) {
         log.error("", exception);
         UnifyResponseVo unifyResponse = new UnifyResponseVo();
         unifyResponse.setRequest(getSimpleRequest(request));
