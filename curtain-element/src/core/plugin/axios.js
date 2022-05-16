@@ -24,7 +24,7 @@ const config = {
  */
 function refreshTokenException(code) {
   let flag = false
-  const codes = [10000, 10042, 10050, 10052]
+  const codes = [10000, 10042, 10050, 10051, 10052]
   if (codes.includes(code)) {
     flag = true
   }
@@ -128,6 +128,8 @@ _axios.interceptors.response.use(
     }
     return new Promise(async (resolve, reject) => {
       const { url } = res.config
+
+      console.log("code: " + code)
 
       // refreshToken相关，直接登出
       if (refreshTokenException(code)) {
