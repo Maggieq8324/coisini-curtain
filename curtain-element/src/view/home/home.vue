@@ -19,11 +19,13 @@
           <app-main ref="appMain"></app-main>
         </el-main>
         <el-footer style="border: 1px solid #f8f9fa; height: 35px;padding-top: 7px;">
-          <p>Copyright&copy; 2021 美佳窗帘布艺
-            <a href="https://beian.miit.gov.cn" target="_blank">滇ICP备2021007167号-1</a>
+          <p>Copyright© 2021 美佳窗帘布艺
+            <a href="https://beian.miit.gov.cn" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;" target="_blank">滇ICP备2021007167号-1</a>
             &ensp;
-            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=53042102000021"
-               style="display:inline-block;text-decoration:none;height:20px;line-height:20px;">滇公网安备：53042102000021</a>
+            <a target="_blank" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=53042102000021">
+              <img style="display: inline-block; width: 20px; height: 20px" src="../../assets/image/footer.png"/>
+              滇公网安备：53042102000021
+            </a>
           </p>
         </el-footer>
         <back-top :right="50" :bottom="20" :fontSize="34"></back-top>
